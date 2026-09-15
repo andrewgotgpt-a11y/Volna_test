@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Волна Лаундж — Онлайн Меню</title>
+    
+    <!-- PWA & Telegram Mini App Meta -->
+    <meta name="theme-color" content="#111317">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. Базовые стили & WCAG 2.1 AA Переменные
+           ========================================================================== */
+        :root {
+            --bg-main: #111317;
+            --bg-card: #1c1f26;
+            --bg-card-active: #252a34;
+            --gold-primary: #c5a059;
+            --gold-light: #f3e1b9;
+            --text-main: #ffffff;
+            --text-secondary: #d1d5db; /* WCAG 2.1 AA Contrast Ratio > 4.5:1 */
+            --text-muted: #9ca3af;
+            --border-color: rgba(197, 160, 89, 0.25);
+            --touch-target: 44px; /* Мин. размер кликабельной зоны */
+            --radius-main: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 0 16px;
+        }
+
+        /* Skip link дляAccessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--gold-primary);
+            color: #000;
+            padding: 8px;
+            z-index: 1000;
+            transition: top 0.2s;
+        }
+        .skip-link:focus { top: 0; }
+
+        /* ==========================================================================
+           2. Логотип & Мобильный шапка
+           ========================================================================== */
+        .logo-section {
+            text-align: center;
+            padding: 24px 0 16px 0;
+        }
+        .vector-logo {
+            width: 110px;
+            height: 110px;
+            filter: drop-shadow(0 6px 15px rgba(0, 0, 0, 0.6));
+        }
+        .brand-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .welcome-text {
+            font-size: 12px;
+            color: var(--gold-primary);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* Быстрые сервисные кнопки */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .action-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-main);
+            padding: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--touch-target);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.15s ease, border-color 0.2s;
+        }
+        .action-btn:active { transform: scale(0.97); }
+        .action-btn .sub { font-size: 10px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+
+        .btn-tips-highlight {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #9a7432 0%, #c5a059 100%);
+            color: #111317;
+            border: none;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(197, 160, 89, 0.25);
+        }
+        .btn-tips-highlight .sub { color: #1c222d; font-weight: 500; }
+
+        /* Динамический баннер акций дня */
+        .promo-banner {
+            background: var(--bg-card);
+            border-left: 4px solid var(--gold-primary);
+            border-radius: var(--radius-main);
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .promo-badge {
+            background: var(--gold-primary);
+            color: #111317;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .promo-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        /* ==========================================================================
+           3. Закреплённая навигация Категорий (Sticky Tabs) & Поиск
+           ========================================================================== */
+        .search-sticky-container {
+            position: sticky;
+            top: 0;
+            background: rgba(17, 19, 23, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            padding: 10px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .search-input {
+            width: 100%;
+            height: var(--touch-target);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 0 16px 0 42px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus {
+            border-color: var(--gold-light);
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--gold-primary);
+            width: 18px;
+            height: 18px;
+            pointer-events: none;
+        }
+
+        /* Горизонтальная лента категорий */
+        .category-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 4px;
+        }
+        .category-tabs::-webkit-scrollbar { display: none; }
+        
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            min-height: 38px;
+            transition: all 0.2s ease;
+        }
+        .tab-btn.active {
+            background: var(--gold-primary);
+            color: #111317;
+            font-weight: 700;
+            border-color: var(--gold-primary);
+        }
+
+        /* ==========================================================================
+           4. Карточки Блюд & Гибридный макет (Hybrid Layout)
+           ========================================================================== */
+        .section-header {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            color: var(--gold-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+            margin: 28px 0 16px 0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .section-subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        /* Списочный макет */
+        .menu-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .menu-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-main);
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: border-color 0.2s;
+        }
+        .menu-item:hover { border-color: var(--border-color); }
+
+        .item-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 4px;
+        }
+        .item-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            padding-right: 8px;
+        }
+        .item-volume {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .item-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--gold-light);
+            white-space: nowrap;
+        }
+
+        .taste-tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--gold-primary);
+            background: rgba(197, 160, 89, 0.12);
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .item-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* AI-Апсейл Чип (Pairing) */
+        .pairing-chip {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(197, 160, 89, 0.2);
+            font-size: 11px;
+            color: var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Кальяны - Специальный Блок */
+        .hookah-card {
+            background: linear-gradient(135deg, #1c1f26 0%, #15181e 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-main);
+            padding: 16px;
+            text-align: center;
+        }
+        .hookah-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        .hookah-option {
+            background: rgba(255,255,255,0.02);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .hookah-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--gold-primary);
+        }
+
+        /* Подвал */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .social-links {
+            display: flex;
+            gap: 20px;
+        }
+        .social-btn {
+            width: var(--touch-target);
+            height: var(--touch-target);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-primary);
+            text-decoration: none;
+        }
+        .social-btn svg { width: 20px; height: 28px; fill: currentColor; }
+        .copyright { font-size: 11px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <a href="#main-menu" class="skip-link">Перейти к меню</a>
+
+    <div class="container">
+        <!-- 1. Шапка бренда -->
+        <header class="logo-section">
+            <svg class="vector-logo" viewBox="0 0 200 200" fill="none" aria-hidden="true">
+                <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#9a7432" />
+                        <stop offset="50%" stop-color="#f3e1b9" />
+                        <stop offset="100%" stop-color="#9a7432" />
+                    </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="95" fill="#122540" />
+                <circle cx="100" cy="100" r="88" stroke="url(#goldGrad)" stroke-width="2" />
+                <text x="100" y="94" font-family="'Cormorant Garamond', serif" font-size="34" font-weight="600" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3">ВОЛНА</text>
+                <g stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round">
+                    <path d="M22 110 C 50 125, 75 95, 120 115 C 150 128, 165 110, 178 110" />
+                    <path d="M24 120 C 52 135, 77 105, 122 125 C 152 138, 163 122, 176 120" stroke-opacity="0.8"/>
+                </g>
+            </svg>
+            <h1 class="brand-title">Volna Lounge</h1>
+            <div class="welcome-text">Премиальный Лаундж Бар</div>
+        </header>
+
+        <!-- 2. Быстрые сервисы -->
+        <div class="quick-actions">
+            <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" class="action-btn btn-tips-highlight" aria-label="Оставить чаевые">
+                <span>Оставить чаевые персоналу</span>
+                <span class="sub">Быстрая благодарность через CloudTips</span>
+            </a>
+            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank" class="action-btn">
+                <span>Скидка 10% за отзыв</span>
+                <span class="sub">Покажи скриншот Яндекс.Карт</span>
+            </a>
+            <a href="https://login.wifly.net/" class="action-btn">
+                <span>Подключиться к Wi-Fi</span>
+                <span class="sub">Сеть: Wave</span>
+            </a>
+        </div>
+
+        <!-- 3. Акция дня (Автоматический выбор) -->
+        <div class="promo-banner" id="today-promo">
+            <span class="promo-badge" id="promo-day-tag">Акция</span>
+            <span class="promo-text" id="promo-day-text">Загрузка акции...</span>
+        </div>
+
+        <!-- 4. Закреплённый Поиск и Навигационные Вкладки -->
+        <div class="search-sticky-container">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="menu-search" class="search-input" placeholder="Поиск блюд, коктейлей, чая..." aria-label="Поиск по меню">
+            </div>
+
+            <nav class="category-tabs" role="tablist" aria-label="Категории меню">
+                <button class="tab-btn active" onclick="scrollToCategory('sec-kitchen', this)">Сэндвичи & Кухня</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-hookah', this)">Кальяны</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-cocktails', this)">Коктейли</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-snacks', this)">Закуски & Фритюр</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-beer', this)">Пиво</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-tea', this)">Чай & Лимонады</button>
+                <button class="tab-btn" onclick="scrollToCategory('sec-desserts', this)">Десерты</button>
+            </nav>
+        </div>
+
+        <!-- 5. Контент Меню -->
+        <main id="main-menu">
+
+            <!-- КУХНЯ -->
+            <section id="sec-kitchen">
+                <div class="section-header">
+                    <span>Сэндвичи & Кухня</span>
+                    <span class="section-subtitle">Сытные авторские подачи</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="сэндвич клаб ветчина чеддер огурцы">
+                        <div class="item-head">
+                            <span class="item-name">Клаб-сэндвич Классический <span class="item-volume">(250г)</span></span>
+                            <span class="item-price">390 ₽</span>
+                        </div>
+                        <p class="item-desc">Ветчина, сыр чеддер, маринованные огурцы, айсберг, томаты, бургер-соус.</p>
+                        <div class="pairing-chip"> Рекомендуем к коктейлю: Янтарная глубина</div>
+                    </article>
+
+                    <article class="menu-item" data-keywords="сэндвич курица цезарь">
+                        <div class="item-head">
+                            <span class="item-name">Клаб-сэндвич с копченой курицей <span class="item-volume">(210г)</span></span>
+                            <span class="item-price">390 ₽</span>
+                        </div>
+                        <p class="item-desc">Копченое филе, сыр чеддер, свежий огурец, айсберг, соус цезарь.</p>
+                    </article>
+
+                    <article class="menu-item" data-keywords="панкейк драник бекон фирменный">
+                        <div class="item-head">
+                            <span class="item-name">Фирменный пан-сэндвич <span class="item-volume">(280г)</span></span>
+                            <span class="item-price">390 ₽</span>
+                        </div>
+                        <p class="item-desc">Панкейк с зеленью, картофельный драник, бекон, айсберг, медово-горчичный соус.</p>
+                    </article>
+
+                    <article class="menu-item" style="border: 1px solid var(--border-color);" data-keywords="комбо сет сэндвич">
+                        <div class="item-head">
+                            <span class="item-name" style="color: var(--gold-light);">Сэндвич-комбо <span class="item-volume">(700г / 3 шт)</span></span>
+                            <span class="item-price">1100 ₽</span>
+                        </div>
+                        <p class="item-desc">Все 3 вида сэндвичей в одном сете для компании!</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- КАЛЬЯНЫ -->
+            <section id="sec-hookah">
+                <div class="section-header">
+                    <span>Паровые коктейли</span>
+                    <span class="section-subtitle">Мастерский дым</span>
+                </div>
+                <div class="hookah-card">
+                    <div style="font-size: 14px; font-weight: 600; color: var(--gold-light);">Атмосферный дым на любом табаке</div>
+                    <div class="hookah-grid">
+                        <div class="hookah-option">
+                            <div style="font-size: 12px; font-weight: 600;">Классика</div>
+                            <div class="hookah-price">800 / 1000 ₽</div>
+                            <div style="font-size: 10px; color: var(--text-muted);">Будни до / после 18:00</div>
+                        </div>
+                        <div class="hookah-option">
+                            <div style="font-size: 12px; font-weight: 600;">Премиум</div>
+                            <div class="hookah-price">1000 / 1200 ₽</div>
+                            <div style="font-size: 10px; color: var(--text-muted);">Будни до / после 18:00</div>
+                        </div>
+                    </div>
+                    <div style="font-size: 11px; color: var(--gold-primary);">В выходные и праздники: 1000 ₽ / 1200 ₽ весь день</div>
+                    <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">*Перезабивка на классическом табаке — 600 ₽</div>
+                </div>
+            </section>
+
+            <!-- КОКТЕЙЛИ -->
+            <section id="sec-cocktails">
+                <div class="section-header">
+                    <span>Фирменные коктейли</span>
+                    <span class="section-subtitle">Авторский микс</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="апероль апельсин аперитив игристое">
+                        <div class="item-head">
+                            <span class="item-name">Итальянский прилив</span>
+                            <span class="item-price">600 ₽</span>
+                        </div>
+                        <span class="taste-tag">Горьковато-сладкий • Освежающий</span>
+                        <p class="item-desc">Аперитив Апероль, игристое вино брют, содовая, долька апельсина.</p>
+                    </article>
+
+                    <article class="menu-item" data-keywords="маракуйя ваниль игристое тропики">
+                        <div class="item-head">
+                            <span class="item-name">Звезда горизонта</span>
+                            <span class="item-price">600 ₽</span>
+                        </div>
+                        <span class="taste-tag">Тропический • Кисло-сладкий</span>
+                        <p class="item-desc">Ванильная основа, ликёр маракуйя, игристое брют, сок лайма.</p>
+                    </article>
+
+                    <article class="menu-item" data-keywords="лонг айленд джин ром текила кола водка">
+                        <div class="item-head">
+                            <span class="item-name">Девятый вал</span>
+                            <span class="item-price">600 ₽</span>
+                        </div>
+                        <span class="taste-tag">Крепкий • Цитрусовый</span>
+                        <p class="item-desc">Водка, сухой джин, ром, текила, трипл сек, кола.</p>
+                        <div class="pairing-chip"> Рекомендуем к закуске: Чесночные гренки или Начос</div>
+                    </article>
+
+                    <article class="menu-item" data-keywords="негрони джин кампари вермут">
+                        <div class="item-head">
+                            <span class="item-name">Морской узел</span>
+                            <span class="item-price">600 ₽</span>
+                        </div>
+                        <span class="taste-tag">Пряный • Крепкий горький</span>
+                        <p class="item-desc">Сухой лондонский джин, кампари, красный сладкий вермут.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ЗАКУСКИ & ФРИТЮР -->
+            <section id="sec-snacks">
+                <div class="section-header">
+                    <span>Закуски & Фритюр</span>
+                    <span class="section-subtitle">Хрустящий аккомпанемент</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="картофель фри">
+                        <div class="item-head">
+                            <span class="item-name">Картофель фри <span class="item-volume">(200г)</span></span>
+                            <span class="item-price">280 ₽</span>
+                        </div>
+                    </article>
+                    <article class="menu-item" data-keywords="гренки чеснок">
+                        <div class="item-head">
+                            <span class="item-name">Чесночные гренки <span class="item-volume">(200г)</span></span>
+                            <span class="item-price">280 ₽</span>
+                        </div>
+                    </article>
+                    <article class="menu-item" data-keywords="сырные палочки чеддер">
+                        <div class="item-head">
+                            <span class="item-name">Сырные палочки <span class="item-volume">(200г)</span></span>
+                            <span class="item-price">400 ₽</span>
+                        </div>
+                    </article>
+                    <article class="menu-item" data-keywords="креветки фритюр">
+                        <div class="item-head">
+                            <span class="item-name">Креветки тигровые <span class="item-volume">(200г)</span></span>
+                            <span class="item-price">650 ₽</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ПИВО -->
+            <section id="sec-beer">
+                <div class="section-header">
+                    <span>Пивная карта</span>
+                    <span class="section-subtitle">Разливное и крафт</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="устюжна пивоварня нефильтрованное">
+                        <div class="item-head">
+                            <span class="item-name">Устюжна Нефильтрованное</span>
+                            <span class="item-price">300 ₽</span>
+                        </div>
+                        <p class="item-desc">Свежее пиво с местной Устюженской пивоварни.</p>
+                    </article>
+                    <article class="menu-item" data-keywords="ipa крафт ipa overfall">
+                        <div class="item-head">
+                            <span class="item-name">Konix OVERFALL IPA</span>
+                            <span class="item-price">350 ₽</span>
+                        </div>
+                        <p class="item-desc">Классический американский IPA с ярким охмелением.</p>
+                    </article>
+                    <article class="menu-item" data-keywords="безалкогольное бад хугарден 0.0">
+                        <div class="item-head">
+                            <span class="item-name">Хугарден 0.0 Б/А</span>
+                            <span class="item-price">300 ₽</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ЧАЙ & ЛИМОНАДЫ -->
+            <section id="sec-tea">
+                <div class="section-header">
+                    <span>Чай & Напитки</span>
+                    <span class="section-subtitle">Согревающее и освежающее</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="чай черный ассам эрл грей">
+                        <div class="item-head">
+                            <span class="item-name">Чай Фирменный <span class="item-volume">(0.5л / 0.8л)</span></span>
+                            <span class="item-price">300 / 350 ₽</span>
+                        </div>
+                        <p class="item-desc">Ассам, Эрл Грей, Дикая вишня, Жасмин, Ромашка-Лемонграсс.</p>
+                    </article>
+                    <article class="menu-item" data-keywords="габа китайский чай">
+                        <div class="item-head">
+                            <span class="item-name">Китайский чай Габа</span>
+                            <span class="item-price">450 ₽</span>
+                        </div>
+                        <p class="item-desc">Церемониальный чай для глубокого расслабления.</p>
+                    </article>
+                    <article class="menu-item" data-keywords="лимонад гранат малина мохито">
+                        <div class="item-head">
+                            <span class="item-name">Крафтовый Лимонад <span class="item-volume">(0.3л / 1.0л)</span></span>
+                            <span class="item-price">300 / 800 ₽</span>
+                        </div>
+                        <p class="item-desc">Вкусы: Гранат-Малина, Личи-Лемонграсс, Манго-Ананас, Мохито.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ДЕСЕРТЫ -->
+            <section id="sec-desserts">
+                <div class="section-header">
+                    <span>Десерты</span>
+                    <span class="section-subtitle">Сладкое завершение</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" data-keywords="медовик мед торт">
+                        <div class="item-head">
+                            <span class="item-name">Медовик <span class="item-volume">(150г)</span></span>
+                            <span class="item-price">430 ₽</span>
+                        </div>
+                    </article>
+                    <article class="menu-item" data-keywords="чизкейк">
+                        <div class="item-head">
+                            <span class="item-name">Чизкейк в ассортименте <span class="item-volume">(150г)</span></span>
+                            <span class="item-price">370 ₽</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Подвал -->
+        <footer class="footer">
+            <div class="social-links">
+                <a href="https://vk.com/wave_lounge" target="_blank" class="social-btn" aria-label="ВКонтакте">
+                    <svg viewBox="0 0 24 24"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14c5.6 0 6.93-1.33 6.93-6.93V8.93C22 3.33 20.67 2 15.07 2zm3.16 13.75h-1.32c-.61 0-.8-.49-1.89-1.58-.95-.92-1.37-1.04-1.61-1.04-.33 0-.43.09-.43.54v1.51c0 .39-.12.57-1.15.57-1.7 0-3.58-1.03-4.91-2.92-2-2.82-2.54-4.94-2.54-5.37 0-.24.12-.46.54-.46h1.32c.38 0 .52.17.67.57.73 2.12 1.95 3.98 2.45 3.98.19 0 .28-.09.28-.58V9.22c-.07-1.04-.6-1.13-.6-1.5 0-.19.16-.38.42-.38h2.08c.29 0 .41.16.41.53v2.85c0 .31.14.42.23.42.19 0 .35-.11.71-.47 1.1-1.23 1.88-3.12 1.88-3.12.1-.21.26-.38.64-.38h1.32c.4 0 .52.21.42.53-.17.73-1.68 3.09-1.71 3.14-.14.24-.19.35 0 .6.14.19.61.6 1.01 1.07.74.85 1.3 1.57 1.45 2.06.14.49-.07.74-.46.74z"/></svg>
+                </a>
+                <a href="https://www.instagram.com/wavelounge35" target="_blank" class="social-btn" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 2.156 4.919 5.419.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 5.234-4.919 5.382-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-2.159-4.919-5.382-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-5.234 4.919-5.382 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+            </div>
+            <div class="copyright">© Volna Lounge • Все права защищены</div>
+        </footer>
+    </div>
+
+    <!-- ==========================================================================
+       6. Оптимизированный Vanilla JS (Поиск, Авто-Акция, Telegram SDK)
+       ========================================================================== -->
+    <script>
+        // Инициализация Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp) {
+            const tg = window.Telegram.WebApp;
+            tg.expand(); // Раскрываем на весь экран
+            tg.ready();
+        }
+
+        // Автоматический выбор акции по дню недели
+        (function initDailyPromo() {
+            const promos = [
+                { day: "Воскресенье", text: "Отличный день для дымного отдыха и фирменного чая!" },
+                { day: "Понедельник", text: "Легкий старт недели: скидка 10% на все сэндвичи." },
+                { day: "Вторник", text: " Вторник: Каждый 3-й паровой коктейль — В ПОДАРОК!" },
+                { day: "Среда", text: " Женская Среда: Коктейли 1+1 для женских компаний!" },
+                { day: "Четверг", text: " Мужской Четверг: Закажи 3 пива — получи закуску в подарок!" },
+                { day: "Пятница", text: "Пятничный вечер: Заказывай фирменные сеты для компании!" },
+                { day: "Суббота", text: "Субботний драйв: Попробуй наш авторский коктейль «Девятый вал»!" }
+            ];
+            
+            const today = new Date().getDay();
+            const currentPromo = promos[today];
+            
+            document.getElementById('promo-day-tag').innerText = currentPromo.day;
+            document.getElementById('promo-day-text').innerText = currentPromo.text;
+        })();
+
+        // Плавный скролл к категории и подсветка вкладок
+        function scrollToCategory(sectionId, btn) {
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                const offset = 120; // Учитываем высоту плавающей шапки
+                const bodyRect = document.body.getBoundingClientRect().top;
+                const elementRect = targetSection.getBoundingClientRect().top;
+                const elementPosition = elementRect - bodyRect;
+                const offsetPosition = elementPosition - offset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+
+                // Переключение активного таба
+                document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+                btn.classList.add('active');
+            }
+        }
+
+        // Мгновенный поиск по меню (по названиям и тегам)
+        document.getElementById('menu-search').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const items = document.querySelectorAll('.menu-item');
+
+            items.forEach(item => {
+                const name = item.querySelector('.item-name')?.innerText.toLowerCase() || '';
+                const desc = item.querySelector('.item-desc')?.innerText.toLowerCase() || '';
+                const keywords = item.getAttribute('data-keywords')?.toLowerCase() || '';
+
+                if (name.includes(query) || desc.includes(query) || keywords.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
