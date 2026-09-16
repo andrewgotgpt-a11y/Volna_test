@@ -1,343 +1,730 @@
-```
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Волна Лаундж — Онлайн Меню</title>
 
-    
-    
-    
+    <meta name="theme-color" content="#111317">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    
-    
-    
+    <!-- Оптимизированное подключение шрифтов без блокировки ПК-браузера -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
-    <link rel="stylesheet" media="print" />
+    <!-- Telegram WebApp SDK (Async) -->
+    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
 
-    
-    
+    <style>
+        :root {
+            --bg-main: #111317;
+            --bg-card: #1c1f26;
+            --bg-card-hover: #252a34;
+            --gold-primary: #c5a059;
+            --gold-light: #f3e1b9;
+            --text-main: #ffffff;
+            --text-secondary: #d1d5db; /* WCAG 2.1 AA Contrast > 4.5:1 */
+            --text-muted: #9ca3af;
+            --border-color: rgba(197, 160, 89, 0.25);
+            --touch-target: 44px;
+            --radius-main: 14px;
+        }
 
-    
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <div>
-        
-        <header>
-            
-            <h1>Volna Lounge</h1>
-            <div>Премиальный Лаундж Бар</div>
+        .container { width: 100%; max-width: 480px; padding: 0 16px; }
+
+        /* Шапка бренда */
+        .logo-section { text-align: center; padding: 20px 0 12px 0; }
+        .vector-logo { width: 100px; height: 100px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6)); }
+        .brand-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .welcome-text { font-size: 11px; color: var(--gold-primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+
+        /* Сервисы и Акции */
+        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+        .action-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-main);
+            padding: 10px 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: var(--touch-target);
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .action-btn:active { transform: scale(0.97); }
+        .action-btn .sub { font-size: 10px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+
+        .btn-tips-highlight {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #9a7432 0%, #c5a059 100%);
+            color: #111317;
+            border: none;
+            font-weight: 700;
+        }
+        .btn-tips-highlight .sub { color: #1c222d; font-weight: 500; }
+
+        /* Баннер геймификации и акций */
+        .gamify-banner {
+            background: linear-gradient(135deg, #1c1f26 0%, #2a2418 100%);
+            border: 1px solid var(--gold-primary);
+            border-radius: var(--radius-main);
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        /* Закрепленный Поиск и Категории */
+        .search-sticky-container {
+            position: sticky;
+            top: 0;
+            background: rgba(17, 19, 23, 0.96);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 100;
+            padding: 10px 0;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .search-box { position: relative; margin-bottom: 8px; }
+        .search-input {
+            width: 100%;
+            height: var(--touch-target);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 0 16px 0 40px;
+            color: var(--text-main);
+            font-size: 14px;
+            outline: none;
+        }
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            fill: var(--gold-primary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .category-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+        .category-tabs::-webkit-scrollbar { display: none; }
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 8px 14px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .tab-btn.active {
+            background: var(--gold-primary);
+            color: #111317;
+            font-weight: 700;
+            border-color: var(--gold-primary);
+        }
+
+        /* Меню & Разделы */
+        .section-header {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            color: var(--gold-light);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 4px;
+            margin: 24px 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .sub-category-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--gold-primary);
+            margin: 14px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-left: 3px solid var(--gold-primary);
+            padding-left: 8px;
+        }
+
+        .menu-list { display: flex; flex-direction: column; gap: 10px; }
+        .menu-item {
+            background: var(--bg-card);
+            border-radius: var(--radius-main);
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            cursor: pointer;
+            transition: background 0.15s ease, border-color 0.2s;
+        }
+        .menu-item:active { background: var(--bg-card-hover); border-color: var(--gold-primary); }
+
+        .item-head { display: flex; justify-content: space-between; align-items: baseline; }
+        .item-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
+        .item-volume { font-size: 11px; color: var(--text-muted); font-weight: 400; }
+        .item-price { font-size: 14px; font-weight: 700; color: var(--gold-light); white-space: nowrap; }
+        .taste-tag {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--gold-primary);
+            background: rgba(197, 160, 89, 0.12);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 4px 0;
+            text-transform: uppercase;
+        }
+        .item-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.35; margin-top: 2px; }
+
+        /* Модальные окна */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text-main);
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .modal-img-placeholder {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #252a34 0%, #111317 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-primary);
+            font-size: 13px;
+            margin-bottom: 14px;
+            border: 1px dashed var(--border-color);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .footer { margin-top: 30px; text-align: center; font-size: 11px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- 1. Шапка заведения -->
+        <header class="logo-section">
+            <svg class="vector-logo" viewBox="0 0 200 200" fill="none">
+                <defs>
+                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#9a7432" />
+                        <stop offset="50%" stop-color="#f3e1b9" />
+                        <stop offset="100%" stop-color="#9a7432" />
+                    </linearGradient>
+                </defs>
+                <circle cx="100" cy="100" r="95" fill="#122540" />
+                <circle cx="100" cy="100" r="88" stroke="url(#goldGrad)" stroke-width="2" />
+                <text x="100" y="94" font-family="'Cormorant Garamond', serif" font-size="34" font-weight="600" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3">ВОЛНА</text>
+                <g stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round">
+                    <path d="M22 110 C 50 125, 75 95, 120 115 C 150 128, 165 110, 178 110" />
+                    <path d="M24 120 C 52 135, 77 105, 122 125 C 152 138, 163 122, 176 120" stroke-opacity="0.8"/>
+                </g>
+            </svg>
+            <h1 class="brand-title">Volna Lounge</h1>
+            <div class="welcome-text">Премиальный Лаундж Бар</div>
         </header>
 
-        
-        <div>
-            <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank">
+        <!-- 2. Сервисы -->
+        <div class="quick-actions">
+            <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" class="action-btn btn-tips-highlight">
                 <span>Оставить чаевые персоналу</span>
-                <span>Быстрый перевод через CloudTips</span>
+                <span class="sub">Быстрый перевод через CloudTips</span>
             </a>
-            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank">
+            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank" class="action-btn">
                 <span>Скидка 10% за отзыв</span>
-                <span>Покажи скриншот Яндекс.Карт</span>
+                <span class="sub">Покажи скриншот Яндекс.Карт</span>
             </a>
-            <a href="https://login.wifly.net/">
+            <a href="https://login.wifly.net/" class="action-btn">
                 <span>Подключиться к Wi-Fi</span>
-                <span>Сеть: Wave</span>
+                <span class="sub">Сеть: Wave</span>
             </a>
         </div>
 
-        
-        <div>
+        <!-- 3. Геймификация & Акции дня -->
+        <div class="gamify-banner" onclick="openPromosModal()">
             <div>
-                <div>Акция дня</div>
-                <div>Загрузка...</div>
+                <div style="font-size:12px; font-weight:700; color:var(--gold-light);" id="promo-day-title">Акция дня</div>
+                <div style="font-size:11px; color:var(--text-secondary);" id="promo-day-desc">Загрузка...</div>
             </div>
-            
+            <button style="background:var(--gold-primary); border:none; color:#111; font-weight:700; font-size:11px; padding:6px 10px; border-radius:8px; cursor:pointer;">Все акции</button>
         </div>
 
-        
-        <div>
+        <!-- 4. Гастро-Рулетка (Тест Геймификации) -->
+        <div class="gamify-banner" style="background: linear-gradient(135deg, #1f271c 0%, #1c1f26 100%); border-color:#59c562; margin-bottom:20px;" onclick="spinRoulette()">
             <div>
-                <div>🎲 Гастро-Рулетка</div>
-                <div>Не знаете, что выбрать? Испытайте удачу!</div>
+                <div style="font-size:12px; font-weight:700; color:#85f38e;">🎲 Гастро-Рулетка</div>
+                <div style="font-size:11px; color:var(--text-secondary);">Не знаете, что выбрать? Испытайте удачу!</div>
             </div>
-            
+            <button style="background:#59c562; border:none; color:#111; font-weight:700; font-size:11px; padding:6px 10px; border-radius:8px; cursor:pointer;">Крутить</button>
         </div>
 
-        
-        <div>
-            <div>
-                
-                
+        <!-- 5. Закрепленный Поиск и Категории -->
+        <div class="search-sticky-container">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="menu-search" class="search-input" placeholder="Поиск по всему меню (гренки, IPA, чай)...">
             </div>
 
-            <nav>
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+            <nav class="category-tabs">
+                <button class="tab-btn active" onclick="scrollToSec('sec-kitchen', this)">Кухня</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-hookah', this)">Кальяны</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-snacks-cold', this)">Холодные закуски</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-snacks-hot', this)">Фритюр</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-cocktails', this)">Коктейли</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-shots', this)">Шоты</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-beer', this)">Пиво</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-tea', this)">Чай</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-lemonade', this)">Лимонады</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-coffee', this)">Кофе & Б/А</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-desserts', this)">Десерты</button>
             </nav>
         </div>
 
-        
-        <main>
+        <!-- 6. ПОЛНОЕ МЕНЮ (100% Позиций из оригинала) -->
+        <main id="main-menu">
 
-            
-            <section>
-                <div>Сэндвичи &amp; Кухня</div>
-                <div>
-                    <article>
-                        <div><span>Клаб-сэндвич Классический <span>(250г)</span></span><span>390 ₽</span></div>
-                        <p>Ветчина, сыр чеддер, маринованные огурцы, айсберг, томаты, бургер-соус.</p>
+            <!-- КУХНЯ -->
+            <section id="sec-kitchen">
+                <div class="section-header">Сэндвичи & Кухня</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)" data-img="images/sandwich-classic.jpg" data-pairing="Рекомендуем к коктейлю: Янтарная глубина">
+                        <div class="item-head"><span class="item-name">Клаб-сэндвич Классический <span class="item-volume">(250г)</span></span><span class="item-price">390 ₽</span></div>
+                        <p class="item-desc">Ветчина, сыр чеддер, маринованные огурцы, айсберг, томаты, бургер-соус.</p>
                     </article>
-                    <article>
-                        <div><span>Клаб-сэндвич с копченой курицей <span>(210г)</span></span><span>390 ₽</span></div>
-                        <p>Копченое филе, сыр чеддер, свежий огурец, айсберг, соус цезарь.</p>
+                    <article class="menu-item" onclick="openItemModal(this)" data-img="images/sandwich-chicken.jpg">
+                        <div class="item-head"><span class="item-name">Клаб-сэндвич с копченой курицей <span class="item-volume">(210г)</span></span><span class="item-price">390 ₽</span></div>
+                        <p class="item-desc">Копченое филе, сыр чеддер, свежий огурец, айсберг, соус цезарь.</p>
                     </article>
-                    <article>
-                        <div><span>Фирменный пан-сэндвич <span>(280г)</span></span><span>390 ₽</span></div>
-                        <p>Панкейк с зеленью, картофельный драник, бекон, айсберг, медово-горчичный соус.</p>
+                    <article class="menu-item" onclick="openItemModal(this)" data-img="images/sandwich-pan.jpg">
+                        <div class="item-head"><span class="item-name">Фирменный пан-сэндвич <span class="item-volume">(280г)</span></span><span class="item-price">390 ₽</span></div>
+                        <p class="item-desc">Панкейк с зеленью, картофельный драник, бекон, айсберг, медово-горчичный соус.</p>
                     </article>
-                    <article>
-                        <div><span>Сэндвич-комбо <span>(700г / 3 шт)</span></span><span>1100 ₽</span></div>
-                        <p>Сет из 3 сэндвичей: Классический, с курицей и Фирменный пан-сэндвич.</p>
+                    <article class="menu-item" onclick="openItemModal(this)" data-img="images/sandwich-combo.jpg" style="border-color: var(--gold-primary);">
+                        <div class="item-head"><span class="item-name" style="color:var(--gold-light);">Сэндвич-комбо <span class="item-volume">(700г / 3 шт)</span></span><span class="item-price">1100 ₽</span></div>
+                        <p class="item-desc">Сет из 3 сэндвичей: Классический, с курицей и Фирменный пан-сэндвич.</p>
                     </article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Паровые коктейли</div>
-                <div>
-                    <article>
-                        <div><span>Кальян «Классика»</span><span>800 / 1000 ₽</span></div>
-                        <p>Будни до 18:00 — 800 ₽. После 18:00 и в выходные — 1000 ₽.</p>
+            <!-- КАЛЬЯНЫ -->
+            <section id="sec-hookah">
+                <div class="section-header">Паровые коктейли</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Кальян «Классика»</span><span class="item-price">800 / 1000 ₽</span></div>
+                        <p class="item-desc">Будни до 18:00 — 800 ₽. После 18:00 и в выходные — 1000 ₽.</p>
                     </article>
-                    <article>
-                        <div><span>Кальян «Премиум»</span><span>1000 / 1200 ₽</span></div>
-                        <p>Будни до 18:00 — 1000 ₽. После 18:00 и в выходные — 1200 ₽.</p>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Кальян «Премиум»</span><span class="item-price">1000 / 1200 ₽</span></div>
+                        <p class="item-desc">Будни до 18:00 — 1000 ₽. После 18:00 и в выходные — 1200 ₽.</p>
                     </article>
-                    <article>
-                        <div><span>Перезабивка (Классический табак)</span><span>600 ₽</span></div>
-                    </article>
-                </div>
-            </section>
-
-            
-            <section>
-                <div>Холодные закуски</div>
-                <div>
-                    <article><div><span>Сухарики <span>(100г)</span></span><span>250 ₽</span></div></article>
-                    <article><div><span>Начос <span>(70г)</span></span><span>250 ₽</span></div></article>
-                    <article><div><span>Арахис <span>(100г)</span></span><span>200 ₽</span></div></article>
-                    <article><div><span>Кальмар <span>(50г)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Сыр косичка <span>(50г)</span></span><span>200 ₽</span></div></article>
-                    <article><div><span>Фисташки <span>(100г)</span></span><span>350 ₽</span></div></article>
-                </div>
-            </section>
-
-            
-            <section>
-                <div>Горячий Фритюр</div>
-                <div>
-                    <article><div><span>Картофель фри <span>(200г)</span></span><span>280 ₽</span></div></article>
-                    <article><div><span>Картофель Айдахо <span>(200г)</span></span><span>280 ₽</span></div></article>
-                    <article><div><span>Чесночные гренки <span>(200г)</span></span><span>280 ₽</span></div></article>
-                    <article><div><span>Луковые кольца <span>(200г)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Рыбные палочки <span>(200г)</span></span><span>350 ₽</span></div></article>
-                    <article><div><span>Наггетсы куриные <span>(200г)</span></span><span>350 ₽</span></div></article>
-                    <article><div><span>Стрипсы куриные <span>(200г)</span></span><span>400 ₽</span></div></article>
-                    <article><div><span>Сырные палочки <span>(200г)</span></span><span>400 ₽</span></div></article>
-                    <article><div><span>Камамбер <span>(200г)</span></span><span>550 ₽</span></div></article>
-                    <article><div><span>Крылышки куриные <span>(300г)</span></span><span>600 ₽</span></div></article>
-                    <article><div><span>Кольца кальмара <span>(200г)</span></span><span>450 ₽</span></div></article>
-                    <article><div><span>Креветки тигровые <span>(200г)</span></span><span>650 ₽</span></div></article>
-                </div>
-            </section>
-
-            
-            <section>
-                <div>Фирменные коктейли</div>
-                <div>
-                    <article>
-                        <div><span>Итальянский прилив</span><span>600 ₽</span></div>
-                        <span>Горьковато-сладкий • Освежающий</span>
-                        <p>Апероль, игристое вино брют, содовая, апельсин.</p>
-                    </article>
-                    <article>
-                        <div><span>Звезда горизонта</span><span>600 ₽</span></div>
-                        <span>Тропический • Кисло-сладкий</span>
-                        <p>Ванильная основа, ликёр маракуйя, игристое брют, сок лайма.</p>
-                    </article>
-                    <article>
-                        <div><span>Девятый вал</span><span>600 ₽</span></div>
-                        <span>Крепкий • Цитрусовый</span>
-                        <p>Водка, сухой джин, ром, текила, трипл сек, кола.</p>
-                    </article>
-                    <article>
-                        <div><span>Морской узел</span><span>600 ₽</span></div>
-                        <span>Пряный • Крепкий горький</span>
-                        <p>Сухой лондонский джин, кампари, красный вермут.</p>
-                    </article>
-                    <article>
-                        <div><span>Мятный бриз</span><span>450 ₽</span></div>
-                        <span>Свежий • Мятный кислый</span>
-                        <p>Светлый ром, спрайт, лайм, мята.</p>
-                    </article>
-                    <article>
-                        <div><span>Рубиновый прилив</span><span>450 ₽</span></div>
-                        <span>Цитрусовый • С горчинкой</span>
-                        <p>Мартини Фиеро, классический тоник.</p>
-                    </article>
-                    <article>
-                        <div><span>Янтарная глубина</span><span>450 ₽</span></div>
-                        <span>Классический • Насыщенный</span>
-                        <p>Выдержанный купажированный виски, кола.</p>
-                    </article>
-                    <article>
-                        <div><span>Карибская ночь</span><span>450 ₽</span></div>
-                        <span>Сладкий • С кислинкой</span>
-                        <p>Светлый ром, кола, сок лайма.</p>
-                    </article>
-                    <article>
-                        <div><span>Можжевеловый штиль</span><span>450 ₽</span></div>
-                        <span>Сухой • Травянистый</span>
-                        <p>Джин, тоник, слайс огурца.</p>
-                    </article>
-                    <article>
-                        <div><span>Травяное цунами</span><span>450 ₽</span></div>
-                        <span>Бодрящий • Травяной</span>
-                        <p>Ягермейстер, энергетик.</p>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Перезабивка (Классический табак)</span><span class="item-price">600 ₽</span></div>
                     </article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Шот сеты</div>
-                <div>
-                    <article><div><span>Лазурный штиль <span>(сет из 6)</span></span><span>800 ₽</span></div><p>Водка, груша, зелёное яблоко.</p></article>
-                    <article><div><span>Унесенные ветром <span>(сет из 6)</span></span><span>800 ₽</span></div><p>Джин, малина, мята, яблоко.</p></article>
-                    <article><div><span>Морской эшелон (Б-52)</span><span>400 ₽</span></div><p>Три слоя ликеров (подача на баре).</p></article>
-                    <article><div><span>Высший эшелон (Б-53)</span><span>450 ₽</span></div><p>Крепость и яркий аромат (подача на баре).</p></article>
+            <!-- ХОЛОДНЫЕ ЗАКУСКИ -->
+            <section id="sec-snacks-cold">
+                <div class="section-header">Холодные закуски</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Сухарики <span class="item-volume">(100г)</span></span><span class="item-price">250 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Начос <span class="item-volume">(70г)</span></span><span class="item-price">250 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Арахис <span class="item-volume">(100г)</span></span><span class="item-price">200 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Кальмар <span class="item-volume">(50г)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Сыр косичка <span class="item-volume">(50г)</span></span><span class="item-price">200 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Фисташки <span class="item-volume">(100г)</span></span><span class="item-price">350 ₽</span></div></article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Пивная карта</div>
+            <!-- ГОРЯЧИЙ ФРИТЮР -->
+            <section id="sec-snacks-hot">
+                <div class="section-header">Горячий Фритюр</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)" data-pairing="Идеально со светлым пивом или колой"><div class="item-head"><span class="item-name">Картофель фри <span class="item-volume">(200г)</span></span><span class="item-price">280 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Картофель Айдахо <span class="item-volume">(200г)</span></span><span class="item-price">280 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)" data-pairing="Рекомендуем к коктейлю «Девятый вал»"><div class="item-head"><span class="item-name">Чесночные гренки <span class="item-volume">(200г)</span></span><span class="item-price">280 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Луковые кольца <span class="item-volume">(200г)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Рыбные палочки <span class="item-volume">(200г)</span></span><span class="item-price">350 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Наггетсы куриные <span class="item-volume">(200г)</span></span><span class="item-price">350 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Стрипсы куриные <span class="item-volume">(200г)</span></span><span class="item-price">400 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Сырные палочки <span class="item-volume">(200г)</span></span><span class="item-price">400 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Камамбер <span class="item-volume">(200г)</span></span><span class="item-price">550 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Крылышки куриные <span class="item-volume">(300г)</span></span><span class="item-price">600 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Кольца кальмара <span class="item-volume">(200г)</span></span><span class="item-price">450 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Креветки тигровые <span class="item-volume">(200г)</span></span><span class="item-price">650 ₽</span></div></article>
+                </div>
+            </section>
+
+            <!-- КОКТЕЙЛИ -->
+            <section id="sec-cocktails">
+                <div class="section-header">Фирменные коктейли</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)" data-img="images/cocktail-aperol.jpg">
+                        <div class="item-head"><span class="item-name">Итальянский прилив</span><span class="item-price">600 ₽</span></div>
+                        <span class="taste-tag">Горьковато-сладкий • Освежающий</span>
+                        <p class="item-desc">Апероль, игристое вино брют, содовая, апельсин.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Звезда горизонта</span><span class="item-price">600 ₽</span></div>
+                        <span class="taste-tag">Тропический • Кисло-сладкий</span>
+                        <p class="item-desc">Ванильная основа, ликёр маракуйя, игристое брют, сок лайма.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)" data-pairing="Идеально со Сырными палочками или Чесночными гренками">
+                        <div class="item-head"><span class="item-name">Девятый вал</span><span class="item-price">600 ₽</span></div>
+                        <span class="taste-tag">Крепкий • Цитрусовый</span>
+                        <p class="item-desc">Водка, сухой джин, ром, текила, трипл сек, кола.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Морской узел</span><span class="item-price">600 ₽</span></div>
+                        <span class="taste-tag">Пряный • Крепкий горький</span>
+                        <p class="item-desc">Сухой лондонский джин, кампари, красный вермут.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Мятный бриз</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Свежий • Мятный кислый</span>
+                        <p class="item-desc">Светлый ром, спрайт, лайм, мята.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Рубиновый прилив</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Цитрусовый • С горчинкой</span>
+                        <p class="item-desc">Мартини Фиеро, классический тоник.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Янтарная глубина</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Классический • Насыщенный</span>
+                        <p class="item-desc">Выдержанный купажированный виски, кола.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Карибская ночь</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Сладкий • С кислинкой</span>
+                        <p class="item-desc">Светлый ром, кола, сок лайма.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Можжевеловый штиль</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Сухой • Травянистый</span>
+                        <p class="item-desc">Джин, тоник, слайс огурца.</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal(this)">
+                        <div class="item-head"><span class="item-name">Травяное цунами</span><span class="item-price">450 ₽</span></div>
+                        <span class="taste-tag">Бодрящий • Травяной</span>
+                        <p class="item-desc">Ягермейстер, энергетик.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ШОТ СЕТЫ -->
+            <section id="sec-shots">
+                <div class="section-header">Шот сеты</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Лазурный штиль <span class="item-volume">(сет из 6)</span></span><span class="item-price">800 ₽</span></div><p class="item-desc">Водка, груша, зелёное яблоко.</p></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Унесенные ветром <span class="item-volume">(сет из 6)</span></span><span class="item-price">800 ₽</span></div><p class="item-desc">Джин, малина, мята, яблоко.</p></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Морской эшелон (Б-52)</span><span class="item-price">400 ₽</span></div><p class="item-desc">Три слоя ликеров (подача на баре).</p></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Высший эшелон (Б-53)</span><span class="item-price">450 ₽</span></div><p class="item-desc">Крепость и яркий аромат (подача на баре).</p></article>
+                </div>
+            </section>
+
+            <!-- ПИВО -->
+            <section id="sec-beer">
+                <div class="section-header">Пивная карта</div>
                 
-                <div>Устюженская Пивоварня</div>
-                <div>
-                    <article><div><span>Устюжна <span>(Нефильтрованное)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Русское <span>(Нефильтрованное)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Роттенбир <span>(Нефильтрованное)</span></span><span>300 ₽</span></div></article>
+                <div class="sub-category-title">Устюженская Пивоварня</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Устюжна <span class="item-volume">(Нефильтрованное)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Русское <span class="item-volume">(Нефильтрованное)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Роттенбир <span class="item-volume">(Нефильтрованное)</span></span><span class="item-price">300 ₽</span></div></article>
                 </div>
 
-                <div>Светлое пиво</div>
-                <div>
-                    <article><div><span>Бад / Шпатен / Стела Артуа <span>(Фильтр.)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Эль Капулько / Ловенбрау <span>(Фильтр.)</span></span><span>300 ₽</span></div></article>
-                    <article><div><span>Оттингер <span>(Фильтр.)</span></span><span>350 ₽</span></div></article>
-                    <article><div><span>Хугарден / Бланш <span>(Нефильтр.)</span></span><span>300 ₽</span></div></article>
+                <div class="sub-category-title">Светлое пиво</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Бад / Шпатен / Стела Артуа <span class="item-volume">(Фильтр.)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Эль Капулько / Ловенбрау <span class="item-volume">(Фильтр.)</span></span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Оттингер <span class="item-volume">(Фильтр.)</span></span><span class="item-price">350 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Хугарден / Бланш <span class="item-volume">(Нефильтр.)</span></span><span class="item-price">300 ₽</span></div></article>
                 </div>
 
-                <div>Темное, Вкусовое &amp; Крафт</div>
-                <div>
-                    <article><div><span>Ловенбрау Тёмное</span><span>300 ₽</span></div></article>
-                    <article><div><span>Реворт Balkan Pearl <span>(Шоколадный стаут)</span></span><span>400 ₽</span></div></article>
-                    <article><div><span>Хугарден Грейпфрут / Честер Сидр</span><span>300 ₽</span></div></article>
-                    <article><div><span>Beer Bar IPA</span><span>300 ₽</span></div></article>
-                    <article><div><span>Konix OVERFALL IPA</span><span>350 ₽</span></div></article>
+                <div class="sub-category-title">Темное, Вкусовое & Крафт</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Ловенбрау Тёмное</span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Реворт Balkan Pearl <span class="item-volume">(Шоколадный стаут)</span></span><span class="item-price">400 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Хугарден Грейпфрут / Честер Сидр</span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Beer Bar IPA</span><span class="item-price">300 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Konix OVERFALL IPA</span><span class="item-price">350 ₽</span></div></article>
                 </div>
 
-                <div>Безалкогольное пиво</div>
-                <div>
-                    <article><div><span>Хугарден 0.0 / Стела Артуа 0.0 / Бад 0.0</span><span>300 ₽</span></div></article>
-                </div>
-            </section>
-
-            
-            <section>
-                <div>Чайная коллекция</div>
-                <div>
-                    <article><div><span>Чай Черный / Зеленый / Травяной <span>(0.5л / 0.8л)</span></span><span>300 / 350 ₽</span></div><p>Ассам, Эрл Грей, Дикая вишня, Сенча, Жасмин, Ромашка-Лемонграсс.</p></article>
-                    <article><div><span>Китайский чай <span>(Пуэр, Те Гуань Инь, Да Хун Пао, Улун)</span></span><span>350 ₽</span></div></article>
-                    <article><div><span>Китайский церемониальный чай Габа</span><span>450 ₽</span></div></article>
-                    <article><div><span>Крафтовый Чай <span>(0.8л)</span></span><span>450 ₽</span></div><p>Вкусы: Киви-Яблоко, Облепиха-груша, Клюква-апельсин, Черника-мята, Пуэр Малина-Гранат.</p></article>
+                <div class="sub-category-title">Безалкогольное пиво</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Хугарден 0.0 / Стела Артуа 0.0 / Бад 0.0</span><span class="item-price">300 ₽</span></div></article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Крафтовые Лимонады</div>
-                <div>
-                    <article><div><span>Лимонад <span>(0.3л / 1.0л)</span></span><span>300 / 800 ₽</span></div><p>Вкусы: Гранат-Малина, Личи-лемонграсс, Ежевика-фиалка, Манго-ананас, Черника-мята, Киви-мята, Мохито.</p></article>
+            <!-- ЧАЙНАЯ КАРТА -->
+            <section id="sec-tea">
+                <div class="section-header">Чайная коллекция</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Чай Черный / Зеленый / Травяной <span class="item-volume">(0.5л / 0.8л)</span></span><span class="item-price">300 / 350 ₽</span></div><p class="item-desc">Ассам, Эрл Грей, Дикая вишня, Сенча, Жасмин, Ромашка-Лемонграсс.</p></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Китайский чай <span class="item-volume">(Пуэр, Те Гуань Инь, Да Хун Пао, Улун)</span></span><span class="item-price">350 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Китайский церемониальный чай Габа</span><span class="item-price">450 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Крафтовый Чай <span class="item-volume">(0.8л)</span></span><span class="item-price">450 ₽</span></div><p class="item-desc">Вкусы: Киви-Яблоко, Облепиха-груша, Клюква-апельсин, Черника-мята, Пуэр Малина-Гранат.</p></article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Кофе &amp; Б/А Напитки</div>
-                <div>
-                    <article><div><span>Эспрессо / Американо</span><span>190 / 200 ₽</span></div></article>
-                    <article><div><span>Капучино / Латте / Айс Латте</span><span>250 ₽</span></div></article>
-                    <article><div><span>Эспрессо-тоник / Бамбл</span><span>300 / 350 ₽</span></div></article>
-                    <article><div><span>Лимонад Добрый (0.5л) / Морс (0.25л)</span><span>200 / 100 ₽</span></div></article>
-                    <article><div><span>Энергетик Берн / Адреналин</span><span>200 / 250 ₽</span></div></article>
+            <!-- ЛИМОНАДЫ -->
+            <section id="sec-lemonade">
+                <div class="section-header">Крафтовые Лимонады</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Лимонад <span class="item-volume">(0.3л / 1.0л)</span></span><span class="item-price">300 / 800 ₽</span></div><p class="item-desc">Вкусы: Гранат-Малина, Личи-лемонграсс, Ежевика-фиалка, Манго-ананас, Черника-мята, Киви-мята, Мохито.</p></article>
                 </div>
             </section>
 
-            
-            <section>
-                <div>Десерты</div>
-                <div>
-                    <article><div><span>Медовик <span>(150г)</span></span><span>430 ₽</span></div></article>
-                    <article><div><span>Чизкейк в ассортименте <span>(150г)</span></span><span>370 ₽</span></div></article>
-                    <article><div><span>Шарик мороженого <span>(70г)</span></span><span>150 ₽</span></div></article>
+            <!-- КОФЕ & Б/А -->
+            <section id="sec-coffee">
+                <div class="section-header">Кофе & Б/А Напитки</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Эспрессо / Американо</span><span class="item-price">190 / 200 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Капучино / Латте / Айс Латте</span><span class="item-price">250 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Эспрессо-тоник / Бамбл</span><span class="item-price">300 / 350 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Лимонад Добрый (0.5л) / Морс (0.25л)</span><span class="item-price">200 / 100 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Энергетик Берн / Адреналин</span><span class="item-price">200 / 250 ₽</span></div></article>
+                </div>
+            </section>
+
+            <!-- ДЕСЕРТЫ -->
+            <section id="sec-desserts">
+                <div class="section-header">Десерты</div>
+                <div class="menu-list">
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Медовик <span class="item-volume">(150г)</span></span><span class="item-price">430 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Чизкейк в ассортименте <span class="item-volume">(150г)</span></span><span class="item-price">370 ₽</span></div></article>
+                    <article class="menu-item" onclick="openItemModal(this)"><div class="item-head"><span class="item-name">Шарик мороженого <span class="item-volume">(70г)</span></span><span class="item-price">150 ₽</span></div></article>
                 </div>
             </section>
 
         </main>
 
-        <footer>
+        <footer class="footer">
             <div>© Volna Lounge • Все права защищены</div>
         </footer>
 
     </div>
 
-    
-    <div>
-        <div>
-            
-            <div> Фотография подается на столе</div>
-            <h3>Название</h3>
-            <div>Цена</div>
-            <p>Описание...</p>
-            <div></div>
-            
+    <!-- МОДАЛЬНОЕ ОКНО ТОВАРА (При клике на блюдо) -->
+    <div class="modal-overlay" id="item-modal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('item-modal')">✕</button>
+            <div class="modal-img-placeholder" id="modal-img"> Фотография подается на столе</div>
+            <h3 id="modal-title" style="color:var(--gold-light); font-size:18px; margin-bottom:6px;">Название</h3>
+            <div id="modal-price" style="color:var(--gold-primary); font-weight:700; font-size:16px; margin-bottom:8px;">Цена</div>
+            <p id="modal-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:12px;">Описание...</p>
+            <div id="modal-pairing" style="font-size:11px; color:var(--gold-light); background:rgba(197,160,89,0.1); padding:8px; border-radius:8px; margin-bottom:14px; display:none;"></div>
+            <button onclick="alert('Вызвать официанта для заказа этого блюда?'); closeModal('item-modal')" style="width:100%; height:44px; background:var(--gold-primary); border:none; border-radius:10px; font-weight:700; color:#111; cursor:pointer;"> Хочу заказать (Вызвать официанта)</button>
         </div>
     </div>
 
-    
-    <div>
-        <div>
-            
-            <h3> Все Акции Volna Lounge</h3>
-            <div>
-                <div><strong>Вторник:</strong> Каждый 3-й кальян — в подарок!</div>
-                <div><strong>Женская среда:</strong> Коктейли 1+1 для женских компаний!</div>
-                <div><strong>Мужской четверг:</strong> При заказе от 3-х пива — закуска в подарок!</div>
-                <div><strong>День рождения:</strong> Скидка 10% (день в день, ±1 день).</div>
-                <div><strong>За баром:</strong> Постоянная скидка 10% у стойки бара.</div>
+    <!-- МОДАЛЬНОЕ ОКНО ВСЕХ АКЦИЙ -->
+    <div class="modal-overlay" id="promos-modal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="closeModal('promos-modal')">✕</button>
+            <h3 style="color:var(--gold-light); font-size:18px; text-align:center; margin-bottom:14px;"> Все Акции Volna Lounge</h3>
+            <div style="display:flex; flex-direction:column; gap:10px; font-size:12px; color:var(--text-secondary);">
+                <div style="border-left:3px solid var(--gold-primary); padding-left:8px;"><strong style="color:var(--gold-light);">Вторник:</strong> Каждый 3-й кальян — в подарок!</div>
+                <div style="border-left:3px solid var(--gold-primary); padding-left:8px;"><strong style="color:var(--gold-light);">Женская среда:</strong> Коктейли 1+1 для женских компаний!</div>
+                <div style="border-left:3px solid var(--gold-primary); padding-left:8px;"><strong style="color:var(--gold-light);">Мужской четверг:</strong> При заказе от 3-х пива — закуска в подарок!</div>
+                <div style="border-left:3px solid var(--gold-primary); padding-left:8px;"><strong style="color:var(--gold-light);">День рождения:</strong> Скидка 10% (день в день, ±1 день).</div>
+                <div style="border-left:3px solid var(--gold-primary); padding-left:8px;"><strong style="color:var(--gold-light);">За баром:</strong> Постоянная скидка 10% у стойки бара.</div>
             </div>
         </div>
     </div>
 
-    
-    
+    <!-- JAVASCRIPT: Исправленный умный поиск, Модалки, Рулетка -->
+    <script>
+        // Инициализация Telegram SDK
+        if (window.Telegram && window.Telegram.WebApp) {
+            try { window.Telegram.WebApp.expand(); } catch(e){}
+        }
 
-```
+        // Авто-акция дня
+        (function initPromo() {
+            const promos = [
+                { title: "Воскресный релакс", desc: "Приятный вечер с паровыми коктейлями и чаем." },
+                { title: "Понедельник", desc: "Скидка 10% на все сэндвичи." },
+                { title: "Вторник Кальянов", desc: " Каждый 3-й кальян — в подарок!" },
+                { title: "Женская Среда", desc: " Коктейли 1+1 для девушек!" },
+                { title: "Мужской Четверг", desc: " Закажи 3 пива — получи закуску в подарок!" },
+                { title: "Пятничный Драйв", desc: "Сочные сэндвич-сеты для вашей компании." },
+                { title: "Суббота в Волне", desc: "Фирменные коктейли и лучшая атмосфера." }
+            ];
+            const t = new Date().getDay();
+            document.getElementById('promo-day-title').innerText = promos[t].title;
+            document.getElementById('promo-day-desc').innerText = promos[t].desc;
+        })();
+
+        // УМНЫЙ ПОИСК: Скрывает пустые категории и подкатегории
+        document.getElementById('menu-search').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            const items = document.querySelectorAll('.menu-item');
+            const sections = document.querySelectorAll('section');
+
+            if (!query) {
+                items.forEach(el => el.style.display = 'block');
+                sections.forEach(sec => sec.style.display = 'block');
+                document.querySelectorAll('.sub-category-title').forEach(sub => sub.style.display = 'block');
+                return;
+            }
+
+            items.forEach(item => {
+                const name = item.querySelector('.item-name')?.innerText.toLowerCase() || '';
+                const desc = item.querySelector('.item-desc')?.innerText.toLowerCase() || '';
+                if (name.includes(query) || desc.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            sections.forEach(sec => {
+                const visibleItems = sec.querySelectorAll('.menu-item[style*="display: block"], .menu-item:not([style*="display: none"])');
+                // Проверяем, есть ли видимые элементы в секции
+                let hasVisible = false;
+                sec.querySelectorAll('.menu-item').forEach(item => {
+                    if (item.style.display !== 'none') hasVisible = true;
+                });
+
+                if (hasVisible) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        });
+
+        // Открытие карточки товара (Modal)
+        function openItemModal(itemEl) {
+            const name = itemEl.querySelector('.item-name')?.innerText || '';
+            const price = itemEl.querySelector('.item-price')?.innerText || '';
+            const desc = itemEl.querySelector('.item-desc')?.innerText || 'Отборные ингредиенты и высшее качество подачи от наших шефов.';
+            const imgSrc = itemEl.getAttribute('data-img');
+            const pairing = itemEl.getAttribute('data-pairing');
+
+            document.getElementById('modal-title').innerText = name;
+            document.getElementById('modal-price').innerText = price;
+            document.getElementById('modal-desc').innerText = desc;
+
+            const imgBox = document.getElementById('modal-img');
+            if (imgSrc) {
+                imgBox.style.backgroundImage = `url('${imgSrc}')`;
+                imgBox.innerText = '';
+            } else {
+                imgBox.style.backgroundImage = 'none';
+                imgBox.innerText = ' Фотография готовится';
+            }
+
+            const pairingBox = document.getElementById('modal-pairing');
+            if (pairing) {
+                pairingBox.innerText = '💡 ' + pairing;
+                pairingBox.style.display = 'block';
+            } else {
+                pairingBox.style.display = 'none';
+            }
+
+            document.getElementById('item-modal').classList.add('active');
+        }
+
+        function openPromosModal() { document.getElementById('promos-modal').classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Плавный скролл
+        function scrollToSec(id, btn) {
+            const sec = document.getElementById(id);
+            if (sec) {
+                const offset = 110;
+                const pos = sec.getBoundingClientRect().top + window.pageYOffset - offset;
+                window.scrollTo({ top: pos, behavior: 'smooth' });
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+        }
+
+        // Тестовая Гастро-Рулетка
+        function spinRoulette() {
+            const suggestions = [
+                " Вам выпал: Коктейль «Итальянский прилив» + Чесночные гренки!",
+                " Вам выпал: Авторский чай «Облепиха-груша»!",
+                " Вам выпал: Фирменный пан-сэндвич!",
+                " Вам выпала: Закуска Креветки тигровые!",
+                " Вам выпал: Коктейль «Девятый вал» + Сырные палочки!"
+            ];
+            const win = suggestions[Math.floor(Math.random() * suggestions.length)];
+            alert("🎰 Выпал вариант от рулетки:\n\n" + win);
+        }
+    </script>
+</body>
+</html>
