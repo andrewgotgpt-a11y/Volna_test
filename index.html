@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Волна Лаундж — Онлайн Меню & Отзывы</title>
+    <title>Волна Лаундж — Онлайн Меню & Афиша</title>
 
     <meta name="theme-color" content="#111317">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <!-- Оптимизированные шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -47,19 +48,89 @@
         .container { width: 100%; max-width: 480px; padding: 0 16px; }
 
         /* Шапка бренда */
-        .logo-section { text-align: center; padding: 20px 0 12px 0; }
-        .vector-logo { width: 90px; height: 90px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6)); }
+        .logo-section { text-align: center; padding: 18px 0 10px 0; }
+        .vector-logo { width: 85px; height: 85px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6)); }
         .brand-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             color: var(--gold-light);
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-        .welcome-text { font-size: 11px; color: var(--gold-primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+        .welcome-text { font-size: 10px; color: var(--gold-primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
 
-        /* Сервисы */
+        /* 1. БЛОК STORIES (Карусель Сторис) */
+        .stories-section {
+            margin-bottom: 16px;
+        }
+        .stories-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stories-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding: 4px 2px;
+        }
+        .stories-container::-webkit-scrollbar { display: none; }
+        
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            flex-shrink: 0;
+            width: 72px;
+        }
+        .story-ring {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            padding: 2px;
+            background: linear-gradient(135deg, #c5a059 0%, #f3e1b9 50%, #9a7432 100%);
+            box-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
+            animation: pulse-ring 2s infinite alternate;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.04); }
+        }
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            background-color: var(--bg-card);
+        }
+        .story-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        /* Быстрые сервисные кнопки */
         .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
         .action-btn {
             background: var(--bg-card);
@@ -91,47 +162,19 @@
         }
         .btn-tips-highlight .sub { color: #1c222d; font-weight: 500; }
 
-        /* БЛОК СИСТЕМЫ ОТЗЫВОВ (Оценить визит) */
+        /* БЛОК СИСТЕМЫ ОТЗЫВОВ */
         .feedback-widget {
             background: linear-gradient(135deg, #1c1f26 0%, #15181e 100%);
             border: 1px solid var(--gold-primary);
             border-radius: var(--radius-main);
-            padding: 16px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-        .feedback-title { font-size: 14px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
-        .feedback-subtitle { font-size: 11px; color: var(--text-secondary); margin-bottom: 10px; }
-
-        .stars-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 4px;
-        }
-        .star-btn {
-            background: none;
-            border: none;
-            font-size: 28px;
-            color: #4b5563;
-            cursor: pointer;
-            transition: transform 0.2s, color 0.2s;
-        }
-        .star-btn.active, .star-btn:hover { color: #f59e0b; transform: scale(1.15); }
-
-        /* Баннеры и Геймификация */
-        .gamify-banner {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-main);
-            padding: 12px 14px;
+            padding: 14px;
             margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
+            text-align: center;
         }
+        .feedback-title { font-size: 13px; font-weight: 700; color: var(--gold-light); margin-bottom: 2px; }
+        .stars-container { display: flex; justify-content: center; gap: 10px; margin-top: 4px; }
+        .star-btn { background: none; border: none; font-size: 26px; color: #4b5563; cursor: pointer; transition: color 0.2s; }
+        .star-btn.active { color: #f59e0b; }
 
         /* Поиск и Вкладки */
         .search-sticky-container {
@@ -163,13 +206,22 @@
         }
         .tab-btn.active { background: var(--gold-primary); color: #111317; font-weight: 700; border-color: var(--gold-primary); }
 
-        /* Меню */
+        .tab-btn.highlight-tab {
+            background: rgba(197, 160, 89, 0.15);
+            border-color: var(--gold-primary);
+            color: var(--gold-light);
+            font-weight: 700;
+        }
+
+        /* Секции и Карточки */
         .section-header {
             font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold-light);
             border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin: 24px 0 12px 0;
             text-transform: uppercase; letter-spacing: 1px;
+            display: flex; justify-content: space-between; align-items: center;
         }
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
+        
         .menu-item {
             background: var(--bg-card); border-radius: var(--radius-main);
             padding: 12px 14px; border: 1px solid rgba(255, 255, 255, 0.04); cursor: pointer;
@@ -180,10 +232,66 @@
         .item-price { font-size: 14px; font-weight: 700; color: var(--gold-light); white-space: nowrap; }
         .item-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
 
+        /* КАРТОЧКА СОБЫТИЯ (АФИША) */
+        .event-card {
+            background: linear-gradient(135deg, #1c1f26 0%, #252833 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+        .event-banner {
+            width: 100%;
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+            background-color: #2a2e39;
+            display: flex;
+            align-items: flex-end;
+            padding: 12px;
+            position: relative;
+        }
+        .event-banner::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(28,31,38,1) 0%, rgba(28,31,38,0.2) 70%);
+        }
+        .event-date-badge {
+            position: relative;
+            z-index: 2;
+            background: var(--gold-primary);
+            color: #111;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+        .event-body { padding: 12px 14px; }
+        .event-title { font-size: 16px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
+        .event-desc { font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4; }
+        
+        .book-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(135deg, #9a7432 0%, #c5a059 100%);
+            color: #111;
+            font-weight: 700;
+            font-size: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
+        }
+
         /* Модальные окна */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px);
             z-index: 1000; display: none; align-items: center; justify-content: center; padding: 16px;
         }
         .modal-overlay.active { display: flex; }
@@ -193,26 +301,10 @@
             position: relative; max-height: 90vh; overflow-y: auto;
         }
         .modal-close {
-            position: absolute; top: 14px; right: 14px;
+            position: absolute; top: 12px; right: 12px;
             background: rgba(255,255,255,0.1); border: none; color: var(--text-main);
-            width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer;
+            width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10;
         }
-
-        /* Форма перехвата негатива */
-        .feedback-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
-        .tag-chip {
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-secondary); border-radius: 8px; padding: 6px 12px;
-            font-size: 11px; cursor: pointer;
-        }
-        .tag-chip.selected { background: var(--gold-primary); color: #111; font-weight: 700; border-color: var(--gold-primary); }
-
-        .feedback-input {
-            width: 100%; background: #111317; border: 1px solid var(--border-color);
-            border-radius: 10px; padding: 10px; color: var(--text-main);
-            font-size: 12px; margin-bottom: 10px; outline: none;
-        }
-        textarea.feedback-input { height: 80px; resize: none; }
 
         .footer { margin-top: 30px; text-align: center; font-size: 11px; color: var(--text-muted); }
     </style>
@@ -236,6 +328,29 @@
             <div class="welcome-text">Премиальный Лаундж Бар</div>
         </header>
 
+        <!-- 1. БЛОК STORIES (Карусель Ивентов) -->
+        <div class="stories-section">
+            <div class="stories-title">⚡️ Актуальное & События</div>
+            <div class="stories-container">
+                <div class="story-item" onclick="openStory('🎃 Halloween 31 Октября', 'Самая мистическая ночь осени в Volna Lounge! Специальные коктейли, тематический декор и DJ-сет до 02:00. Бронируйте столы заранее!', '31 Октября в 20:00')">
+                    <div class="story-ring"><div class="story-avatar">🎃</div></div>
+                    <span class="story-label">Halloween</span>
+                </div>
+                <div class="story-item" onclick="openStory('⚽ Дерби ЦСКА — Спартак', 'Большая трансляция футбольного дерби на двух проекторах! Комбо-сеты с пивом и легкие закуски. Атмосфера стадиона в комфорте заведения.', '25 Октября в 19:30')">
+                    <div class="story-ring"><div class="story-avatar">⚽</div></div>
+                    <span class="story-label">ЦСКА-Спартак</span>
+                </div>
+                <div class="story-item" onclick="openStory('🍵 Чайная дегустация Габа', 'Погружение в культуру тайваньского чая Габа с нашим шеф-сомелье. Секреты заваривания и глубокое расслабление.', 'Каждый Четверг')">
+                    <div class="story-ring"><div class="story-avatar">🍵</div></div>
+                    <span class="story-label">Дегустация</span>
+                </div>
+                <div class="story-item" onclick="openStory('🍔 Набор Болельщика', 'Специальное предложение во время топовых спортивных матчей: 2 пинты нефильтрованного + Сэндвич-Сет по супер-цене!', 'В дни матчей')">
+                    <div class="story-ring"><div class="story-avatar">🍔</div></div>
+                    <span class="story-label">Сет дня</span>
+                </div>
+            </div>
+        </div>
+
         <!-- Быстрые сервисы -->
         <div class="quick-actions">
             <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" class="action-btn btn-tips-highlight">
@@ -252,10 +367,10 @@
             </a>
         </div>
 
-        <!-- ВИДЖЕТ ОБРАТНОЙ СВЯЗИ (Smart Review Routing) -->
+        <!-- Виджет оценки визита (Smart Review Routing) -->
         <div class="feedback-widget">
             <div class="feedback-title">Как проходит ваш отдых?</div>
-            <div class="feedback-subtitle">Поставьте оценку заведению в 1 тап:</div>
+            <div style="font-size:11px; color:var(--text-secondary);">Оцените заведение в 1 тап:</div>
             <div class="stars-container">
                 <button class="star-btn" onclick="rateExperience(1)">★</button>
                 <button class="star-btn" onclick="rateExperience(2)">★</button>
@@ -265,23 +380,16 @@
             </div>
         </div>
 
-        <!-- Акция дня -->
-        <div class="gamify-banner" onclick="openModal('promos-modal')">
-            <div>
-                <div style="font-size:12px; font-weight:700; color:var(--gold-light);" id="promo-day-title">Акция дня</div>
-                <div style="font-size:11px; color:var(--text-secondary);" id="promo-day-desc">Загрузка...</div>
-            </div>
-            <button style="background:var(--gold-primary); border:none; color:#111; font-weight:700; font-size:11px; padding:6px 10px; border-radius:8px; cursor:pointer;">Все акции</button>
-        </div>
-
-        <!-- Поиск и Вкладки -->
+        <!-- Поиск и Вкладки (АФИША НА 1-М МЕСТЕ) -->
         <div class="search-sticky-container">
             <div class="search-box">
                 <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" id="menu-search" class="search-input" placeholder="Поиск по меню (гренки, IPA, чай)...">
+                <input type="text" id="menu-search" class="search-input" placeholder="Поиск по меню и событиям...">
             </div>
             <nav class="category-tabs">
-                <button class="tab-btn active" onclick="scrollToSec('sec-kitchen', this)">Кухня</button>
+                <button class="tab-btn active highlight-tab" onclick="scrollToSec('sec-events', this)">Афиша 🎃</button>
+                <button class="tab-btn highlight-tab" onclick="scrollToSec('sec-fan-menu', this)">Меню Болельщика ⚽</button>
+                <button class="tab-btn" onclick="scrollToSec('sec-kitchen', this)">Кухня</button>
                 <button class="tab-btn" onclick="scrollToSec('sec-hookah', this)">Кальяны</button>
                 <button class="tab-btn" onclick="scrollToSec('sec-snacks-hot', this)">Фритюр</button>
                 <button class="tab-btn" onclick="scrollToSec('sec-cocktails', this)">Коктейли</button>
@@ -290,8 +398,62 @@
             </nav>
         </div>
 
-        <!-- Меню -->
+        <!-- Контент меню -->
         <main id="main-menu">
+
+            <!-- 1. АФИША И СОБЫТИЯ -->
+            <section id="sec-events">
+                <div class="section-header">
+                    <span>Афиша & Ивенты</span>
+                    <span style="font-size:11px; color:var(--gold-primary); font-family:sans-serif;">Бронь столов</span>
+                </div>
+
+                <div class="event-card">
+                    <div class="event-banner" style="background-image: linear-gradient(to top, rgba(28,31,38,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=600&q=80');">
+                        <span class="event-date-badge">🎃 31 Октября • 20:00</span>
+                    </div>
+                    <div class="event-body">
+                        <div class="event-title">Halloween в Volna Lounge</div>
+                        <div class="event-desc">Мистическая атмосфера, авторский зелёный шот-сет от шеф-бармена, DJ-сет и продлённый график работы до 02:00!</div>
+                        <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" class="book-btn">
+                            Забронировать стол в WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="event-card">
+                    <div class="event-banner" style="background-image: linear-gradient(to top, rgba(28,31,38,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80');">
+                        <span class="event-date-badge">⚽ 25 Октября • 19:30</span>
+                    </div>
+                    <div class="event-body">
+                        <div class="event-title">Трансляция Дерби: ЦСКА — Спартак</div>
+                        <div class="event-desc">Прямой эфир на двух больших экранах. Специальный сет «Болельщик» со скидкой 15% во время трансляции.</div>
+                        <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20трансляцию%20ЦСКА-Спартак%2025%20октября" target="_blank" class="book-btn">
+                            Забронировать стол на матч
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. МЕНЮ БОЛЕЛЬЩИКА (Контекстная категория) -->
+            <section id="sec-fan-menu">
+                <div class="section-header">
+                    <span>Меню Болельщика</span>
+                    <span style="font-size:10px; color:#85f38e; font-family:sans-serif;">🔥 Спец-предложение</span>
+                </div>
+                <div class="menu-list">
+                    <article class="menu-item" style="border: 1px solid var(--gold-primary);" onclick="openItemModal('Комбо-сет «Дерби»', '890 ₽', '2 пинты нефильтрованного пива Устюжна + Большой сет Чесночных гренок и Луковых колец со скидкой 20%.')">
+                        <div class="item-head"><span class="item-name" style="color:var(--gold-light);">Комбо-сет «Дерби» <span class="item-volume">(2 пива + Фритюр)</span></span><span class="item-price">890 ₽</span></div>
+                        <p class="item-desc">2 пинты Устюжна + Чесночные гренки + Луковые кольца. Идеально для просмотра матча!</p>
+                    </article>
+                    <article class="menu-item" onclick="openItemModal('Шот-сет «Победный»', '800 ₽', '6 авторских микро-шотов су-вид (Джин-малина-мята). Выгодная подача для компании.')">
+                        <div class="item-head"><span class="item-name">Шот-сет «Победный» <span class="item-volume">(6 шотов)</span></span><span class="item-price">800 ₽</span></div>
+                        <p class="item-desc">6 ягодных авторских шотов из су-вида для дружной компании.</p>
+                    </article>
+                </div>
+            </section>
+
+            <!-- 3. КУХНЯ -->
             <section id="sec-kitchen">
                 <div class="section-header">Сэндвичи & Кухня</div>
                 <div class="menu-list">
@@ -306,6 +468,7 @@
                 </div>
             </section>
 
+            <!-- 4. КАЛЬЯНЫ -->
             <section id="sec-hookah">
                 <div class="section-header">Паровые коктейли</div>
                 <div class="menu-list">
@@ -318,6 +481,7 @@
                 </div>
             </section>
 
+            <!-- 5. ГОРЯЧИЙ ФРИТЮР -->
             <section id="sec-snacks-hot">
                 <div class="section-header">Горячий Фритюр</div>
                 <div class="menu-list">
@@ -330,6 +494,7 @@
                 </div>
             </section>
 
+            <!-- 6. КОКТЕЙЛИ -->
             <section id="sec-cocktails">
                 <div class="section-header">Фирменные коктейли</div>
                 <div class="menu-list">
@@ -337,25 +502,20 @@
                         <div class="item-head"><span class="item-name">Итальянский прилив</span><span class="item-price">600 ₽</span></div>
                         <p class="item-desc">Горьковато-сладкий • Освежающий</p>
                     </article>
-                    <article class="menu-item" onclick="openItemModal('Девятый вал', '600 ₽', 'Водка, сухой джин, ром, текила, трипл сек, кола.')">
-                        <div class="item-head"><span class="item-name">Девятый вал</span><span class="item-price">600 ₽</span></div>
-                        <p class="item-desc">Крепкий • Цитрусовый</p>
-                    </article>
                 </div>
             </section>
 
+            <!-- 7. ПИВО -->
             <section id="sec-beer">
                 <div class="section-header">Пивная карта</div>
                 <div class="menu-list">
                     <article class="menu-item" onclick="openItemModal('Устюжна Нефильтрованное', '300 ₽', 'Свежее пиво с местной Устюженской пивоварни.')">
                         <div class="item-head"><span class="item-name">Устюжна Нефильтрованное</span><span class="item-price">300 ₽</span></div>
                     </article>
-                    <article class="menu-item" onclick="openItemModal('Konix OVERFALL IPA', '350 ₽', 'Классический американский IPA.')">
-                        <div class="item-head"><span class="item-name">Konix OVERFALL IPA</span><span class="item-price">350 ₽</span></div>
-                    </article>
                 </div>
             </section>
 
+            <!-- 8. ЧАЙ -->
             <section id="sec-tea">
                 <div class="section-header">Чай & Напитки</div>
                 <div class="menu-list">
@@ -371,44 +531,32 @@
         </footer>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО 1: ПОЗИТИВНЫЙ ОТЗЫВ (4-5 звёзд) -->
-    <div class="modal-overlay" id="positive-modal">
-        <div class="modal-card" style="text-align: center;">
-            <button class="modal-close" onclick="closeModal('positive-modal')">✕</button>
-            <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
-            <h3 style="color:var(--gold-light); font-size:18px; margin-bottom:6px;">Спасибо за высокую оценку!</h3>
-            <p style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;">
-                Мы очень рады, что вам у нас нравится! Поделитесь впечатлениями на Яндекс.Картах и получите <strong>скидку 10%</strong> на текущий чек.
+    <!-- ВСПЛЫВАЮЩИЙ POP-UP ГЛАВНОГО ИВЕНТА (HALLOWEEN) -->
+    <div class="modal-overlay" id="event-popup-modal">
+        <div class="modal-card" style="text-align: center; border-color: var(--gold-primary);">
+            <button class="modal-close" onclick="closeModal('event-popup-modal')">✕</button>
+            <div style="font-size: 38px; margin-bottom: 4px;">🎃</div>
+            <span style="background:var(--gold-primary); color:#111; font-weight:700; font-size:10px; padding:3px 8px; border-radius:4px; text-transform:uppercase;">Главное событие месяца</span>
+            <h3 style="color:var(--gold-light); font-size:19px; margin: 8px 0 4px 0;">31 ОКТЯБРЯ — HALLOWEEN</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:14px;">
+                Работаем до 02:00! Авторские шоты, тематический декор и крутой DJ-сет. Успейте забронировать лучший столик заранее.
             </p>
-            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank" onclick="closeModal('positive-modal')" style="display:block; width:100%; height:44px; line-height:44px; background:var(--gold-primary); border-radius:10px; font-weight:700; color:#111; text-decoration:none; text-align:center;">
-                Оставить отзыв на Яндекс.Картах
+            <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" onclick="closeModal('event-popup-modal')" style="display:block; width:100%; height:42px; line-height:42px; background:var(--gold-primary); border-radius:10px; font-weight:700; color:#111; text-decoration:none; text-align:center; font-size:12px;">
+                Забронировать стол в WhatsApp
             </a>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО 2: ПЕРЕХВАТ НЕГАТИВА (1-3 звезды) -->
-    <div class="modal-overlay" id="negative-modal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="closeModal('negative-modal')">✕</button>
-            <h3 style="color:var(--gold-light); font-size:16px; margin-bottom:4px;">Нам очень жаль!</h3>
-            <p style="font-size:11px; color:var(--text-secondary); margin-bottom:12px;">
-                Подскажите, что пошло не так? Сообщение уйдет лично управляющему:
-            </p>
-
-            <div style="font-size:11px; font-weight:600; color:var(--gold-primary);">Что именно не понравилось?</div>
-            <div class="feedback-tags">
-                <button class="tag-chip" onclick="toggleTag(this)">💨 Кальян</button>
-                <button class="tag-chip" onclick="toggleTag(this)">⏳ Долгое обслуживание</button>
-                <button class="tag-chip" onclick="toggleTag(this)">🍔 Кухня / Сэндвичи</button>
-                <button class="tag-chip" onclick="toggleTag(this)">🔊 Музыка / Душно</button>
-            </div>
-
-            <textarea id="feedback-comment" class="feedback-input" placeholder="Опишите подробнее (например: номер столика или что изменить)..."></textarea>
-            <input type="text" id="feedback-phone" class="feedback-input" placeholder="Ваш телефон для связи (необязательно)">
-
-            <button onclick="submitNegativeFeedback()" id="send-feedback-btn" style="width:100%; height:44px; background:var(--gold-primary); border:none; border-radius:10px; font-weight:700; color:#111; cursor:pointer;">
-                Отправить управляющему
-            </button>
+    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ STORIES -->
+    <div class="modal-overlay" id="story-modal">
+        <div class="modal-card" style="text-align: center;">
+            <button class="modal-close" onclick="closeModal('story-modal')">✕</button>
+            <div id="story-date-badge" style="display:inline-block; background:rgba(197, 160, 89, 0.2); color:var(--gold-light); font-weight:700; font-size:11px; padding:4px 10px; border-radius:6px; margin-bottom:10px;"></div>
+            <h3 id="story-modal-title" style="color:var(--gold-light); font-size:18px; margin-bottom:8px;"></h3>
+            <p id="story-modal-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;"></p>
+            <a id="story-book-link" href="#" target="_blank" onclick="closeModal('story-modal')" style="display:block; width:100%; height:42px; line-height:42px; background:var(--gold-primary); border-radius:10px; font-weight:700; color:#111; text-decoration:none; text-align:center; font-size:12px;">
+                Забронировать стол
+            </a>
         </div>
     </div>
 
@@ -425,85 +573,26 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT & TELEGRAM API -->
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // =========================================================================
-        // НАСТРОЙКИ TELEGRAM БОТА (ВСТАВЬТЕ СВОИ ДАННЫЕ СУДА)
-        // =========================================================================
-        const BOT_TOKEN = '8767571199:AAF_sO7jOoOu8_TnQFUbAccFvPDeO38v7Lg'; 
-        const CHAT_ID = '411217350';
-
-        let selectedRating = 0;
-
-        // Оценка звёздами (Smart Review Routing)
-        function rateExperience(stars) {
-            selectedRating = stars;
-            const buttons = document.querySelectorAll('.star-btn');
-            buttons.forEach((btn, idx) => {
-                if (idx < stars) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-
+        // Показ главных всплывающих модалок при входе
+        window.addEventListener('DOMContentLoaded', () => {
+            // Показываем главный Pop-Up ивента через 1 секунду после входа
             setTimeout(() => {
-                if (stars >= 4) {
-                    openModal('positive-modal');
-                } else {
-                    openModal('negative-modal');
-                }
-            }, 250);
-        }
+                openModal('event-popup-modal');
+            }, 1000);
+        });
 
-        // Выбор тегов негатива
-        function toggleTag(btn) {
-            btn.classList.toggle('selected');
-        }
+        // Открытие Story
+        function openStory(title, desc, dateText) {
+            document.getElementById('story-modal-title').innerText = title;
+            document.getElementById('story-modal-desc').innerText = desc;
+            document.getElementById('story-date-badge').innerText = dateText;
+            
+            const waLink = `https://wa.me/79000000000?text=${encodeURIComponent('Привет! Хочу забронировать стол на событие: ' + title)}`;
+            document.getElementById('story-book-link').href = waLink;
 
-        // Отправка неблагоприятного отзыва в Telegram
-        async function submitNegativeFeedback() {
-            const comment = document.getElementById('feedback-comment').value.trim();
-            const phone = document.getElementById('feedback-phone').value.trim();
-            const sendBtn = document.getElementById('send-feedback-btn');
-
-            const selectedTags = Array.from(document.querySelectorAll('.tag-chip.selected'))
-                                     .map(el => el.innerText)
-                                     .join(', ');
-
-            if (!comment && !selectedTags) {
-                alert('Пожалуйста, выберите категорию или напишите краткий комментарий.');
-                return;
-            }
-
-            sendBtn.innerText = 'Отправка...';
-            sendBtn.disabled = true;
-
-            const messageText = `🚨 <b>НЕГАТИВНЫЙ ОТЗЫВ ИЗ МЕНЮ</b>\n\n` +
-                                `⭐️ <b>Оценка:</b> ${selectedRating} из 5\n` +
-                                `📌 <b>Категории:</b> ${selectedTags || 'Не выбраны'}\n` +
-                                `💬 <b>Комментарий:</b> ${comment || 'Без комментария'}\n` +
-                                `📱 <b>Телефон гостя:</b> ${phone || 'Не указан'}`;
-
-            try {
-                if (BOT_TOKEN !== 'ВАШ_BOT_TOKEN_ОТ_BOTFATHER') {
-                    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            chat_id: CHAT_ID,
-                            text: messageText,
-                            parse_mode: 'HTML'
-                        })
-                    });
-                }
-                alert('Спасибо! Ваш отзыв мгновенно передан управляющему. Мы сделаем всё возможное, чтобы исправить ситуацию!');
-                closeModal('negative-modal');
-            } catch (err) {
-                console.error(err);
-                alert('Спасибо за вашу обратную связь!');
-                closeModal('negative-modal');
-            } finally {
-                sendBtn.innerText = 'Отправить управляющему';
-                sendBtn.disabled = false;
-            }
+            openModal('story-modal');
         }
 
         // Вспомогательные функции UI
@@ -527,10 +616,10 @@
             }
         }
 
-        // Поиск по меню
+        // Умный поиск по меню и афише
         document.getElementById('menu-search').addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
-            const items = document.querySelectorAll('.menu-item');
+            const items = document.querySelectorAll('.menu-item, .event-card');
             const sections = document.querySelectorAll('section');
 
             items.forEach(item => {
@@ -540,7 +629,7 @@
 
             sections.forEach(sec => {
                 let hasVisible = false;
-                sec.querySelectorAll('.menu-item').forEach(i => {
+                sec.querySelectorAll('.menu-item, .event-card').forEach(i => {
                     if (i.style.display !== 'none') hasVisible = true;
                 });
                 sec.style.display = hasVisible ? 'block' : 'none';
