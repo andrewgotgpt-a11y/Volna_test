@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Волна Лаундж — Онлайн Меню & Афиша</title>
+    <title>Волна Лаундж — Меню & Афиша</title>
 
-    <meta name="theme-color" content="#111317">
+    <meta name="theme-color" content="#0f1115">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Оптимизированные шрифты -->
+    <!-- Подключение шрифтов Montserrat & Cormorant Garamond -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-
-    <script src="https://telegram.org/js/telegram-web-app.js" async></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-main: #111317;
-            --bg-card: #1c1f26;
-            --bg-card-hover: #252a34;
+            --bg-dark: #0f1115;
+            --bg-card: #181b22;
+            --bg-card-hover: #212530;
             --gold-primary: #c5a059;
             --gold-light: #f3e1b9;
-            --text-main: #ffffff;
+            --gold-gradient: linear-gradient(135deg, #9a7432 0%, #f3e1b9 50%, #c5a059 100%);
+            --text-white: #ffffff;
             --text-secondary: #d1d5db;
-            --text-muted: #9ca3af;
-            --border-color: rgba(197, 160, 89, 0.25);
+            --text-muted: #8e95a2;
+            --border-gold: rgba(197, 160, 89, 0.3);
             --touch-target: 44px;
-            --radius-main: 14px;
+            --radius-main: 16px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         html { scroll-behavior: smooth; }
         body {
             font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-main);
+            background-color: var(--bg-dark);
+            color: var(--text-white);
             line-height: 1.5;
             padding-bottom: 60px;
             display: flex;
@@ -47,248 +46,190 @@
 
         .container { width: 100%; max-width: 480px; padding: 0 16px; }
 
-        /* Шапка бренда */
-        .logo-section { text-align: center; padding: 18px 0 10px 0; }
-        .vector-logo { width: 85px; height: 85px; filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6)); }
+        /* ---------------------------------------------------- */
+        /* 1. ШАПКА БРЕНДА                                      */
+        /* ---------------------------------------------------- */
+        .logo-section { text-align: center; padding: 20px 0 12px 0; }
+        .brand-logo-svg { width: 85px; height: 85px; filter: drop-shadow(0 6px 15px rgba(197, 160, 89, 0.2)); }
         .brand-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--gold-light);
             letter-spacing: 2px;
             text-transform: uppercase;
+            margin-top: 4px;
         }
-        .welcome-text { font-size: 10px; color: var(--gold-primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
+        .brand-sub { font-size: 10px; color: var(--gold-primary); letter-spacing: 3px; text-transform: uppercase; font-weight: 600; }
 
-        /* 1. БЛОК STORIES (Карусель Сторис) */
-        .stories-section {
-            margin-bottom: 16px;
+        /* ---------------------------------------------------- */
+        /* 2. БЛОК STORIES (Карусель Сторис)                    */
+        /* ---------------------------------------------------- */
+        .stories-section { margin-bottom: 18px; }
+        .stories-label {
+            font-size: 11px; font-weight: 700; color: var(--gold-light);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 6px;
         }
-        .stories-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--gold-light);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        .stories-track {
+            display: flex; gap: 14px; overflow-x: auto;
+            scrollbar-width: none; padding: 4px 2px;
         }
-        .stories-container {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            padding: 4px 2px;
+        .stories-track::-webkit-scrollbar { display: none; }
+
+        .story-circle {
+            display: flex; flex-direction: column; align-items: center; gap: 6px;
+            cursor: pointer; flex-shrink: 0; width: 74px;
         }
-        .stories-container::-webkit-scrollbar { display: none; }
-        
-        .story-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            cursor: pointer;
-            flex-shrink: 0;
-            width: 72px;
+        .story-border {
+            width: 66px; height: 66px; border-radius: 50%; padding: 2px;
+            background: var(--gold-gradient);
+            box-shadow: 0 0 12px rgba(197, 160, 89, 0.35);
+            animation: pulse-border 2.5s infinite alternate;
         }
-        .story-ring {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            padding: 2px;
-            background: linear-gradient(135deg, #c5a059 0%, #f3e1b9 50%, #9a7432 100%);
-            box-shadow: 0 0 10px rgba(197, 160, 89, 0.3);
-            animation: pulse-ring 2s infinite alternate;
+        @keyframes pulse-border {
+            0% { transform: scale(1); box-shadow: 0 0 8px rgba(197, 160, 89, 0.2); }
+            100% { transform: scale(1.05); box-shadow: 0 0 16px rgba(197, 160, 89, 0.5); }
         }
-        @keyframes pulse-ring {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.04); }
+        .story-img-box {
+            width: 100%; height: 100%; border-radius: 50%;
+            background-color: var(--bg-card); border: 2px solid var(--bg-dark);
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+            background-size: cover; background-position: center;
         }
-        .story-avatar {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background-size: cover;
-            background-position: center;
-            border: 2px solid var(--bg-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            background-color: var(--bg-card);
-        }
-        .story-label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            width: 100%;
-            font-weight: 500;
+        .story-title-text {
+            font-size: 10px; color: var(--text-secondary); text-align: center;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 100%; font-weight: 500;
         }
 
         /* Быстрые сервисные кнопки */
-        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-        .action-btn {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-main);
-            padding: 10px 12px;
-            color: var(--text-main);
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: var(--touch-target);
-            font-size: 12px;
-            font-weight: 600;
-            text-align: center;
-            cursor: pointer;
+        .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+        .action-card {
+            background: var(--bg-card); border: 1px solid var(--border-gold);
+            border-radius: var(--radius-main); padding: 10px 12px;
+            color: var(--text-white); text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: var(--touch-target); font-size: 12px; font-weight: 600; text-align: center;
             transition: transform 0.15s ease;
         }
-        .action-btn:active { transform: scale(0.97); }
-        .action-btn .sub { font-size: 10px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
+        .action-card:active { transform: scale(0.97); }
+        .action-card .sub { font-size: 10px; color: var(--text-muted); font-weight: 400; margin-top: 2px; }
 
-        .btn-tips-highlight {
-            grid-column: span 2;
-            background: linear-gradient(135deg, #9a7432 0%, #c5a059 100%);
-            color: #111317;
-            border: none;
-            font-weight: 700;
+        .btn-gold-fill {
+            grid-column: span 2; background: var(--gold-gradient);
+            color: #0f1115; border: none; font-weight: 700;
         }
-        .btn-tips-highlight .sub { color: #1c222d; font-weight: 500; }
+        .btn-gold-fill .sub { color: #1a1e27; font-weight: 600; }
 
-        /* БЛОК СИСТЕМЫ ОТЗЫВОВ */
-        .feedback-widget {
-            background: linear-gradient(135deg, #1c1f26 0%, #15181e 100%);
-            border: 1px solid var(--gold-primary);
-            border-radius: var(--radius-main);
-            padding: 14px;
-            margin-bottom: 16px;
-            text-align: center;
-        }
-        .feedback-title { font-size: 13px; font-weight: 700; color: var(--gold-light); margin-bottom: 2px; }
-        .stars-container { display: flex; justify-content: center; gap: 10px; margin-top: 4px; }
-        .star-btn { background: none; border: none; font-size: 26px; color: #4b5563; cursor: pointer; transition: color 0.2s; }
-        .star-btn.active { color: #f59e0b; }
-
-        /* Поиск и Вкладки */
-        .search-sticky-container {
-            position: sticky;
-            top: 0;
-            background: rgba(17, 19, 23, 0.96);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index: 100;
-            padding: 10px 0;
-            margin-bottom: 16px;
+        /* ---------------------------------------------------- */
+        /* 3. ЗАКРЕПЛЕННЫЙ ПОИСК И НАВИГАЦИЯ                    */
+        /* ---------------------------------------------------- */
+        .sticky-header {
+            position: sticky; top: 0; background: rgba(15, 17, 21, 0.95);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 100; padding: 10px 0; margin-bottom: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .search-box { position: relative; margin-bottom: 8px; }
+        .search-field { position: relative; margin-bottom: 8px; }
         .search-input {
-            width: 100%; height: var(--touch-target);
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 22px; padding: 0 16px 0 40px;
-            color: var(--text-main); font-size: 14px; outline: none;
+            width: 100%; height: var(--touch-target); background: var(--bg-card);
+            border: 1px solid var(--border-gold); border-radius: 22px;
+            padding: 0 16px 0 40px; color: var(--text-white); font-size: 13px; outline: none;
         }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); fill: var(--gold-primary); width: 18px; height: 18px; }
+        .search-icon-svg {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            fill: var(--gold-primary); width: 18px; height: 18px;
+        }
 
         .category-tabs { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .category-tabs::-webkit-scrollbar { display: none; }
         .tab-btn {
-            background: var(--bg-card); border: 1px solid rgba(255,255,255,0.08);
+            background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 20px; padding: 8px 14px; color: var(--text-secondary);
             font-size: 12px; font-weight: 500; white-space: nowrap; cursor: pointer;
         }
-        .tab-btn.active { background: var(--gold-primary); color: #111317; font-weight: 700; border-color: var(--gold-primary); }
-
-        .tab-btn.highlight-tab {
-            background: rgba(197, 160, 89, 0.15);
-            border-color: var(--gold-primary);
-            color: var(--gold-light);
-            font-weight: 700;
+        .tab-btn.active {
+            background: var(--gold-primary); color: #0f1115;
+            font-weight: 700; border-color: var(--gold-primary);
+        }
+        .tab-btn.tab-highlight {
+            background: rgba(197, 160, 89, 0.15); border-color: var(--gold-primary);
+            color: var(--gold-light); font-weight: 700;
         }
 
-        /* Секции и Карточки */
+        /* ---------------------------------------------------- */
+        /* 4. КАРТОЧКИ СОБЫТИЙ И МЕНЮ                           */
+        /* ---------------------------------------------------- */
         .section-header {
             font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--gold-light);
-            border-bottom: 1px solid var(--border-color); padding-bottom: 4px; margin: 24px 0 12px 0;
-            text-transform: uppercase; letter-spacing: 1px;
-            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border-gold); padding-bottom: 4px; margin: 24px 0 14px 0;
+            text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center;
         }
+
+        /* АФИША ИВЕНТОВ */
+        .event-card {
+            background: var(--bg-card); border: 1px solid var(--border-gold);
+            border-radius: var(--radius-main); overflow: hidden; margin-bottom: 14px;
+        }
+        .event-banner-img {
+            width: 100%; height: 140px; background-size: cover; background-position: center;
+            background-color: #212530; display: flex; align-items: flex-end; padding: 12px; position: relative;
+        }
+        .event-banner-img::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(24, 27, 34, 1) 0%, rgba(24, 27, 34, 0.2) 70%);
+        }
+        .event-date-tag {
+            position: relative; z-index: 2; background: var(--gold-primary); color: #0f1115;
+            font-weight: 700; font-size: 11px; padding: 4px 10px; border-radius: 6px; text-transform: uppercase;
+        }
+        .event-content { padding: 12px 14px; }
+        .event-title { font-size: 16px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
+        .event-desc { font-size: 11px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.4; }
+        .event-actions { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+
+        .btn-vk-booking {
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            background: #2787f5; color: #ffffff; font-weight: 700; font-size: 12px;
+            padding: 10px; border-radius: 10px; text-decoration: none; border: none;
+        }
+        .btn-tg-icon {
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border-gold);
+            width: 42px; height: 42px; border-radius: 10px; text-decoration: none; color: var(--gold-light);
+        }
+
+        /* ВРЕМЕННАЯ КАТЕГОРИЯ «МЕНЮ БОЛЕЛЬЩИКА» */
+        .fan-menu-box {
+            background: linear-gradient(135deg, #181b22 0%, #232018 100%);
+            border: 2px solid var(--gold-primary); border-radius: var(--radius-main);
+            padding: 14px; margin-bottom: 16px; box-shadow: 0 0 15px rgba(197, 160, 89, 0.15);
+        }
+
+        /* ЕЖЕНЕДЕЛЬНЫЕ РИТУАЛЫ (Аккордеон/Список) */
+        .rituals-list { display: flex; flex-direction: column; gap: 8px; }
+        .ritual-item {
+            background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .ritual-day { font-size: 11px; font-weight: 700; color: var(--gold-primary); text-transform: uppercase; }
+        .ritual-name { font-size: 12px; font-weight: 600; color: var(--text-white); }
+
+        /* ОБЫЧНОЕ МЕНЮ */
         .menu-list { display: flex; flex-direction: column; gap: 10px; }
-        
         .menu-item {
             background: var(--bg-card); border-radius: var(--radius-main);
             padding: 12px 14px; border: 1px solid rgba(255, 255, 255, 0.04); cursor: pointer;
         }
         .item-head { display: flex; justify-content: space-between; align-items: baseline; }
-        .item-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
+        .item-name { font-size: 14px; font-weight: 600; color: var(--text-white); }
         .item-volume { font-size: 11px; color: var(--text-muted); font-weight: 400; }
         .item-price { font-size: 14px; font-weight: 700; color: var(--gold-light); white-space: nowrap; }
-        .item-desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .item-desc { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
 
-        /* КАРТОЧКА СОБЫТИЯ (АФИША) */
-        .event-card {
-            background: linear-gradient(135deg, #1c1f26 0%, #252833 100%);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 12px;
-        }
-        .event-banner {
-            width: 100%;
-            height: 140px;
-            background-size: cover;
-            background-position: center;
-            background-color: #2a2e39;
-            display: flex;
-            align-items: flex-end;
-            padding: 12px;
-            position: relative;
-        }
-        .event-banner::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to top, rgba(28,31,38,1) 0%, rgba(28,31,38,0.2) 70%);
-        }
-        .event-date-badge {
-            position: relative;
-            z-index: 2;
-            background: var(--gold-primary);
-            color: #111;
-            font-weight: 700;
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            text-transform: uppercase;
-        }
-        .event-body { padding: 12px 14px; }
-        .event-title { font-size: 16px; font-weight: 700; color: var(--gold-light); margin-bottom: 4px; }
-        .event-desc { font-size: 11px; color: var(--text-secondary); margin-bottom: 12px; line-height: 1.4; }
-        
-        .book-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 40px;
-            background: linear-gradient(135deg, #9a7432 0%, #c5a059 100%);
-            color: #111;
-            font-weight: 700;
-            font-size: 12px;
-            border-radius: 10px;
-            text-decoration: none;
-            gap: 6px;
-            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.2);
-        }
-
-        /* Модальные окна */
+        /* ---------------------------------------------------- */
+        /* 5. МОДАЛЬНЫЕ ОКНА                                    */
+        /* ---------------------------------------------------- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px);
@@ -296,25 +237,26 @@
         }
         .modal-overlay.active { display: flex; }
         .modal-card {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            border-radius: 18px; width: 100%; max-width: 420px; padding: 20px;
-            position: relative; max-height: 90vh; overflow-y: auto;
+            background: var(--bg-card); border: 1px solid var(--border-gold);
+            border-radius: 20px; width: 100%; max-width: 420px; padding: 20px; position: relative;
+            max-height: 90vh; overflow-y: auto;
         }
-        .modal-close {
-            position: absolute; top: 12px; right: 12px;
-            background: rgba(255,255,255,0.1); border: none; color: var(--text-main);
-            width: 32px; height: 32px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10;
+        .modal-close-btn {
+            position: absolute; top: 12px; right: 12px; background: rgba(255,255,255,0.1);
+            border: none; color: var(--text-white); width: 32px; height: 32px;
+            border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10;
         }
 
-        .footer { margin-top: 30px; text-align: center; font-size: 11px; color: var(--text-muted); }
+        .footer { margin-top: 35px; text-align: center; font-size: 11px; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Шапка -->
+
+        <!-- 1. ШАПКА БРЕНДА -->
         <header class="logo-section">
-            <svg class="vector-logo" viewBox="0 0 200 200" fill="none">
+            <svg class="brand-logo-svg" viewBox="0 0 200 200" fill="none">
                 <defs>
                     <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" stop-color="#9a7432" /><stop offset="50%" stop-color="#f3e1b9" /><stop offset="100%" stop-color="#9a7432" />
@@ -323,137 +265,155 @@
                 <circle cx="100" cy="100" r="95" fill="#122540" />
                 <circle cx="100" cy="100" r="88" stroke="url(#goldGrad)" stroke-width="2" />
                 <text x="100" y="94" font-family="'Cormorant Garamond', serif" font-size="34" font-weight="600" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="3">ВОЛНА</text>
+                <g stroke="url(#goldGrad)" stroke-width="1.2" stroke-linecap="round">
+                    <path d="M22 110 C 50 125, 75 95, 120 115 C 150 128, 165 110, 178 110" />
+                </g>
             </svg>
             <h1 class="brand-title">Volna Lounge</h1>
-            <div class="welcome-text">Премиальный Лаундж Бар</div>
+            <div class="brand-sub">Премиальный Лаундж Бар</div>
         </header>
 
-        <!-- 1. БЛОК STORIES (Карусель Ивентов) -->
+        <!-- 2. БЛОК STORIES (Карусель) -->
         <div class="stories-section">
-            <div class="stories-title">⚡️ Актуальное & События</div>
-            <div class="stories-container">
-                <div class="story-item" onclick="openStory('🎃 Halloween 31 Октября', 'Самая мистическая ночь осени в Volna Lounge! Специальные коктейли, тематический декор и DJ-сет до 02:00. Бронируйте столы заранее!', '31 Октября в 20:00')">
-                    <div class="story-ring"><div class="story-avatar">🎃</div></div>
-                    <span class="story-label">Halloween</span>
+            <div class="stories-label">⚡️ События месяца (Stories)</div>
+            <div class="stories-track">
+                <!-- Story 1 -->
+                <div class="story-circle" onclick="openStoryModal('🎃 31.10 - HALLOWEEN в Волне', 'Самая мистическая ночь осени! Коктейли с сухим льдом, специальный декор и продлённый график работы до 02:00. Бронируйте столик заранее!', '31 Октября • до 02:00', 'Halloween')">
+                    <div class="story-border"><div class="story-img-box">🎃</div></div>
+                    <span class="story-title-text">Halloween</span>
                 </div>
-                <div class="story-item" onclick="openStory('⚽ Дерби ЦСКА — Спартак', 'Большая трансляция футбольного дерби на двух проекторах! Комбо-сеты с пивом и легкие закуски. Атмосфера стадиона в комфорте заведения.', '25 Октября в 19:30')">
-                    <div class="story-ring"><div class="story-avatar">⚽</div></div>
-                    <span class="story-label">ЦСКА-Спартак</span>
+                <!-- Story 2 -->
+                <div class="story-circle" onclick="openStoryModal('⚽ 25.10 - Супердерби: ЦСКА vs Спартак', 'Прямая трансляция футбольного дерби на проекторе в высоком качестве! Заказывайте Комбо Болельщика и болеем вместе.', '25 Октября • 19:30', 'ЦСКА vs Спартак')">
+                    <div class="story-border"><div class="story-img-box">⚽</div></div>
+                    <span class="story-title-text">ЦСКА-Спартак</span>
                 </div>
-                <div class="story-item" onclick="openStory('🍵 Чайная дегустация Габа', 'Погружение в культуру тайваньского чая Габа с нашим шеф-сомелье. Секреты заваривания и глубокое расслабление.', 'Каждый Четверг')">
-                    <div class="story-ring"><div class="story-avatar">🍵</div></div>
-                    <span class="story-label">Дегустация</span>
+                <!-- Story 3 -->
+                <div class="story-circle" onclick="openStoryModal('💨 08.10 - Дегустация нового табака', 'Презентация премиальной линейки ароматов от шеф-кальянщика. Бесплатные пробы для гостей заведения.', '8 Октября • 19:00', 'Дегустация')">
+                    <div class="story-border"><div class="story-img-box">💨</div></div>
+                    <span class="story-title-text">Дегустация</span>
                 </div>
-                <div class="story-item" onclick="openStory('🍔 Набор Болельщика', 'Специальное предложение во время топовых спортивных матчей: 2 пинты нефильтрованного + Сэндвич-Сет по супер-цене!', 'В дни матчей')">
-                    <div class="story-ring"><div class="story-avatar">🍔</div></div>
-                    <span class="story-label">Сет дня</span>
+                <!-- Story 4 -->
+                <div class="story-circle" onclick="openStoryModal('🏒 ХК Северсталь - СКА', 'Хоккейный матч в прямом эфире! Атмосфера стадиона в комфорте премиального лаунджа.', 'Скоро', 'Хоккей')">
+                    <div class="story-border"><div class="story-img-box">🏒</div></div>
+                    <span class="story-title-text">Северсталь</span>
                 </div>
             </div>
         </div>
 
         <!-- Быстрые сервисы -->
         <div class="quick-actions">
-            <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" class="action-btn btn-tips-highlight">
+            <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" class="action-card btn-gold-fill">
                 <span>Оставить чаевые персоналу</span>
                 <span class="sub">Быстрый перевод через CloudTips</span>
             </a>
-            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank" class="action-btn">
+            <a href="https://yandex.ru/maps/-/CPhgiUll" target="_blank" class="action-card">
                 <span>Скидка 10% за отзыв</span>
-                <span class="sub">Покажи скриншот Яндекс.Карт</span>
+                <span class="sub">Яндекс.Карты</span>
             </a>
-            <a href="https://login.wifly.net/" class="action-btn">
+            <a href="https://login.wifly.net/" class="action-card">
                 <span>Подключиться к Wi-Fi</span>
                 <span class="sub">Сеть: Wave</span>
             </a>
         </div>
 
-        <!-- Виджет оценки визита (Smart Review Routing) -->
-        <div class="feedback-widget">
-            <div class="feedback-title">Как проходит ваш отдых?</div>
-            <div style="font-size:11px; color:var(--text-secondary);">Оцените заведение в 1 тап:</div>
-            <div class="stars-container">
-                <button class="star-btn" onclick="rateExperience(1)">★</button>
-                <button class="star-btn" onclick="rateExperience(2)">★</button>
-                <button class="star-btn" onclick="rateExperience(3)">★</button>
-                <button class="star-btn" onclick="rateExperience(4)">★</button>
-                <button class="star-btn" onclick="rateExperience(5)">★</button>
-            </div>
-        </div>
-
-        <!-- Поиск и Вкладки (АФИША НА 1-М МЕСТЕ) -->
-        <div class="search-sticky-container">
-            <div class="search-box">
-                <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-                <input type="text" id="menu-search" class="search-input" placeholder="Поиск по меню и событиям...">
+        <!-- 3. ЗАКРЕПЛЕННЫЙ ПОИСК И НАВИГАЦИЯ -->
+        <div class="sticky-header">
+            <div class="search-field">
+                <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" id="menu-search" class="search-input" placeholder="Поиск по меню и афише...">
             </div>
             <nav class="category-tabs">
-                <button class="tab-btn active highlight-tab" onclick="scrollToSec('sec-events', this)">Афиша 🎃</button>
-                <button class="tab-btn highlight-tab" onclick="scrollToSec('sec-fan-menu', this)">Меню Болельщика ⚽</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-kitchen', this)">Кухня</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-hookah', this)">Кальяны</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-snacks-hot', this)">Фритюр</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-cocktails', this)">Коктейли</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-beer', this)">Пиво</button>
-                <button class="tab-btn" onclick="scrollToSec('sec-tea', this)">Чай</button>
+                <button class="tab-btn active tab-highlight" onclick="scrollToSection('sec-events', this)">Афиша 🎃</button>
+                <button class="tab-btn tab-highlight" id="tab-fan-menu" onclick="scrollToSection('sec-fan-menu', this)">Меню Болельщика ⚽</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-rituals', this)">Ритуалы 📅</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-kitchen', this)">Кухня</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-hookah', this)">Кальяны</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-snacks-hot', this)">Фритюр</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-cocktails', this)">Коктейли</button>
+                <button class="tab-btn" onclick="scrollToSection('sec-beer', this)">Пиво</button>
             </nav>
         </div>
 
-        <!-- Контент меню -->
-        <main id="main-menu">
+        <!-- ОСНОВНОЙ КОНТЕНТ -->
+        <main id="main-content">
 
-            <!-- 1. АФИША И СОБЫТИЯ -->
+            <!-- КАТЕГОРИЯ: АФИША / СОБЫТИЯ -->
             <section id="sec-events">
                 <div class="section-header">
                     <span>Афиша & Ивенты</span>
-                    <span style="font-size:11px; color:var(--gold-primary); font-family:sans-serif;">Бронь столов</span>
+                    <span style="font-size:10px; color:var(--gold-primary); font-family:sans-serif;">Бронирование</span>
                 </div>
 
-                <div class="event-card">
-                    <div class="event-banner" style="background-image: linear-gradient(to top, rgba(28,31,38,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=600&q=80');">
-                        <span class="event-date-badge">🎃 31 Октября • 20:00</span>
+                <!-- Карточка Ивента 1 (Halloween) -->
+                <article class="event-card">
+                    <div class="event-banner-img" style="background-image: linear-gradient(to top, rgba(24,27,34,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1509557965875-b88c97052f0e?auto=format&fit=crop&w=600&q=80');">
+                        <span class="event-date-tag">🎃 31 Октября • 20:00</span>
                     </div>
-                    <div class="event-body">
-                        <div class="event-title">Halloween в Volna Lounge</div>
-                        <div class="event-desc">Мистическая атмосфера, авторский зелёный шот-сет от шеф-бармена, DJ-сет и продлённый график работы до 02:00!</div>
-                        <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" class="book-btn">
-                            Забронировать стол в WhatsApp
-                        </a>
+                    <div class="event-content">
+                        <div class="event-title">HALLOWEEN в Волне</div>
+                        <div class="event-desc">Самая мистическая ночь осени! Коктейли с сухим льдом, тематический декор и продлённый график работы до 02:00.</div>
+                        <div class="event-actions">
+                            <a href="https://vk.me/wave_lounge?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" class="btn-vk-booking">
+                                💬 Забронировать в VK
+                            </a>
+                            <a href="https://t.me/wave_lounge" target="_blank" class="btn-tg-icon" title="Бронь в Telegram">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </article>
 
-                <div class="event-card">
-                    <div class="event-banner" style="background-image: linear-gradient(to top, rgba(28,31,38,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80');">
-                        <span class="event-date-badge">⚽ 25 Октября • 19:30</span>
+                <!-- Карточка Ивента 2 (ЦСКА vs Спартак) -->
+                <article class="event-card">
+                    <div class="event-banner-img" style="background-image: linear-gradient(to top, rgba(24,27,34,1), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80');">
+                        <span class="event-date-tag">⚽ 25 Октября • 19:30</span>
                     </div>
-                    <div class="event-body">
-                        <div class="event-title">Трансляция Дерби: ЦСКА — Спартак</div>
-                        <div class="event-desc">Прямой эфир на двух больших экранах. Специальный сет «Болельщик» со скидкой 15% во время трансляции.</div>
-                        <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20трансляцию%20ЦСКА-Спартак%2025%20октября" target="_blank" class="book-btn">
-                            Забронировать стол на матч
-                        </a>
+                    <div class="event-content">
+                        <div class="event-title">Супердерби: ЦСКА vs Спартак</div>
+                        <div class="event-desc">Прямая трансляция футбольного матча на огромном проекторе. Наборы болельщика со скидкой во время эфира.</div>
+                        <div class="event-actions">
+                            <a href="https://vk.me/wave_lounge?text=Привет!%20Хочу%20забронировать%20стол%20на%20трансляцию%20ЦСКА-Спартак%2025%20октября" target="_blank" class="btn-vk-booking">
+                                💬 Забронировать в VK
+                            </a>
+                            <a href="https://t.me/wave_lounge" target="_blank" class="btn-tg-icon" title="Бронь в Telegram">
+                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                            </a>
+                        </div>
                     </div>
-                </div>
+                </article>
             </section>
 
-            <!-- 2. МЕНЮ БОЛЕЛЬЩИКА (Контекстная категория) -->
-            <section id="sec-fan-menu">
-                <div class="section-header">
-                    <span>Меню Болельщика</span>
-                    <span style="font-size:10px; color:#85f38e; font-family:sans-serif;">🔥 Спец-предложение</span>
+            <!-- 2. ВРЕМЕННАЯ КАТЕГОРИЯ: МЕНЮ БОЛЕЛЬЩИКА -->
+            <section id="sec-fan-menu" class="fan-menu-box">
+                <div class="section-header" style="margin-top:0; border-bottom:1px solid var(--gold-primary);">
+                    <span style="color:var(--gold-light);">МЕНЮ БОЛЕЛЬЩИКА</span>
+                    <span style="font-size:10px; background:var(--gold-primary); color:#0f1115; font-weight:700; padding:2px 6px; border-radius:4px;">🔥 MATCH DAY</span>
                 </div>
                 <div class="menu-list">
-                    <article class="menu-item" style="border: 1px solid var(--gold-primary);" onclick="openItemModal('Комбо-сет «Дерби»', '890 ₽', '2 пинты нефильтрованного пива Устюжна + Большой сет Чесночных гренок и Луковых колец со скидкой 20%.')">
-                        <div class="item-head"><span class="item-name" style="color:var(--gold-light);">Комбо-сет «Дерби» <span class="item-volume">(2 пива + Фритюр)</span></span><span class="item-price">890 ₽</span></div>
-                        <p class="item-desc">2 пинты Устюжна + Чесночные гренки + Луковые кольца. Идеально для просмотра матча!</p>
+                    <article class="menu-item" onclick="openItemModal('Комбо: Клаб-Сэндвич + Пиво', '590 ₽', 'Классический клаб-сэндвич с ветчиной и сыром + пинта свежего нефильтрованного пива Устюжна.')">
+                        <div class="item-head"><span class="item-name" style="color:var(--gold-light);">Комбо: Бургер/Сэндвич + Пиво</span><span class="item-price">590 ₽</span></div>
+                        <p class="item-desc">Сочный сэндвич на выбор + пинта Устюженского нефильтрованного со скидкой 15%.</p>
                     </article>
-                    <article class="menu-item" onclick="openItemModal('Шот-сет «Победный»', '800 ₽', '6 авторских микро-шотов су-вид (Джин-малина-мята). Выгодная подача для компании.')">
-                        <div class="item-head"><span class="item-name">Шот-сет «Победный» <span class="item-volume">(6 шотов)</span></span><span class="item-price">800 ₽</span></div>
-                        <p class="item-desc">6 ягодных авторских шотов из су-вида для дружной компании.</p>
+                    <article class="menu-item" onclick="openItemModal('Сет крафтовых настоек (су-вид)', '850 ₽', '5 авторских настоек су-вид: Джин-малина, Пряная вишня, Облепиха-лемонграсс, Бородинская, Лайм-мята.')">
+                        <div class="item-head"><span class="item-name">Сет крафтовых настоек (су-вид)</span><span class="item-price">850 ₽</span></div>
+                        <p class="item-desc">5 фирменных шотов глубокого настоя для хорошей компании.</p>
                     </article>
                 </div>
             </section>
 
-            <!-- 3. КУХНЯ -->
+            <!-- 3. БЛОК: КАЖДЫЙ ДЕНЬ В ВОЛНЕ (Еженедельные ритуалы) -->
+            <section id="sec-rituals">
+                <div class="section-header">Каждый день в Волне</div>
+                <div class="rituals-list">
+                    <div class="ritual-item"><span class="ritual-day">ПОНЕДЕЛЬНИК</span><span class="ritual-name">🎬 Кино-понедельник на проекторе</span></div>
+                    <div class="ritual-item"><span class="ritual-day">ВТОРНИК</span><span class="ritual-name">🎮 Кибер-турнир PS5 (FC24 / MK1)</span></div>
+                    <div class="ritual-item"><span class="ritual-day">СРЕДА</span><span class="ritual-name">🍸 Staff Day (Скидка 20% для HoReCa)</span></div>
+                    <div class="ritual-item"><span class="ritual-day">ЧЕТВЕРГ</span><span class="ritual-name">🍵 Gastro-Тест (Дегустации чая/табака)</span></div>
+                    <div class="ritual-item"><span class="ritual-day">ПТ / СБ</span><span class="ritual-name">🔥 Prime Time & Спортивные Трансляции</span></div>
+                </div>
+            </section>
+
+            <!-- КУХНЯ -->
             <section id="sec-kitchen">
                 <div class="section-header">Сэндвичи & Кухня</div>
                 <div class="menu-list">
@@ -468,7 +428,7 @@
                 </div>
             </section>
 
-            <!-- 4. КАЛЬЯНЫ -->
+            <!-- КАЛЬЯНЫ -->
             <section id="sec-hookah">
                 <div class="section-header">Паровые коктейли</div>
                 <div class="menu-list">
@@ -481,7 +441,7 @@
                 </div>
             </section>
 
-            <!-- 5. ГОРЯЧИЙ ФРИТЮР -->
+            <!-- ФРИТЮР -->
             <section id="sec-snacks-hot">
                 <div class="section-header">Горячий Фритюр</div>
                 <div class="menu-list">
@@ -494,7 +454,7 @@
                 </div>
             </section>
 
-            <!-- 6. КОКТЕЙЛИ -->
+            <!-- КОКТЕЙЛИ -->
             <section id="sec-cocktails">
                 <div class="section-header">Фирменные коктейли</div>
                 <div class="menu-list">
@@ -505,7 +465,7 @@
                 </div>
             </section>
 
-            <!-- 7. ПИВО -->
+            <!-- ПИВО -->
             <section id="sec-beer">
                 <div class="section-header">Пивная карта</div>
                 <div class="menu-list">
@@ -515,15 +475,6 @@
                 </div>
             </section>
 
-            <!-- 8. ЧАЙ -->
-            <section id="sec-tea">
-                <div class="section-header">Чай & Напитки</div>
-                <div class="menu-list">
-                    <article class="menu-item" onclick="openItemModal('Чай Фирменный', '300 / 350 ₽', 'Ассам, Эрл Грей, Дикая вишня, Жасмин, Ромашка.')">
-                        <div class="item-head"><span class="item-name">Чай Фирменный <span class="item-volume">(0.5л / 0.8л)</span></span><span class="item-price">300 / 350 ₽</span></div>
-                    </article>
-                </div>
-            </section>
         </main>
 
         <footer class="footer">
@@ -531,82 +482,114 @@
         </footer>
     </div>
 
-    <!-- ВСПЛЫВАЮЩИЙ POP-UP ГЛАВНОГО ИВЕНТА (HALLOWEEN) -->
-    <div class="modal-overlay" id="event-popup-modal">
+    <!-- ---------------------------------------------------- -->
+    <!-- МОДАЛЬНЫЕ ОКНА                                       -->
+    <!-- ---------------------------------------------------- -->
+
+    <!-- POP-UP МОДАЛКА (Всплывает через 3 секунды, 1 раз за сессию) -->
+    <div class="modal-overlay" id="popup-hallowen-modal">
         <div class="modal-card" style="text-align: center; border-color: var(--gold-primary);">
-            <button class="modal-close" onclick="closeModal('event-popup-modal')">✕</button>
-            <div style="font-size: 38px; margin-bottom: 4px;">🎃</div>
-            <span style="background:var(--gold-primary); color:#111; font-weight:700; font-size:10px; padding:3px 8px; border-radius:4px; text-transform:uppercase;">Главное событие месяца</span>
-            <h3 style="color:var(--gold-light); font-size:19px; margin: 8px 0 4px 0;">31 ОКТЯБРЯ — HALLOWEEN</h3>
-            <p style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:14px;">
-                Работаем до 02:00! Авторские шоты, тематический декор и крутой DJ-сет. Успейте забронировать лучший столик заранее.
+            <button class="modal-close-btn" onclick="closeModal('popup-hallowen-modal')">✕</button>
+            <div style="font-size: 42px; margin-bottom: 4px;">🎃</div>
+            <span style="background:var(--gold-primary); color:#0f1115; font-weight:700; font-size:10px; padding:3px 8px; border-radius:4px; text-transform:uppercase;">Главное событие октября</span>
+            <h3 style="color:var(--gold-light); font-size:20px; margin: 8px 0 4px 0;">31 ОКТЯБРЯ — HALLOWEEN</h3>
+            <p style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;">
+                Работаем до 02:00! Коктейли с сухим льдом, мистический декор и крутой DJ-сет. Успейте забронировать лучший стол!
             </p>
-            <a href="https://wa.me/79000000000?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" onclick="closeModal('event-popup-modal')" style="display:block; width:100%; height:42px; line-height:42px; background:var(--gold-primary); border-radius:10px; font-weight:700; color:#111; text-decoration:none; text-align:center; font-size:12px;">
-                Забронировать стол в WhatsApp
+            <a href="https://vk.me/wave_lounge?text=Привет!%20Хочу%20забронировать%20стол%20на%20Halloween%2031%20октября" target="_blank" onclick="closeModal('popup-hallowen-modal')" class="btn-vk-booking" style="height:44px; font-size:13px;">
+                💬 Забронировать стол в VK
             </a>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ДЛЯ STORIES -->
-    <div class="modal-overlay" id="story-modal">
+    <!-- МОДАЛКА ПРОСМОТРА STORIES -->
+    <div class="modal-overlay" id="story-viewer-modal">
         <div class="modal-card" style="text-align: center;">
-            <button class="modal-close" onclick="closeModal('story-modal')">✕</button>
+            <button class="modal-close-btn" onclick="closeModal('story-viewer-modal')">✕</button>
             <div id="story-date-badge" style="display:inline-block; background:rgba(197, 160, 89, 0.2); color:var(--gold-light); font-weight:700; font-size:11px; padding:4px 10px; border-radius:6px; margin-bottom:10px;"></div>
-            <h3 id="story-modal-title" style="color:var(--gold-light); font-size:18px; margin-bottom:8px;"></h3>
-            <p id="story-modal-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;"></p>
-            <a id="story-book-link" href="#" target="_blank" onclick="closeModal('story-modal')" style="display:block; width:100%; height:42px; line-height:42px; background:var(--gold-primary); border-radius:10px; font-weight:700; color:#111; text-decoration:none; text-align:center; font-size:12px;">
-                Забронировать стол
+            <h3 id="story-title" style="color:var(--gold-light); font-size:18px; margin-bottom:8px;"></h3>
+            <p id="story-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;"></p>
+            <a id="story-vk-link" href="#" target="_blank" onclick="closeModal('story-viewer-modal')" class="btn-vk-booking" style="height:44px;">
+                💬 Забронировать в ВКонтакте
             </a>
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО ТОВАРА -->
+    <!-- МОДАЛКА КАРТОЧКИ БЛЮДА -->
     <div class="modal-overlay" id="item-modal">
         <div class="modal-card">
-            <button class="modal-close" onclick="closeModal('item-modal')">✕</button>
-            <h3 id="modal-title" style="color:var(--gold-light); font-size:18px; margin-bottom:6px;"></h3>
-            <div id="modal-price" style="color:var(--gold-primary); font-weight:700; font-size:16px; margin-bottom:8px;"></div>
-            <p id="modal-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:14px;"></p>
-            <button onclick="alert('Вызов официанта отправлен!'); closeModal('item-modal')" style="width:100%; height:44px; background:var(--gold-primary); border:none; border-radius:10px; font-weight:700; color:#111; cursor:pointer;">
+            <button class="modal-close-btn" onclick="closeModal('item-modal')">✕</button>
+            <h3 id="item-modal-title" style="color:var(--gold-light); font-size:18px; margin-bottom:6px;"></h3>
+            <div id="item-modal-price" style="color:var(--gold-primary); font-weight:700; font-size:16px; margin-bottom:8px;"></div>
+            <p id="item-modal-desc" style="font-size:12px; color:var(--text-secondary); line-height:1.4; margin-bottom:16px;"></p>
+            <button onclick="alert('Вызов официанта отправлен!'); closeModal('item-modal')" style="width:100%; height:44px; background:var(--gold-primary); border:none; border-radius:10px; font-weight:700; color:#0f1115; cursor:pointer;">
                 Хочу заказать (Вызвать официанта)
             </button>
         </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- ---------------------------------------------------- -->
+    <!-- SCRIPTS                                              -->
+    <!-- ---------------------------------------------------- -->
     <script>
-        // Показ главных всплывающих модалок при входе
+        // =========================================================================
+        // ⚙️ НАСТРОЙКИ И ПЕРЕКЛЮЧАТЕЛИ (SETTINGS)
+        // =========================================================================
+        
+        // Переключатель категории «Меню Болельщика»:
+        // true  -> Категория ВИДИМА (в дни матчей)
+        // false -> Категория СКРЫТА (в обычные дни)
+        const SHOW_FAN_MENU = true;
+
+        // Ссылка на диалог группы ВКонтакте
+        const VK_GROUP_LINK = "https://vk.me/wave_lounge";
+
+        // =========================================================================
+
         window.addEventListener('DOMContentLoaded', () => {
-            // Показываем главный Pop-Up ивента через 1 секунду после входа
-            setTimeout(() => {
-                openModal('event-popup-modal');
-            }, 1000);
+            // Инициализация переключателя Меню Болельщика
+            const fanSec = document.getElementById('sec-fan-menu');
+            const fanTab = document.getElementById('tab-fan-menu');
+            if (!SHOW_FAN_MENU) {
+                if (fanSec) fanSec.style.display = 'none';
+                if (fanTab) fanTab.style.display = 'none';
+            }
+
+            // Логика POP-UP окнa (Показывается 1 раз за сессию через 3 сек)
+            if (!sessionStorage.getItem('hallowen_popup_shown')) {
+                setTimeout(() => {
+                    openModal('popup-hallowen-modal');
+                    sessionStorage.setItem('hallowen_popup_shown', 'true');
+                }, 3000);
+            }
         });
 
-        // Открытие Story
-        function openStory(title, desc, dateText) {
-            document.getElementById('story-modal-title').innerText = title;
-            document.getElementById('story-modal-desc').innerText = desc;
+        // Открытие просмотрщика Stories
+        function openStoryModal(title, desc, dateText, eventTag) {
+            document.getElementById('story-title').innerText = title;
+            document.getElementById('story-desc').innerText = desc;
             document.getElementById('story-date-badge').innerText = dateText;
-            
-            const waLink = `https://wa.me/79000000000?text=${encodeURIComponent('Привет! Хочу забронировать стол на событие: ' + title)}`;
-            document.getElementById('story-book-link').href = waLink;
 
-            openModal('story-modal');
+            const textMsg = encodeURIComponent(`Привет! Хочу забронировать стол на событие: ${eventTag}`);
+            document.getElementById('story-vk-link').href = `${VK_GROUP_LINK}?text=${textMsg}`;
+
+            openModal('story-viewer-modal');
         }
 
-        // Вспомогательные функции UI
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-
+        // Открытие блюда
         function openItemModal(title, price, desc) {
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-price').innerText = price;
-            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('item-modal-title').innerText = title;
+            document.getElementById('item-modal-price').innerText = price;
+            document.getElementById('item-modal-desc').innerText = desc;
             openModal('item-modal');
         }
 
-        function scrollToSec(id, btn) {
+        // Вспомогательные функции окон
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Плавный скролл по навигации
+        function scrollToSection(id, btn) {
             const sec = document.getElementById(id);
             if (sec) {
                 const pos = sec.getBoundingClientRect().top + window.pageYOffset - 110;
@@ -616,20 +599,21 @@
             }
         }
 
-        // Умный поиск по меню и афише
+        // Умный поиск по всем категориям и событиям
         document.getElementById('menu-search').addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase().trim();
-            const items = document.querySelectorAll('.menu-item, .event-card');
+            const items = document.querySelectorAll('.menu-item, .event-card, .ritual-item');
             const sections = document.querySelectorAll('section');
 
             items.forEach(item => {
                 const text = item.innerText.toLowerCase();
-                item.style.display = text.includes(query) ? 'block' : 'none';
+                item.style.display = text.includes(query) ? '' : 'none';
             });
 
             sections.forEach(sec => {
+                if (sec.id === 'sec-fan-menu' && !SHOW_FAN_MENU) return;
                 let hasVisible = false;
-                sec.querySelectorAll('.menu-item, .event-card').forEach(i => {
+                sec.querySelectorAll('.menu-item, .event-card, .ritual-item').forEach(i => {
                     if (i.style.display !== 'none') hasVisible = true;
                 });
                 sec.style.display = hasVisible ? 'block' : 'none';
