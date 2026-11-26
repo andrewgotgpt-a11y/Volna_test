@@ -1,0 +1,95 @@
+{
+"id": "./",
+"name": "Волна Лаундж — Меню и Банкеты",
+"short_name": "Волна Лаундж",
+"description": "Онлайн-меню, авторская кухня, паровые коктейли, барная карта, акции и расчёт банкетов в «Волна Лаундж» (Череповец).",
+"lang": "ru",
+"dir": "ltr",
+"start_url": "./",
+"scope": "./",
+"display": "standalone",
+"display_override": [
+"standalone",
+"minimal-ui"
+],
+"orientation": "portrait-primary",
+"background_color": "#111317",
+"theme_color": "#111317",
+"categories": [
+"food",
+"lifestyle"
+],
+"icons": [
+{
+"src": "icon-192.png",
+"sizes": "192x192",
+"type": "image/png",
+"purpose": "any"
+},
+{
+"src": "icon-192.png",
+"sizes": "192x192",
+"type": "image/png",
+"purpose": "maskable"
+},
+{
+"src": "icon-512.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "any"
+},
+{
+"src": "icon-512.png",
+"sizes": "512x512",
+"type": "image/png",
+"purpose": "maskable"
+},
+{
+"src": "icon.svg",
+"sizes": "any",
+"type": "image/svg+xml",
+"purpose": "any"
+}
+],
+"shortcuts": [
+{
+"name": "Авторская кухня",
+"short_name": "Кухня",
+"description": "Основные блюда, супы, бургеры и кесадильи",
+"url": "./#sec-kitchen",
+"icons": [
+{
+"src": "icon-192.png",
+"sizes": "192x192",
+"type": "image/png"
+}
+]
+},
+{
+"name": "Кальяны и Микс дня",
+"short_name": "Кальяны",
+"description": "Паровые коктейли, фруктовые чаши и 14 миксов",
+"url": "./#sec-hookah",
+"icons": [
+{
+"src": "icon-192.png",
+"sizes": "192x192",
+"type": "image/png"
+}
+]
+},
+{
+"name": "Банкеты и календарь",
+"short_name": "Банкеты",
+"description": "Закрытие площадки, свободные даты и расчёт сметы",
+"url": "./#sec-banquet",
+"icons": [
+{
+"src": "icon-192.png",
+"sizes": "192x192",
+"type": "image/png"
+}
+]
+}
+]
+}
