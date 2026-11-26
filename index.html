@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Волна Лаундж — Онлайн-меню и Банкеты • Череповец</title>
 
-    <!-- PWA и мобильные мета-теги -->
+    <!-- Мета-теги веб-приложения (убирают ложный «режим чтения / озвучивание» и настраивают PWA) -->
+    <meta name="application-name" content="Волна Лаундж">
+    <meta name="format-detection" content="telephone=no">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <meta name="apple-mobile-web-app-title" content="Волна Лаундж">
@@ -14,20 +16,20 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#111317">
 
-    <!-- Неблокирующее подключение шрифтов (если недоступны — сразу сработают системные) -->
+    <!-- Неблокирующее подключение шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
-    <!-- Неблокирующая инициализация VK Mini Apps (не тормозит загрузку в обычном браузере и на РФ-сетях) -->
+    <!-- Неблокирующая инициализация VK Mini Apps (не мешает обычным браузерам) -->
     <script>
         (function initVkSafe() {
             try {
-                // Мгновенный нативный сигнал готовности для VK WebView без ожидания внешнего CDN
                 if (window.parent && window.parent !== window) {
                     window.parent.postMessage({ handler: 'VKWebAppInit', params: {}, type: 'vk-connect' }, '*');
                 }
                 var isVkContext = /vk_app_id|vk_platform|vk_user_id/i.test(location.search) || /vk\.com/i.test(document.referrer || '');
+                window.__isVkMiniApp = isVkContext;
                 if (isVkContext) {
                     var s = document.createElement('script');
                     s.src = 'https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js';
@@ -41,7 +43,7 @@
         })();
     </script>
 
-    <!-- Yandex.Metrika counter (152-ФЗ: запускается после согласия в cookie-баннере) -->
+    <!-- Yandex.Metrika counter (152-ФЗ: запускается только после согласия в cookie-баннере) -->
     <script type="text/javascript">
         window.__ymInitialized = false;
         window.initYandexMetrika = function () {
@@ -109,99 +111,87 @@
         button { cursor: pointer; background: none; border: none; }
         .hidden { display: none !important; }
         .overflow-hidden { overflow: hidden !important; }
-        .font-serif { font-family: 'Cormorant Garamond', Georgia, serif; }
-
         .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 14px; }
 
-        /* Шапка */
+        /* ==================== КОМПАКТНАЯ ШАПКА ==================== */
         .hero {
-            padding: 18px 0 14px;
-            background: radial-gradient(circle at top center, rgba(18, 37, 64, 0.72), transparent 68%);
+            padding: 12px 0 10px;
+            background: radial-gradient(circle at top center, rgba(18, 37, 64, 0.65), transparent 72%);
             border-bottom: 1px solid var(--border);
         }
         .hero-card {
-            background: linear-gradient(145deg, rgba(23, 26, 33, 0.96), rgba(18, 37, 64, 0.45));
+            background: linear-gradient(145deg, rgba(23, 26, 33, 0.96), rgba(18, 37, 64, 0.4));
             border: 1px solid var(--border-gold);
-            border-radius: 22px;
-            padding: 16px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.38);
+            border-radius: 20px;
+            padding: 13px 14px;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
         }
         .hero-top {
             display: flex;
             align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
+            gap: 12px;
         }
-        .logo-svg { width: 74px; height: 74px; flex-shrink: 0; filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45)); }
-        .hero-brand { flex: 1; min-width: 190px; }
+        .logo-svg { width: 58px; height: 58px; flex-shrink: 0; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
+        .hero-brand { flex: 1; min-width: 0; }
         .hero-title {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 28px;
+            font-size: 24px;
             line-height: 1.05;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             color: var(--gold-light);
             font-weight: 700;
-        }
-        .hero-sub {
-            font-size: 12px;
-            color: var(--muted);
-            margin-top: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
         }
         .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            margin-top: 8px;
-            padding: 5px 10px;
+            gap: 6px;
+            margin-top: 5px;
+            padding: 3px 9px;
             border-radius: 999px;
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 600;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
+            color: var(--text-soft);
         }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+        .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
         .status-dot.closed { background: var(--muted); }
 
-        .hero-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 10px;
-            margin-top: 14px;
-        }
-        .info-tile {
+        .hero-meta-line {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: rgba(17, 19, 23, 0.65);
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            padding: 8px 10px;
+            border-radius: 12px;
+            background: rgba(17, 19, 23, 0.58);
             border: 1px solid var(--border);
-            font-size: 13px;
-            transition: border-color .2s, transform .15s;
+            font-size: 12px;
         }
-        .info-tile:hover { border-color: var(--border-gold); }
-        .info-tile:active { transform: scale(0.99); }
-        .info-tile-icon { font-size: 18px; flex-shrink: 0; }
-        .info-tile-label { font-size: 11px; color: var(--muted); display: block; }
-        .info-tile-val { font-weight: 600; color: #fff; font-size: 13px; }
+        .hero-address {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .hero-address:hover { color: var(--gold-light); }
+        .hero-hours { color: var(--muted); font-size: 11.5px; }
 
         .hero-actions {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
-            margin-top: 12px;
-        }
-        @media (min-width: 720px) {
-            .hero-actions { grid-template-columns: repeat(5, 1fr); }
+            margin-top: 10px;
         }
         .action-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 10px 10px;
+            gap: 5px;
+            padding: 10px 8px;
             border-radius: 12px;
             font-size: 12.5px;
             font-weight: 600;
@@ -210,6 +200,7 @@
             color: #fff;
             text-align: center;
             transition: border-color .2s, transform .15s, background .2s;
+            white-space: nowrap;
         }
         .action-btn:hover { border-color: var(--border-gold); background: var(--surface-3); }
         .action-btn:active { transform: scale(0.97); }
@@ -222,21 +213,33 @@
         .action-btn.accent {
             border-color: var(--border-gold);
             color: var(--gold-light);
-            background: rgba(197, 160, 89, 0.1);
+            background: rgba(197, 160, 89, 0.12);
         }
-        .action-btn.span-2 { grid-column: span 2; }
-        @media (min-width: 720px) { .action-btn.span-2 { grid-column: span 1; } }
 
-        /* Липкая панель поиска и вкладок */
+        /* Аккуратная плашка установки приложения (как у банков) */
+        .pwa-strip {
+            margin-top: 10px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(18, 37, 64, 0.85), rgba(197, 160, 89, 0.14));
+            border: 1px solid var(--border-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        /* ==================== ЛИПКАЯ НАВИГАЦИЯ ==================== */
         .sticky-nav {
             position: sticky;
             top: 0;
             z-index: 30;
-            background: rgba(17, 19, 23, 0.94);
+            background: rgba(17, 19, 23, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
-            padding: 10px 0 8px;
+            padding: 8px 0;
         }
         .search-row {
             display: flex;
@@ -244,29 +247,44 @@
             gap: 8px;
             margin-bottom: 8px;
         }
-        .search-box {
-            position: relative;
-            flex: 1;
-        }
+        .search-box { position: relative; flex: 1; }
         .search-box input {
             width: 100%;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 10px 36px 10px 36px;
-            font-size: 14px;
+            padding: 9px 34px 9px 34px;
+            font-size: 13.5px;
             color: #fff;
             outline: none;
             transition: border-color .2s;
         }
         .search-box input:focus { border-color: var(--gold); }
         .search-box input::placeholder { color: var(--muted); }
-        .search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: 0.7; pointer-events: none; }
+        .search-ico { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; opacity: 0.7; pointer-events: none; }
         .search-clear {
-            position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+            position: absolute; right: 7px; top: 50%; transform: translateY(-50%);
             width: 24px; height: 24px; border-radius: 50%;
             background: var(--surface-3); color: var(--text-soft); font-size: 12px;
             display: flex; align-items: center; justify-content: center;
+        }
+        .filter-toggle-btn {
+            padding: 9px 11px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-soft);
+            font-size: 12.5px;
+            font-weight: 600;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .filter-toggle-btn.active {
+            border-color: var(--gold);
+            color: var(--gold-light);
+            background: rgba(197, 160, 89, 0.14);
         }
 
         .tabs-scroll, .filters-scroll {
@@ -280,7 +298,7 @@
 
         .tab-btn {
             flex-shrink: 0;
-            padding: 8px 13px;
+            padding: 7px 13px;
             border-radius: 999px;
             font-size: 13px;
             font-weight: 600;
@@ -306,7 +324,7 @@
             border: 1px solid var(--border);
             color: var(--muted);
             white-space: nowrap;
-            margin-top: 6px;
+            margin-top: 7px;
         }
         .filter-chip.active {
             background: rgba(197, 160, 89, 0.18);
@@ -314,22 +332,22 @@
             color: var(--gold-light);
         }
 
-        /* Разделы ленты */
-        .feed { padding-top: 14px; display: flex; flex-direction: column; gap: 28px; }
-        .section-block { scroll-margin-top: 136px; }
+        /* ==================== РАЗДЕЛЫ ЛЕНТЫ ==================== */
+        .feed { padding-top: 14px; display: flex; flex-direction: column; gap: 26px; }
+        .section-block { scroll-margin-top: 118px; }
         .section-head {
             display: flex;
             align-items: flex-end;
             justify-content: space-between;
             gap: 10px;
             flex-wrap: wrap;
-            padding-bottom: 10px;
-            margin-bottom: 14px;
+            padding-bottom: 9px;
+            margin-bottom: 12px;
             border-bottom: 1px solid var(--border-gold);
         }
         .section-title {
             font-family: 'Cormorant Garamond', Georgia, serif;
-            font-size: 26px;
+            font-size: 25px;
             line-height: 1.08;
             color: var(--gold-light);
             font-weight: 700;
@@ -347,42 +365,38 @@
         }
 
         .subcat-title {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.1px;
             color: var(--gold);
-            margin: 18px 0 10px;
-            padding-left: 10px;
+            margin: 16px 0 9px;
+            padding-left: 9px;
             border-left: 3px solid var(--gold);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
         }
         .subcat-title:first-of-type { margin-top: 4px; }
 
-        /* Сетки карточек */
         .cards-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
+            gap: 9px;
         }
         @media (min-width: 720px) {
-            .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .cards-grid { grid-template-columns: repeat(2, 1fr); gap: 11px; }
         }
 
-        /* Горизонтальная компактная карточка блюда с фото слева */
+        /* ==================== ЧИСТЫЕ КАРТОЧКИ БЛЮД (КБЖУ ВНУТРИ ПО ТАПУ) ==================== */
         .dish-card {
             display: flex;
             align-items: stretch;
-            gap: 12px;
+            gap: 11px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 10px;
+            padding: 9px;
             transition: border-color .2s;
             min-width: 0;
+            cursor: pointer;
         }
         .dish-card:hover { border-color: var(--border-gold); }
         .dish-card.featured {
@@ -391,8 +405,8 @@
         }
 
         .dish-thumb {
-            width: 94px;
-            height: 94px;
+            width: 88px;
+            height: 88px;
             border-radius: 12px;
             overflow: hidden;
             flex-shrink: 0;
@@ -405,14 +419,13 @@
             text-align: center;
             padding: 6px;
             position: relative;
-            cursor: pointer;
         }
         @media (min-width: 720px) {
-            .dish-thumb { width: 108px; height: 108px; }
+            .dish-thumb { width: 100px; height: 100px; }
         }
         .dish-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .thumb-emoji { font-size: 26px; line-height: 1; margin-bottom: 4px; }
-        .thumb-cap { font-size: 9.5px; color: var(--gold-light); opacity: 0.78; line-height: 1.15; }
+        .thumb-emoji { font-size: 25px; line-height: 1; margin-bottom: 3px; }
+        .thumb-cap { font-size: 9px; color: var(--gold-light); opacity: 0.75; line-height: 1.15; }
 
         .dish-body {
             flex: 1;
@@ -420,7 +433,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 6px;
+            gap: 5px;
         }
         .dish-head-line {
             display: flex;
@@ -428,14 +441,14 @@
             justify-content: space-between;
             gap: 8px;
         }
-        .dish-name { font-size: 14.5px; font-weight: 700; color: #fff; line-height: 1.25; }
-        .dish-vol { font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+        .dish-name { font-size: 14.5px; font-weight: 700; color: #fff; line-height: 1.24; }
+        .dish-vol { font-size: 11.5px; font-weight: 500; color: var(--muted); white-space: nowrap; }
         .dish-tag {
             display: inline-block;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.45px;
             padding: 2px 7px;
             border-radius: 6px;
             background: rgba(197, 160, 89, 0.14);
@@ -443,15 +456,15 @@
             margin-top: 3px;
         }
         .dish-tag.hot { background: rgba(248, 113, 113, 0.16); color: #fca5a5; }
-        .dish-desc { font-size: 12.5px; color: var(--text-soft); opacity: 0.88; line-height: 1.38; }
-        .kbzhu-line {
-            font-size: 11px;
-            color: var(--muted);
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 3px 7px;
-            line-height: 1.3;
+        .dish-desc {
+            font-size: 12px;
+            color: var(--text-soft);
+            opacity: 0.86;
+            line-height: 1.35;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
         }
         .dish-foot {
             display: flex;
@@ -460,39 +473,40 @@
             gap: 8px;
             margin-top: 2px;
         }
-        .price-pill {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--gold-light);
-            white-space: nowrap;
+        .price-pill { font-size: 15px; font-weight: 700; color: var(--gold-light); white-space: nowrap; }
+        .kbzhu-hint { font-size: 10.5px; color: var(--muted); }
+        .kbzhu-line {
+            font-size: 12px;
+            color: var(--text-soft);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed var(--border-gold);
+            border-radius: 10px;
+            padding: 8px 10px;
+            line-height: 1.4;
         }
 
-        /* Компактная строка меню (фритюр, пиво, кофе, снеки) */
+        /* Компактные строки (фритюр, бар, чай, снеки) */
         .compact-card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 6px;
+            gap: 5px;
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 11px 12px;
+            padding: 10px 12px;
             min-width: 0;
         }
+        .compact-card.clickable { cursor: pointer; }
+        .compact-card.clickable:hover { border-color: var(--border-gold); }
         .compact-top {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             gap: 10px;
         }
-        .compact-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
+        .compact-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-        /* Кнопка + в блокнот */
         .add-btn {
             min-width: 32px;
             height: 32px;
@@ -517,49 +531,37 @@
             border-color: transparent;
         }
 
-        /* Инфо-коробка (соусы, лимонады, крафт чай) */
         .info-strip {
-            margin-top: 12px;
+            margin-top: 10px;
             background: var(--surface);
             border: 1px dashed var(--border-gold);
             border-radius: 14px;
-            padding: 12px 14px;
+            padding: 11px 13px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
-        /* Кальяны, микс дня и конструктор */
-        .hookah-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
-        }
-        @media (min-width: 720px) {
-            .hookah-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        /* ==================== КАЛЬЯНЫ И БАНКЕТЫ ==================== */
+        .hookah-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        @media (min-width: 720px) { .hookah-grid { grid-template-columns: repeat(2, 1fr); } }
         .navy-box {
             background: linear-gradient(145deg, var(--navy), #161d2b);
             border: 1px solid var(--border-gold);
             border-radius: 18px;
-            padding: 16px;
+            padding: 15px;
         }
-        .tier-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 12px;
-        }
+        .tier-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; margin-bottom: 12px; }
         .tier-card {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(197, 160, 89, 0.35);
             border-radius: 14px;
-            padding: 12px 10px;
+            padding: 11px 8px;
             text-align: center;
         }
-        .tier-price { font-size: 17px; font-weight: 700; color: var(--gold-light); margin: 4px 0; }
+        .tier-price { font-size: 16.5px; font-weight: 700; color: var(--gold-light); margin: 3px 0; }
         .chip-group { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
         .choice-chip {
             padding: 6px 11px;
@@ -576,47 +578,32 @@
             color: var(--gold-light);
         }
 
-        /* Банкеты, калькулятор, календарь */
         .banquet-panel {
             background: var(--surface);
             border: 1px solid var(--border-gold);
             border-radius: 18px;
-            padding: 16px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 15px;
         }
-        .venue-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
+        .venue-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
         @media (min-width: 720px) { .venue-grid { grid-template-columns: repeat(2, 1fr); } }
         .venue-card {
             text-align: left;
             background: var(--surface-2);
             border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 14px;
+            padding: 13px;
             transition: all .2s;
         }
         .venue-card.active {
             border-color: var(--gold);
             background: rgba(197, 160, 89, 0.11);
         }
-        .tariff-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-        }
+        .tariff-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
         @media (min-width: 720px) { .tariff-grid { grid-template-columns: repeat(3, 1fr); } }
-
-        .range-input {
-            width: 100%;
-            accent-color: var(--gold);
-            height: 6px;
-            cursor: pointer;
-        }
+        .range-input { width: 100%; accent-color: var(--gold); height: 6px; cursor: pointer; }
 
         .cal-wrap {
             background: rgba(17, 19, 23, 0.65);
@@ -656,8 +643,8 @@
             font-weight: 700;
         }
         .cal-day.booked {
-            background: rgba(248, 113, 113, 0.14);
-            border-color: rgba(248, 113, 113, 0.35);
+            background: rgba(248, 113, 113, 0.15);
+            border-color: rgba(248, 113, 113, 0.38);
             color: #fca5a5;
             text-decoration: line-through;
             cursor: not-allowed;
@@ -667,6 +654,18 @@
             color: #475569;
             cursor: not-allowed;
         }
+        .cal-sync-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 9px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+            font-size: 11px;
+            color: var(--muted);
+        }
 
         .summary-box {
             background: linear-gradient(145deg, var(--navy), #171c28);
@@ -675,7 +674,7 @@
             padding: 14px;
         }
 
-        /* Плавающие элементы */
+        /* ==================== ПЛАВАЮЩИЕ КНОПКИ И COOKIE ==================== */
         .fab-bar {
             position: fixed;
             left: 14px;
@@ -693,11 +692,11 @@
         .fab-bar > * { pointer-events: auto; }
         .notepad-fab {
             flex: 1;
-            max-width: 380px;
+            max-width: 360px;
             background: linear-gradient(135deg, var(--bronze), var(--gold));
             color: #111317;
             border-radius: 14px;
-            padding: 12px 16px;
+            padding: 11px 15px;
             font-size: 13.5px;
             font-weight: 700;
             display: flex;
@@ -715,26 +714,24 @@
             font-size: 12.5px;
             font-weight: 700;
             box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
-            transition: opacity .2s, transform .2s;
         }
 
-        /* Cookie баннер */
         .cookie-banner {
             position: fixed;
             left: 12px;
             right: 12px;
             bottom: 12px;
             z-index: 45;
-            max-width: 440px;
+            max-width: 460px;
             margin-left: auto;
             background: rgba(23, 26, 33, 0.98);
             border: 1px solid var(--border-gold);
             border-radius: 16px;
-            padding: 14px;
+            padding: 12px 14px;
             box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65);
         }
 
-        /* Модалки */
+        /* ==================== МОДАЛЬНЫЕ ОКНА ==================== */
         .modal-backdrop {
             position: fixed;
             inset: 0;
@@ -777,7 +774,7 @@
             background: var(--surface-2); color: var(--text-soft); font-size: 16px;
             display: flex; align-items: center; justify-content: center;
         }
-        .modal-body { padding: 16px 18px; overflow-y: auto; flex: 1; }
+        .modal-body { padding: 15px 18px; overflow-y: auto; flex: 1; }
 
         .field-label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--muted); margin-bottom: 5px; font-weight: 600; }
         .field-input {
@@ -800,21 +797,14 @@
             font-size: 12.5px;
         }
 
-        /* Звёзды отзыва */
         .stars-row { display: flex; justify-content: center; gap: 8px; margin: 10px 0; }
-        .star-btn {
-            font-size: 36px;
-            line-height: 1;
-            color: #334155;
-            transition: transform .15s, color .15s;
-        }
+        .star-btn { font-size: 36px; line-height: 1; color: #334155; transition: transform .15s, color .15s; }
         .star-btn.lit { color: #fbbf24; }
         .star-btn:active { transform: scale(1.15); }
 
-        /* Подвал */
         .site-footer {
-            margin-top: 34px;
-            padding: 24px 14px 36px;
+            margin-top: 32px;
+            padding: 22px 14px 36px;
             border-top: 1px solid var(--border);
             text-align: center;
         }
@@ -830,7 +820,6 @@
         .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 16px; margin: 10px 0; font-size: 12px; }
         .footer-links button { color: var(--gold-light); text-decoration: underline; text-underline-offset: 3px; }
 
-        /* Тост */
         .toast {
             position: fixed;
             top: 16px;
@@ -849,15 +838,20 @@
             text-align: center;
         }
 
-        /* Игровой канвас */
+        /* Игровой канвас «Волна» */
+        .game-stage {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid var(--border-gold);
+            background: linear-gradient(180deg, #0b182b 0%, #111317 100%);
+        }
         #waveGameCanvas {
             width: 100%;
-            height: 220px;
+            height: 235px;
             display: block;
-            background: linear-gradient(180deg, #0e1b30 0%, #111317 100%);
-            border: 1px solid var(--border-gold);
-            border-radius: 14px;
             touch-action: manipulation;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -865,7 +859,7 @@
 
     <div id="toast" class="toast hidden"></div>
 
-    <!-- ==================== ШАПКА ==================== -->
+    <!-- ==================== КОМПАКТНАЯ ШАПКА ==================== -->
     <header id="topHeader" class="hero">
         <div class="wrap">
             <div class="hero-card">
@@ -891,42 +885,43 @@
 
                     <div class="hero-brand">
                         <h1 class="hero-title">ВОЛНА ЛАУНДЖ</h1>
-                        <div class="hero-sub">Авторская кухня • Кальяны • Бар • Банкеты</div>
                         <div id="liveStatusPill" class="status-pill">
                             <span id="liveStatusDot" class="status-dot"></span>
-                            <span id="liveStatusText">Череповец • Вс–Чт 13:00–01:00, Пт–Сб до 02:00</span>
+                            <span id="liveStatusText">Вс–Чт 13:00–01:00 • Пт–Сб до 02:00</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="hero-info-grid">
-                    <a href="https://yandex.ru/maps/?rtext=~59.122844%2C37.932270&rtt=auto" target="_blank" rel="noopener noreferrer" class="info-tile">
-                        <span class="info-tile-icon">📍</span>
-                        <span>
-                            <span class="info-tile-label">Адрес (построить маршрут) ↗</span>
-                            <span class="info-tile-val">Череповец, ул. Социалистическая, 33</span>
-                        </span>
+                <div class="hero-meta-line">
+                    <a href="https://yandex.ru/maps/?rtext=~59.122844%2C37.932270&rtt=auto" target="_blank" rel="noopener noreferrer" class="hero-address">
+                        📍 Череповец, ул. Социалистическая, 33 <span style="color:var(--gold-light); font-weight:700;">↗</span>
                     </a>
-                    <div class="info-tile">
-                        <span class="info-tile-icon">🕒</span>
-                        <span>
-                            <span class="info-tile-label">График работы • Кухня с 18:00</span>
-                            <span class="info-tile-val">Вс–Чт: 13:00–01:00 • Пт–Сб: 13:00–02:00</span>
-                        </span>
-                    </div>
+                    <span class="hero-hours">Кухня с 18:00 • Фритюр весь день</span>
                 </div>
 
+                <!-- 3 главные понятные кнопки без перегруза -->
                 <div id="heroMainActions" class="hero-actions">
-                    <button type="button" onclick="openModal('bookingModal')" class="action-btn primary">📞 Бронь стола</button>
-                    <button type="button" onclick="openReviewModal()" class="action-btn accent">⭐ Скидка 10%</button>
-                    <button type="button" onclick="openModal('wifiModal')" class="action-btn">📶 Wi-Fi: Wave</button>
-                    <button type="button" onclick="openModal('gamesModal')" class="action-btn">🎮 Игры за столом</button>
-                    <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" rel="noopener noreferrer" class="action-btn span-2">💛 Чаевые команде</a>
+                    <button type="button" onclick="openModal('bookingModal')" class="action-btn primary">📞 Бронь</button>
+                    <button type="button" onclick="openReviewModal()" class="action-btn accent">⭐ Отзыв = −10%</button>
+                    <button type="button" onclick="openModal('servicesModal')" class="action-btn">☰ Сервисы</button>
                 </div>
 
-                <div id="banquetModeBanner" class="hidden" style="margin-top:12px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:10px 12px; border-radius:12px; background:rgba(197,160,89,0.12); border:1px solid var(--border-gold); font-size:12.5px;">
-                    <span>🎉 <strong>Режим банкетного модуля</strong> (синхронизирован с сайтом)</span>
-                    <button type="button" onclick="toggleBanquetOnlyMode(false)" class="action-btn" style="padding:6px 10px; font-size:11.5px;">Открыть всё меню</button>
+                <!-- Скрытая кнопка возврата, когда страница открыта в банкетном режиме (?mode=banquet) -->
+                <div id="banquetModeBanner" class="hidden" style="margin-top:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; padding:9px 12px; border-radius:12px; background:rgba(197,160,89,0.12); border:1px solid var(--border-gold); font-size:12.5px;">
+                    <span>🎉 <strong>Банкетное предложение и расчёт сметы</strong></span>
+                    <button type="button" onclick="toggleBanquetOnlyMode(false)" class="action-btn" style="padding:6px 10px; font-size:11.5px;">← Всё меню</button>
+                </div>
+
+                <!-- Плашка установки на экран смартфона (показывается только в обычном мобильном браузере) -->
+                <div id="pwaStripBanner" class="pwa-strip hidden">
+                    <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+                        <span style="font-size:18px; flex-shrink:0;">📲</span>
+                        <span style="line-height:1.3;"><strong style="color:var(--gold-light);">Установить как приложение</strong><br><span style="color:var(--muted); font-size:11px;">Быстрый доступ к меню и акциям с экрана телефона</span></span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                        <button type="button" onclick="openInstallFlow()" class="action-btn primary" style="padding:7px 11px; font-size:11.5px;">Установить</button>
+                        <button type="button" onclick="dismissPwaStrip()" aria-label="Скрыть" style="color:var(--muted); font-size:15px; padding:4px;">✕</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -938,13 +933,13 @@
             <div class="search-row">
                 <div class="search-box">
                     <span class="search-ico">🔍</span>
-                    <input id="searchInput" type="search" placeholder="Найти блюдо, коктейль, пиво, чай или банкет..." oninput="handleSearch(this.value)" autocomplete="off">
+                    <input id="searchInput" type="search" placeholder="Найти блюдо, напиток, кальян или банкет..." oninput="handleSearch(this.value)" autocomplete="off">
                     <button id="searchClearBtn" type="button" class="search-clear hidden" onclick="clearSearch()" aria-label="Очистить поиск">✕</button>
                 </div>
-                <button type="button" onclick="openModal('kbzhuModal')" class="action-btn accent" style="padding:9px 11px; flex-shrink:0;">📊 КБЖУ</button>
+                <button id="filterToggleBtn" type="button" class="filter-toggle-btn" onclick="toggleFiltersRow()">⚙ Фильтр</button>
             </div>
             <div id="tabsScroll" class="tabs-scroll"></div>
-            <div id="filtersScroll" class="filters-scroll"></div>
+            <div id="filtersScroll" class="filters-scroll hidden"></div>
         </div>
     </nav>
 
@@ -1002,21 +997,48 @@
 
     <!-- ==================== COOKIE-ПЛАШКА (152-ФЗ) ==================== -->
     <div id="cookieBanner" class="cookie-banner hidden">
-        <div style="font-size:13px; font-weight:700; color:var(--gold-light); margin-bottom:6px;">Использование cookie и аналитики</div>
-        <p style="font-size:12px; color:var(--text-soft); margin-bottom:10px; line-height:1.45;">
-            Технические cookie нужны для работы блокнота заказа. Сервис <strong style="color:#fff;">Яндекс Метрика</strong> включается только с вашего согласия. Подробнее —
-            <button type="button" onclick="openModal('privacyModal')" style="color:var(--gold-light); text-decoration:underline;">Политика ПДн</button> и
-            <button type="button" onclick="openModal('consentModal')" style="color:var(--gold-light); text-decoration:underline;">Согласие</button>.
+        <p style="font-size:12px; color:var(--text-soft); margin-bottom:9px; line-height:1.4;">
+            Мы используем cookie и <strong style="color:#fff;">Яндекс Метрику</strong> (только с вашего согласия). Подробнее —
+            <button type="button" onclick="openModal('privacyModal')" style="color:var(--gold-light); text-decoration:underline;">Политика ПДн</button>.
         </p>
-        <div style="display:flex; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
-            <button type="button" onclick="declineCookies()" class="action-btn" style="padding:7px 12px; font-size:12px;">Только необходимые</button>
-            <button type="button" onclick="acceptCookies()" class="action-btn primary" style="padding:7px 14px; font-size:12px;">Принять все</button>
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+            <button type="button" onclick="declineCookies()" class="action-btn" style="padding:6px 11px; font-size:11.5px;">Только нужные</button>
+            <button type="button" onclick="acceptCookies()" class="action-btn primary" style="padding:6px 13px; font-size:11.5px;">Принять</button>
         </div>
     </div>
 
-    <!-- ==================== МОДАЛЬНЫЕ ОКНА ==================== -->
+    <!-- ==================== МОДАЛЬНЫЕ ОКНА (ВСЕ СТРОГО НА ВЕРХНЕМ УРОВНЕ BODY) ==================== -->
 
-    <!-- 1. Бронь стола -->
+    <!-- 1. Шторка «Сервисы» (разгружает главный экран, весь функционал под рукой) -->
+    <div id="servicesModal" class="modal-backdrop hidden" onclick="backdropClose(event,'servicesModal')">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h2 class="modal-title">Сервисы «Волна Лаундж»</h2>
+                <button type="button" class="modal-close" onclick="closeModal('servicesModal')">✕</button>
+            </div>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:10px;">
+                <button type="button" onclick="closeModal('servicesModal'); openModal('wifiModal');" class="action-btn" style="padding:12px; justify-content:flex-start; padding-left:14px;">📶 Подключиться к гостевому Wi-Fi: Wave</button>
+                <button type="button" onclick="closeModal('servicesModal'); openModal('gamesModal');" class="action-btn accent" style="padding:12px; justify-content:flex-start; padding-left:14px;">🎮 Мини-игра «Волна» и игры за столом</button>
+                <a href="https://pay.cloudtips.ru/p/79aaf6e6" target="_blank" rel="noopener noreferrer" class="action-btn" style="padding:12px; justify-content:flex-start; padding-left:14px;">💛 Оставить чаевые команде (CloudTips) ↗</a>
+                <button type="button" onclick="closeModal('servicesModal'); openModal('kbzhuModal');" class="action-btn" style="padding:12px; justify-content:flex-start; padding-left:14px;">📊 Полная таблица КБЖУ и аллергены</button>
+                <button type="button" onclick="closeModal('servicesModal'); scrollToSection('sec-banquet');" class="action-btn" style="padding:12px; justify-content:flex-start; padding-left:14px;">🎉 Банкетное предложение и календарь дат</button>
+                <button type="button" id="servicesInstallBtn" onclick="openInstallFlow()" class="action-btn primary" style="padding:12px;">📲 Установить меню на экран смартфона</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Инструкция установки приложения (PWA как у банков на iOS и Android) -->
+    <div id="installGuideModal" class="modal-backdrop hidden" onclick="backdropClose(event,'installGuideModal')">
+        <div class="modal-box">
+            <div class="modal-head">
+                <h2 class="modal-title">Установить приложение 📲</h2>
+                <button type="button" class="modal-close" onclick="closeModal('installGuideModal')">✕</button>
+            </div>
+            <div id="installGuideBody" class="modal-body" style="display:flex; flex-direction:column; gap:12px; font-size:13px; color:var(--text-soft); line-height:1.5;"></div>
+        </div>
+    </div>
+
+    <!-- 3. Бронь стола (кнопка перехода на блок с банкетным предложением) -->
     <div id="bookingModal" class="modal-backdrop hidden" onclick="backdropClose(event,'bookingModal')">
         <div class="modal-box">
             <div class="modal-head">
@@ -1027,18 +1049,17 @@
                 <p style="font-size:13px; color:var(--text-soft);">Выберите удобный способ бронирования в «Волна Лаундж» (Череповец, ул. Социалистическая, 33):</p>
                 <a href="tel:+79005444437" class="action-btn primary" style="padding:13px;">📞 Позвонить: +7 (900) 544-44-37</a>
                 <a href="https://vk.me/wave_lounge" target="_blank" rel="noopener noreferrer" class="action-btn accent" style="padding:13px;">💬 Написать ВКонтакте (@wave_lounge) ↗</a>
-                <div style="margin-top:6px; padding-top:10px; border-top:1px solid var(--border); font-size:12.5px; color:var(--muted);">
-                    Планируете закрытие площадки под банкет или день рождения?
-                    <div style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;">
-                        <a href="https://t.me/tomilov_jonn" target="_blank" rel="noopener noreferrer" class="action-btn" style="flex:1;">Telegram Евгения ↗</a>
-                        <a href="https://vk.me/tomilov_jonn" target="_blank" rel="noopener noreferrer" class="action-btn" style="flex:1;">ВК Евгения ↗</a>
-                    </div>
+                <div style="margin-top:6px; padding-top:12px; border-top:1px solid var(--border); font-size:12.5px; color:var(--muted);">
+                    Планируете закрытие площадки под банкет, юбилей или день рождения?
+                    <button type="button" onclick="closeModal('bookingModal'); scrollToSection('sec-banquet');" class="action-btn accent" style="width:100%; margin-top:8px; padding:12px;">
+                        🎉 Смотреть банкетное предложение →
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 2. Wi-Fi Wave (без чужих MAC-данных) -->
+    <!-- 4. Wi-Fi Wave (без чужих MAC-данных) -->
     <div id="wifiModal" class="modal-backdrop hidden" onclick="backdropClose(event,'wifiModal')">
         <div class="modal-box">
             <div class="modal-head">
@@ -1048,7 +1069,7 @@
             <div class="modal-body" style="display:flex; flex-direction:column; gap:12px; font-size:13px; color:var(--text-soft);">
                 <div style="padding:12px; border-radius:12px; background:var(--bg); border:1px solid var(--border-gold);">
                     <div>Сеть: <strong style="color:var(--gold-light);">Wave</strong> (без пароля)</div>
-                    <div style="font-size:12px; color:var(--muted); margin-top:3px;">После подключения в настройках телефона откроется окно быстрой авторизации по номеру телефона (требование закона РФ для публичного Wi-Fi).</div>
+                    <div style="font-size:12px; color:var(--muted); margin-top:3px;">После подключения в настройках телефона откроется окно быстрой авторизации по номеру (требование закона РФ для публичного Wi-Fi).</div>
                 </div>
                 <p style="font-size:12.5px;">Если окно входа не открылось автоматически — нажмите кнопку ниже (при активном подключении к сети <strong>Wave</strong>):</p>
                 <a href="http://wf.wifly.net/login" target="_blank" rel="noopener noreferrer" class="action-btn primary" style="padding:12px;">📶 Открыть страницу входа Wi-Fi ↗</a>
@@ -1057,7 +1078,7 @@
         </div>
     </div>
 
-    <!-- 3. Блокнот заказа + деление счёта -->
+    <!-- 5. Блокнот заказа + деление счёта -->
     <div id="notepadModal" class="modal-backdrop hidden" onclick="backdropClose(event,'notepadModal')">
         <div class="modal-box">
             <div class="modal-head">
@@ -1071,7 +1092,7 @@
         </div>
     </div>
 
-    <!-- 4. Полная таблица КБЖУ -->
+    <!-- 6. Полная таблица КБЖУ -->
     <div id="kbzhuModal" class="modal-backdrop hidden" onclick="backdropClose(event,'kbzhuModal')">
         <div class="modal-box" style="max-width:680px;">
             <div class="modal-head">
@@ -1088,8 +1109,8 @@
         </div>
     </div>
 
-    <!-- 5. Игры за столом -->
-    <div id="gamesModal" class="modal-backdrop hidden" onclick="backdropClose(event,'gamesModal'); stopWaveGame();">
+    <!-- 7. Игры за столом (починен баг всплытия клика + новая игра «Волна») -->
+    <div id="gamesModal" class="modal-backdrop hidden" onclick="if(event.target && event.target.id === 'gamesModal'){ closeModal('gamesModal'); stopWaveGame(); }">
         <div class="modal-box" style="max-width:600px;">
             <div class="modal-head">
                 <h2 class="modal-title">Пока ждёте заказ 🎮</h2>
@@ -1097,27 +1118,30 @@
             </div>
             <div class="modal-body" style="display:flex; flex-direction:column; gap:12px;">
                 <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-                    <button type="button" id="gTabWave" class="action-btn accent" onclick="switchGameTab('wave')">🌊 Поймай Волну</button>
-                    <button type="button" id="gTabRoulette" class="action-btn" onclick="switchGameTab('roulette')">🎰 Рулетка вкусов</button>
-                    <button type="button" id="gTabParty" class="action-btn" onclick="switchGameTab('party')">🎲 Игры стола</button>
+                    <button type="button" id="gTabWave" class="action-btn accent" onclick="switchGameTab('wave')">🌊 Волна</button>
+                    <button type="button" id="gTabRoulette" class="action-btn" onclick="switchGameTab('roulette')">🎰 Рулетка</button>
+                    <button type="button" id="gTabParty" class="action-btn" onclick="switchGameTab('party')">🎲 Для стола</button>
                 </div>
 
-                <!-- Игра 1: Поймай Волну -->
+                <!-- Игра 1: Абстрактная Волна (растёт скорость, сужается окно) -->
                 <div id="gameWavePane">
-                    <div style="display:flex; justify-content:space-between; font-size:12.5px; margin-bottom:8px;">
-                        <span>Счёт: <strong id="waveScore" style="color:var(--gold-light);">0</strong></span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:12.5px; margin-bottom:8px;">
+                        <span>Счёт: <strong id="waveScore" style="color:var(--gold-light); font-size:15px;">0</strong></span>
+                        <span id="waveSpeedLabel" style="font-size:11px; color:var(--muted);">Скорость: 1.0x</span>
                         <span>Рекорд: <strong id="waveBest" style="color:var(--gold-light);">0</strong></span>
                     </div>
-                    <canvas id="waveGameCanvas" width="520" height="220"></canvas>
-                    <div style="display:flex; gap:8px; margin-top:10px; align-items:center;">
-                        <button type="button" id="waveStartBtn" class="action-btn primary" style="flex:1; padding:11px;" onclick="startWaveGame()">▶ Старт / Прыжок</button>
+                    <div class="game-stage">
+                        <canvas id="waveGameCanvas"></canvas>
                     </div>
-                    <p style="font-size:11.5px; color:var(--muted); margin-top:6px; text-align:center;">Тапайте по экрану (или Пробел), чтобы перепрыгивать рифы и ловить золотые звёзды.</p>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button type="button" id="waveStartBtn" class="action-btn primary" style="flex:1; padding:12px;" onclick="onWaveActionBtn()">▶ Старт</button>
+                    </div>
+                    <p style="font-size:11.5px; color:var(--muted); margin-top:6px; text-align:center;">Тапайте по полю (или Пробел), чтобы провести волну через золотое окно. С каждым окном выше скорость и уже проход.</p>
                 </div>
 
                 <!-- Игра 2: Рулетка вкусов -->
-                <div id="gameRoulettePane" class="hidden" style="text-align:center; padding:10px 0;">
-                    <p style="font-size:13px; color:var(--text-soft); margin-bottom:12px;">Не можете определиться? Крутите рулетку — подберём связку из нашего меню!</p>
+                <div id="gameRoulettePane" class="hidden" style="text-align:center; padding:8px 0;">
+                    <p style="font-size:13px; color:var(--text-soft); margin-bottom:12px;">Не можете определиться? Крутите рулетку — подберём связку вечера!</p>
                     <div id="rouletteResult" style="background:var(--bg); border:1px solid var(--border-gold); border-radius:14px; padding:16px; margin-bottom:12px; min-height:110px; display:flex; flex-direction:column; justify-content:center; gap:6px;">
                         <span style="color:var(--muted); font-size:13px;">Нажмите кнопку ниже 🎰</span>
                     </div>
@@ -1145,13 +1169,13 @@
         </div>
     </div>
 
-    <!-- 6. Умная система отзывов -->
+    <!-- 8. Умная система отзывов (5★ -> Карты, 1-4★ -> Telegram-бот) -->
     <div id="reviewModal" class="modal-backdrop hidden" onclick="backdropClose(event,'reviewModal')">
         <div class="modal-box">
             <div class="modal-head">
                 <div>
-                    <h2 class="modal-title">Оцените ваш визит ⭐</h2>
-                    <div style="font-size:11.5px; color:var(--muted);">За отзыв на картах — скидка 10% (покажите скриншот)</div>
+                    <h2 class="modal-title">Отзыв = скидка 10% ⭐</h2>
+                    <div style="font-size:11.5px; color:var(--muted);">Оставьте отзыв на картах и покажите скриншот сотруднику</div>
                 </div>
                 <button type="button" class="modal-close" onclick="closeModal('reviewModal')">✕</button>
             </div>
@@ -1193,7 +1217,7 @@
 
                     <label style="display:flex; align-items:flex-start; gap:8px; font-size:11.5px; color:var(--text-soft); background:var(--bg); border:1px solid var(--border); padding:9px 10px; border-radius:10px; cursor:pointer;">
                         <input id="reviewConsentCheck" type="checkbox" style="margin-top:2px; width:16px; height:16px; accent-color:var(--gold); flex-shrink:0;">
-                        <span>Я даю отдельное <button type="button" onclick="event.stopPropagation(); openModal('consentModal');" style="color:var(--gold-light); text-decoration:underline;">согласие на обработку ПДн</button> (при указании контактов) и ознакомлен(а) с <button type="button" onclick="event.stopPropagation(); openModal('privacyModal');" style="color:var(--gold-light); text-decoration:underline;">Политикой ПДн</button>. *</span>
+                        <span>Даю <button type="button" onclick="event.stopPropagation(); openModal('consentModal');" style="color:var(--gold-light); text-decoration:underline;">согласие на обработку ПДн</button> (при указании контактов) и ознакомлен(а) с <button type="button" onclick="event.stopPropagation(); openModal('privacyModal');" style="color:var(--gold-light); text-decoration:underline;">Политикой ПДн</button>. *</span>
                     </label>
 
                     <div id="reviewFormError" class="err-box hidden"></div>
@@ -1206,7 +1230,7 @@
                     <div style="font-size:38px;">🤝</div>
                     <div style="font-size:17px; font-weight:700; color:var(--gold-light);">Спасибо за честную обратную связь!</div>
                     <p style="font-size:13px; color:var(--text-soft); line-height:1.5;">
-                        Ваше обращение <strong id="reviewThanksId" style="color:#fff;"></strong> передано лично управляющему «Волна Лаундж». Мы обязательно разберём ситуацию с командой и учтём ваше мнение, чтобы следующий визит прошёл на все 5 звёзд.
+                        Ваше обращение <strong id="reviewThanksId" style="color:#fff;"></strong> передано лично управляющему «Волна Лаундж». Мы обязательно разберём ситуацию с командой и учтём ваше мнение.
                     </p>
                     <button type="button" class="action-btn accent" onclick="closeModal('reviewModal')">Вернуться в меню</button>
                 </div>
@@ -1214,28 +1238,13 @@
         </div>
     </div>
 
-    <!-- 7. Отправка банкетной заявки и сметы -->
-    <div id="banquetLeadModal" class="modal-backdrop hidden" onclick="backdropClose(event,'banquetLeadModal')">
-        <div class="modal-box">
-            <div class="modal-head">
-                <h2 class="modal-title">Отправить смету и бронь даты</h2>
-                <button type="button" class="modal-close" onclick="closeModal('banquetLeadModal')">✕</button>
-            </div>
-            <div class="modal-body">
-                <form id="banquetLeadForm" onsubmit="submitBanquetLead(event)" style="display:flex; flex-direction:column; gap:11px;">
-                    <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:10px 12px;">
-                        <div class="field-label" style="margin-bottom:4px;">Ваша собранная смета</div>
-                        <pre id="leadPreviewSummary" style="font-family:inherit; font-size:12px; color:var(--text-soft); white-space:pre-wrap; line-height:1.4; max-height:140px; overflow-y:auto;"></pre>
-                    </div>
-
-                    <div>
-    <!-- 7. Отправка банкетной заявки и сметы (Схема 1: обезличенная смета #WL без ПДн) -->
+    <!-- 9. Отправка банкетной сметы и запрос даты (ЧИСТАЯ ОДНА МОДАЛКА — связь с ботом v2.5) -->
     <div id="banquetLeadModal" class="modal-backdrop hidden" onclick="backdropClose(event,'banquetLeadModal')">
         <div class="modal-box">
             <div class="modal-head">
                 <div>
-                    <h2 class="modal-title">Зафиксировать смету и дату</h2>
-                    <div style="font-size:11.5px; color:var(--muted);">Без передачи телефона на сторонние серверы (Схема 1)</div>
+                    <h2 class="modal-title">Забронировать дату и смету</h2>
+                    <div style="font-size:11.5px; color:var(--muted);">Смета отправится управляющему и скопируется для чата</div>
                 </div>
                 <button type="button" class="modal-close" onclick="closeModal('banquetLeadModal')">✕</button>
             </div>
@@ -1243,32 +1252,32 @@
                 <form id="banquetLeadForm" onsubmit="submitBanquetLead(event)" style="display:flex; flex-direction:column; gap:12px;">
                     <div style="background:var(--bg); border:1px solid var(--border-gold); border-radius:12px; padding:10px 12px;">
                         <div class="field-label" style="margin-bottom:4px;">Ваша собранная смета</div>
-                        <pre id="leadPreviewSummary" style="font-family:inherit; font-size:12px; color:var(--text-soft); white-space:pre-wrap; line-height:1.45; max-height:165px; overflow-y:auto;"></pre>
+                        <pre id="leadPreviewSummary" style="font-family:inherit; font-size:12px; color:var(--text-soft); white-space:pre-wrap; line-height:1.45; max-height:170px; overflow-y:auto;"></pre>
                     </div>
 
                     <div id="leadDateWarning" class="hidden" style="padding:9px 12px; border-radius:10px; background:rgba(197,160,89,0.12); border:1px dashed var(--gold); font-size:12px; color:var(--gold-light);">
-                        💡 Дата в календаре ещё не выбрана — вы сможете согласовать свободную дату напрямую с Евгением.
+                        💡 Дата в календаре ещё не выбрана — можно выбрать её сейчас в календаре или согласовать с Евгением напрямую.
                     </div>
 
                     <div>
                         <label for="leadCommentInput" class="field-label">Пожелания к мероприятию (необязательно)</label>
                         <textarea id="leadCommentInput" rows="2" class="field-input" placeholder="DJ, кальянный безлимит, свой торт, фотозона, рассадка..."></textarea>
-                        <div style="font-size:11px; color:var(--muted); margin-top:4px;">ФИО и телефон вводить не нужно — контакты обсудим напрямую в чате или по звонку.</div>
                     </div>
 
-                    <button id="leadSubmitBtn" type="submit" class="action-btn primary" style="padding:13px; font-size:13.5px;">📄 Зафиксировать смету #WL и перейти к связи</button>
+                    <button id="leadSubmitBtn" type="submit" class="action-btn primary" style="padding:13px; font-size:13.5px;">📩 Отправить смету управляющему</button>
                 </form>
 
-                <div id="banquetLeadSuccess" class="hidden" style="text-align:center; display:flex; flex-direction:column; gap:10px; padding:6px 0;">
-                    <div style="font-size:38px;">🎉</div>
-                    <div style="font-size:18px; font-weight:700; color:var(--gold-light);">Смета <span id="leadSuccessId"></span> зафиксирована!</div>
+                <div id="banquetLeadSuccess" class="hidden" style="text-align:center; display:flex; flex-direction:column; gap:10px; padding:4px 0;">
+                    <div style="font-size:36px;">🎉</div>
+                    <div style="font-size:18px; font-weight:700; color:var(--gold-light);">Смета <span id="leadSuccessId"></span> отправлена!</div>
                     <p style="font-size:13px; color:var(--text-soft); line-height:1.5;">
-                        Расчёт и выбранная дата уже отправлены управляющему. Чтобы <strong style="color:#fff;">подтвердить и закрыть дату</strong>, напишите Евгению или позвоните — просто назовите код <strong id="leadSuccessCodeInline" style="color:var(--gold-light);"></strong>:
+                        Расчёт уже прилетел управляющему Евгению. Чтобы <strong style="color:#fff;">подтвердить и закрыть дату</strong>, свяжитесь с ним — текст сметы <strong style="color:var(--gold-light);">уже скопирован</strong> (просто нажмите «Вставить» в чате):
                     </p>
                     <div style="display:flex; flex-direction:column; gap:8px; margin-top:4px;">
-                        <a id="leadSuccessTgBtn" href="https://t.me/tomilov_jonn" target="_blank" rel="noopener noreferrer" class="action-btn primary" style="padding:13px;">✈️ Отправить смету Евгению в Telegram ↗</a>
-                        <button type="button" onclick="openVkWithCopiedLead()" class="action-btn accent" style="padding:12px;">💬 Написать ВКонтакте (смета скопируется) ↗</button>
-                        <a href="tel:+79116738344" class="action-btn" style="padding:11px;">📞 Позвонить Евгению: +7 (911) 673-83-44</a>
+                        <button type="button" onclick="openTelegramWithCopiedLead()" class="action-btn primary" style="padding:13px;">✈️ Написать Евгению в Telegram ↗</button>
+                        <button type="button" onclick="openVkWithCopiedLead()" class="action-btn accent" style="padding:12px;">💬 Написать Евгению ВКонтакте ↗</button>
+                        <a href="tel:+79116738344" class="action-btn" style="padding:11px;">📞 Позвонить: +7 (911) 673-83-44</a>
+                        <button type="button" onclick="copyBanquetSummary()" class="action-btn" style="padding:9px; font-size:12px;">📋 Скопировать смету ещё раз</button>
                     </div>
                     <button type="button" class="action-btn" style="margin-top:2px; font-size:12px; color:var(--muted);" onclick="closeModal('banquetLeadModal')">Вернуться к меню</button>
                 </div>
@@ -1276,26 +1285,32 @@
         </div>
     </div>
 
-    <!-- 8. Просмотр фото (Lightbox) -->
+    <!-- 10. Карточка блюда (Крупное фото + Описание + КБЖУ) -->
     <div id="lightboxModal" class="modal-backdrop hidden" onclick="backdropClose(event,'lightboxModal')">
         <div class="modal-box" style="max-width:460px;">
             <div class="modal-head">
-                <h2 id="lightboxTitle" class="modal-title">Блюдо</h2>
+                <div>
+                    <h2 id="lightboxTitle" class="modal-title">Блюдо</h2>
+                    <div id="lightboxVol" style="font-size:11.5px; color:var(--muted);"></div>
+                </div>
                 <button type="button" class="modal-close" onclick="closeModal('lightboxModal')">✕</button>
             </div>
-            <div class="modal-body" style="text-align:center;">
-                <div id="lightboxMedia" style="border-radius:14px; overflow:hidden; margin-bottom:12px; background:var(--bg); border:1px solid var(--border-gold); min-height:180px; display:flex; align-items:center; justify-content:center;"></div>
-                <p id="lightboxDesc" style="font-size:13px; color:var(--text-soft); margin-bottom:8px; text-align:left;"></p>
-                <div id="lightboxKbzhu" class="kbzhu-line" style="text-align:left; margin-bottom:10px;"></div>
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span id="lightboxPrice" class="price-pill" style="font-size:18px;"></span>
-                    <button type="button" class="action-btn" onclick="closeModal('lightboxModal')">Закрыть</button>
+            <div class="modal-body" style="display:flex; flex-direction:column; gap:10px;">
+                <div id="lightboxMedia" style="border-radius:14px; overflow:hidden; background:var(--bg); border:1px solid var(--border-gold); min-height:170px; display:flex; align-items:center; justify-content:center;"></div>
+                <p id="lightboxDesc" style="font-size:13px; color:var(--text-soft); line-height:1.45;"></p>
+                <div id="lightboxKbzhu" class="kbzhu-line"></div>
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:4px;">
+                    <span id="lightboxPrice" class="price-pill" style="font-size:19px;"></span>
+                    <div style="display:flex; gap:8px;">
+                        <button id="lightboxAddBtn" type="button" class="action-btn primary" style="padding:10px 14px;">+ В мой выбор</button>
+                        <button type="button" class="action-btn" style="padding:10px 12px;" onclick="closeModal('lightboxModal')">Закрыть</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 9. Политика обработки ПДн (152-ФЗ) -->
+    <!-- 11. Политика обработки ПДн (152-ФЗ) -->
     <div id="privacyModal" class="modal-backdrop hidden" onclick="backdropClose(event,'privacyModal')">
         <div class="modal-box">
             <div class="modal-head">
@@ -1304,15 +1319,15 @@
             </div>
             <div class="modal-body" style="font-size:12.5px; color:var(--text-soft); display:flex; flex-direction:column; gap:10px; line-height:1.5;">
                 <p><strong style="color:#fff;">1. Оператор:</strong> ИП КУРОПАТКИН ОЛЕГ НИКОЛАЕВИЧ, ОГРНИП 318352500005532, адрес: 162602, Вологодская область, г. Череповец, ул. Социалистическая, д. 33, e-mail: <a href="mailto:canopy@mail.ru" style="color:var(--gold-light); text-decoration:underline;">canopy@mail.ru</a>. Политика составлена в соответствии с ФЗ от 27.07.2006 № 152-ФЗ «О персональных данных».</p>
-                <p><strong style="color:#fff;">2. Состав данных:</strong> при заполнении форм — имя, номер телефона, способ связи, номер стола (по желанию), текст заявки/отзыва; при согласии на аналитические cookie — технические данные (cookie, IP, браузер, действия на сайте) в сервисе Яндекс Метрика (ООО «ЯНДЕКС»).</p>
-                <p><strong style="color:#fff;">3. Цели обработки:</strong> расчёт сметы и согласование бронирования банкетов, обработка обратной связи гостей, веб-аналитика работы онлайн-меню.</p>
+                <p><strong style="color:#fff;">2. Состав данных:</strong> при отправке обратной связи — указанный контакт или номер стола и текст обращения; при согласии на аналитические cookie — технические данные (cookie, IP, браузер, действия на сайте) в сервисе Яндекс Метрика (ООО «ЯНДЕКС»).</p>
+                <p><strong style="color:#fff;">3. Цели обработки:</strong> согласование банкетов, обработка обратной связи гостей, веб-аналитика работы онлайн-меню.</p>
                 <p><strong style="color:#fff;">4. Правовые основания:</strong> отдельное информированное <button type="button" onclick="closeModal('privacyModal'); openModal('consentModal');" style="color:var(--gold-light); text-decoration:underline;">Согласие субъекта ПДн</button> (ч. 1 ст. 9 152-ФЗ) либо заключение/исполнение договора по инициативе гостя (п. 5 ч. 1 ст. 6 152-ФЗ).</p>
                 <p><strong style="color:#fff;">5. Сроки хранения и отзыв:</strong> до достижения целей обработки либо до отзыва согласия, но не более 3 лет. Для отзыва или удаления данных напишите на <a href="mailto:canopy@mail.ru" style="color:var(--gold-light); text-decoration:underline;">canopy@mail.ru</a> — обработка прекращается в срок до 30 календарных дней.</p>
             </div>
         </div>
     </div>
 
-    <!-- 10. Согласие на обработку ПДн -->
+    <!-- 12. Согласие на обработку ПДн -->
     <div id="consentModal" class="modal-backdrop hidden" onclick="backdropClose(event,'consentModal')">
         <div class="modal-box">
             <div class="modal-head">
@@ -1320,9 +1335,9 @@
                 <button type="button" class="modal-close" onclick="closeModal('consentModal')">✕</button>
             </div>
             <div class="modal-body" style="font-size:12.5px; color:var(--text-soft); display:flex; flex-direction:column; gap:10px; line-height:1.5;">
-                <p>Проставляя отметку (галочку) в веб-форме и/или нажимая «Принять все» в уведомлении cookie на сайте <strong style="color:#fff;">волна-лаундж.рф</strong> (включая VK Mini App), я свободно, своей волей и в своём интересе даю согласие <strong style="color:#fff;">ИП Куропаткину Олегу Николаевичу</strong> (ОГРНИП 318352500005532, г. Череповец, ул. Социалистическая, д. 33, canopy@mail.ru) на обработку моих персональных данных:</p>
-                <p><strong style="color:#fff;">Перечень данных:</strong> имя (псевдоним), номер телефона, способ связи, текст заявки/обращения, а при согласии на cookie — обезличенные данные Яндекс Метрики.</p>
-                <p><strong style="color:#fff;">Цели и действия:</strong> сбор, запись, систематизация, хранение, уточнение, использование и уничтожение для согласования банкетов, бронирования и обработки отзывов.</p>
+                <p>Проставляя отметку (галочку) в веб-форме и/или нажимая «Принять» в уведомлении cookie на сайте <strong style="color:#fff;">волна-лаундж.рф</strong>, я свободно, своей волей и в своём интересе даю согласие <strong style="color:#fff;">ИП Куропаткину Олегу Николаевичу</strong> (ОГРНИП 318352500005532, г. Череповец, ул. Социалистическая, д. 33, canopy@mail.ru) на обработку моих персональных данных:</p>
+                <p><strong style="color:#fff;">Перечень данных:</strong> контактные данные (при указании в отзыве), текст обращения, а при согласии на cookie — обезличенные данные Яндекс Метрики.</p>
+                <p><strong style="color:#fff;">Цели и действия:</strong> сбор, запись, хранение, уточнение, использование и уничтожение для обработки отзывов и улучшения качества обслуживания.</p>
                 <p><strong style="color:#fff;">Срок и отзыв:</strong> действует до достижения целей или отзыва, но не более 3 лет. Отзыв — письмом на <a href="mailto:canopy@mail.ru" style="color:var(--gold-light); text-decoration:underline;">canopy@mail.ru</a>. Согласие не распространяется на рекламные рассылки.</p>
             </div>
         </div>
@@ -1330,20 +1345,13 @@
 
     <script>
         // ============================================================
-        // КОНФИГУРАЦИЯ (ФОТО И ЕДИНЫЙ БЭКЕНД GOOGLE APPS SCRIPT)
+        // КОНФИГУРАЦИЯ (ФОТО И СИНХРОНИЗАЦИЯ С БОТОМ v2.5)
         // ============================================================
-        const USE_LOCAL_IMAGES = true; // Фото подцепляются автоматически из папки img/ (если файла нет — показывается заглушка)
+        const USE_LOCAL_IMAGES = true;
         const GAS_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyrV6MYHmUSZLtbUy7gGN4cVyceD_-oQ7fkjv9FSyLe8L5r8NcUfaqVWIfQ1ICdQldx/exec';
 
-        const BANQUET_CALENDAR_CONFIG = {
-            bookedDatesApiUrl: GAS_WEBAPP_URL,
-            submitLeadApiUrl: GAS_WEBAPP_URL,
-            iframeUrl: '', // Если позже захотите встроить внешний виджет-календарь iframe
-            demoBookedDates: []
-        };
-
         // ============================================================
-        // ДАННЫЕ МЕНЮ (100% ПО ПОСЛЕДНЕМУ PDF + БАНКЕТНОЕ МЕНЮ + КБЖУ)
+        // ДАННЫЕ МЕНЮ (100% ПО АКТУАЛЬНОМУ PDF + БАНКЕТЫ + КБЖУ)
         // ============================================================
         const KITCHEN_SUBCATS = [
             {
@@ -1383,18 +1391,18 @@
         ];
 
         const FRY_ITEMS = [
-            { id:'f1', name:'Картофель фри', vol:'200 г', price:280, flags:['hit','under400'], kbzhu:'Порция: 580 ккал • Б 7 г • Ж 28 г • У 75 г (290 ккал / 100 г)' },
-            { id:'f2', name:'Картофель Айдахо', vol:'200 г', price:280, flags:['under400'], kbzhu:'Порция: 440 ккал • Б 6 г • Ж 20 г • У 59 г (220 ккал / 100 г)' },
-            { id:'f3', name:'Чесночные гренки', vol:'200 г', price:280, flags:['hit','under400'], kbzhu:'Порция: 620 ккал • Б 13 г • Ж 28 г • У 79 г (310 ккал / 100 г)' },
-            { id:'f4', name:'Луковые кольца', vol:'200 г', price:300, flags:['under400'], kbzhu:'Порция: 540 ккал • Б 8 г • Ж 27 г • У 66 г (270 ккал / 100 г)' },
-            { id:'f5', name:'Рыбные палочки', vol:'200 г', price:350, flags:['under400'], kbzhu:'Порция: 490 ккал • Б 24 г • Ж 24 г • У 44 г (245 ккал / 100 г)' },
-            { id:'f6', name:'Наггетсы куриные', vol:'200 г', price:350, flags:['hit','under400'], kbzhu:'Порция: 530 ккал • Б 30 г • Ж 29 г • У 37 г (265 ккал / 100 г)' },
-            { id:'f7', name:'Стрипсы куриные', vol:'200 г', price:400, flags:['hit','under400'], kbzhu:'Порция: 510 ккал • Б 34 г • Ж 25 г • У 36 г (255 ккал / 100 г)' },
-            { id:'f8', name:'Сырные палочки', vol:'200 г', price:400, flags:['hit','under400'], kbzhu:'Порция: 640 ккал • Б 26 г • Ж 41 г • У 42 г (320 ккал / 100 г)' },
-            { id:'f9', name:'Кольца кальмара', vol:'200 г', price:450, flags:[], kbzhu:'Порция: 470 ккал • Б 25 г • Ж 23 г • У 40 г (235 ккал / 100 г)' },
-            { id:'f10', name:'Камамбер в кляре', vol:'200 г', price:550, flags:['hit'], kbzhu:'Порция: 680 ккал • Б 28 г • Ж 49 г • У 31 г (340 ккал / 100 г)' },
-            { id:'f11', name:'Крылышки куриные', vol:'300 г', price:600, flags:[], kbzhu:'Порция: 780 ккал • Б 54 г • Ж 57 г • У 12 г (260 ккал / 100 г)' },
-            { id:'f12', name:'Хрустящие креветки', vol:'200 г', price:650, flags:[], kbzhu:'Порция: 450 ккал • Б 29 г • Ж 21 г • У 36 г (225 ккал / 100 г)' }
+            { id:'f1', name:'Картофель фри', vol:'200 г', price:280, emoji:'🍟', flags:['hit','under400'], kbzhu:'Порция: 580 ккал • Б 7 г • Ж 28 г • У 75 г (290 ккал / 100 г)' },
+            { id:'f2', name:'Картофель Айдахо', vol:'200 г', price:280, emoji:'🥔', flags:['under400'], kbzhu:'Порция: 440 ккал • Б 6 г • Ж 20 г • У 59 г (220 ккал / 100 г)' },
+            { id:'f3', name:'Чесночные гренки', vol:'200 г', price:280, emoji:'🥖', flags:['hit','under400'], kbzhu:'Порция: 620 ккал • Б 13 г • Ж 28 г • У 79 г (310 ккал / 100 г)' },
+            { id:'f4', name:'Луковые кольца', vol:'200 г', price:300, emoji:'🧅', flags:['under400'], kbzhu:'Порция: 540 ккал • Б 8 г • Ж 27 г • У 66 г (270 ккал / 100 г)' },
+            { id:'f5', name:'Рыбные палочки', vol:'200 г', price:350, emoji:'🐟', flags:['under400'], kbzhu:'Порция: 490 ккал • Б 24 г • Ж 24 г • У 44 г (245 ккал / 100 г)' },
+            { id:'f6', name:'Наггетсы куриные', vol:'200 г', price:350, emoji:'🍗', flags:['hit','under400'], kbzhu:'Порция: 530 ккал • Б 30 г • Ж 29 г • У 37 г (265 ккал / 100 г)' },
+            { id:'f7', name:'Стрипсы куриные', vol:'200 г', price:400, emoji:'🍗', flags:['hit','under400'], kbzhu:'Порция: 510 ккал • Б 34 г • Ж 25 г • У 36 г (255 ккал / 100 г)' },
+            { id:'f8', name:'Сырные палочки', vol:'200 г', price:400, emoji:'🧀', flags:['hit','under400'], kbzhu:'Порция: 640 ккал • Б 26 г • Ж 41 г • У 42 г (320 ккал / 100 г)' },
+            { id:'f9', name:'Кольца кальмара', vol:'200 г', price:450, emoji:'🦑', flags:[], kbzhu:'Порция: 470 ккал • Б 25 г • Ж 23 г • У 40 г (235 ккал / 100 г)' },
+            { id:'f10', name:'Камамбер в кляре', vol:'200 г', price:550, emoji:'🧀', flags:['hit'], kbzhu:'Порция: 680 ккал • Б 28 г • Ж 49 г • У 31 г (340 ккал / 100 г)' },
+            { id:'f11', name:'Крылышки куриные', vol:'300 г', price:600, emoji:'🍗', flags:[], kbzhu:'Порция: 780 ккал • Б 54 г • Ж 57 г • У 12 г (260 ккал / 100 г)' },
+            { id:'f12', name:'Хрустящие креветки', vol:'200 г', price:650, emoji:'🍤', flags:[], kbzhu:'Порция: 450 ккал • Б 29 г • Ж 21 г • У 36 г (225 ккал / 100 г)' }
         ];
 
         const DESSERT_ITEMS = [
@@ -1522,20 +1530,20 @@
         ];
 
         const SNACK_ITEMS = [
-            { id:'sn1', name:'Арахис солёный', vol:'100 г', price:200, flags:['under400'], kbzhu:'Порция: 590 ккал • Б 26 г • Ж 50 г • У 10 г (590 ккал / 100 г)' },
-            { id:'sn2', name:'Сыр косичка копчёный', vol:'50 г', price:200, flags:['under400'], kbzhu:'Порция: 165 ккал • Б 11 г • Ж 13 г • У 1 г (330 ккал / 100 г)' },
-            { id:'sn3', name:'Сухарики', vol:'100 г', price:250, flags:['under400'], kbzhu:'Порция: 380 ккал • Б 10 г • Ж 11 г • У 60 г (380 ккал / 100 г)' },
-            { id:'sn4', name:'Начос', vol:'70 г', price:250, flags:['under400'], kbzhu:'Порция: 345 ккал • Б 5 г • Ж 17 г • У 44 г (493 ккал / 100 г)' },
-            { id:'sn5', name:'Начос от шефа', vol:'70 г + 40 г соуса', price:290, tag:'От шефа', flags:['hit','under400'], kbzhu:'Порция: 440 ккал • Б 6 г • Ж 25 г • У 48 г (400 ккал / 100 г)' },
-            { id:'sn6', name:'Кальмар сушёный', vol:'50 г', price:300, flags:['under400'], kbzhu:'Порция: 140 ккал • Б 30 г • Ж 1 г • У 2 г (280 ккал / 100 г)' },
-            { id:'sn7', name:'Отборные фисташки', vol:'100 г', price:350, flags:['under400'], kbzhu:'Порция: 560 ккал • Б 20 г • Ж 45 г • У 28 г (560 ккал / 100 г)' }
+            { id:'sn1', name:'Арахис солёный', vol:'100 г', price:200, emoji:'🥜', flags:['under400'], kbzhu:'Порция: 590 ккал • Б 26 г • Ж 50 г • У 10 г (590 ккал / 100 г)' },
+            { id:'sn2', name:'Сыр косичка копчёный', vol:'50 г', price:200, emoji:'🧀', flags:['under400'], kbzhu:'Порция: 165 ккал • Б 11 г • Ж 13 г • У 1 г (330 ккал / 100 г)' },
+            { id:'sn3', name:'Сухарики', vol:'100 г', price:250, emoji:'🥖', flags:['under400'], kbzhu:'Порция: 380 ккал • Б 10 г • Ж 11 г • У 60 г (380 ккал / 100 г)' },
+            { id:'sn4', name:'Начос', vol:'70 г', price:250, emoji:'🌮', flags:['under400'], kbzhu:'Порция: 345 ккал • Б 5 г • Ж 17 г • У 44 г (493 ккал / 100 г)' },
+            { id:'sn5', name:'Начос от шефа', vol:'70 г + 40 г соуса', price:290, emoji:'🌮', tag:'От шефа', flags:['hit','under400'], kbzhu:'Порция: 440 ккал • Б 6 г • Ж 25 г • У 48 г (400 ккал / 100 г)' },
+            { id:'sn6', name:'Кальмар сушёный', vol:'50 г', price:300, emoji:'🦑', flags:['under400'], kbzhu:'Порция: 140 ккал • Б 30 г • Ж 1 г • У 2 г (280 ккал / 100 г)' },
+            { id:'sn7', name:'Отборные фисташки', vol:'100 г', price:350, emoji:'🥜', flags:['under400'], kbzhu:'Порция: 560 ккал • Б 20 г • Ж 45 г • У 28 г (560 ккал / 100 г)' }
         ];
 
         const CORKAGE_ITEMS = [
-            { name:'Безалкогольные напитки', price:'100 ₽' },
-            { name:'Пиво', price:'200 ₽' },
-            { name:'Вино и напитки не крепче 20%', price:'400 ₽' },
-            { name:'Крепкий алкоголь (от 20%)', price:'500 ₽' }
+            { name:'Безалкогольные напитки', price:'100\u00A0₽' },
+            { name:'Пиво', price:'200\u00A0₽' },
+            { name:'Вино и напитки не крепче 20%', price:'400\u00A0₽' },
+            { name:'Крепкий алкоголь (от 20%)', price:'500\u00A0₽' }
         ];
 
         const BANQUET_TARIFFS = {
@@ -1543,7 +1551,6 @@
                 title: 'Базовый фуршет',
                 price: 1850,
                 weight: '550–600 г / гость',
-                desc: 'Лёгкий формат для велком-зоны и фуршетного праздника.',
                 dishes: [
                     '2 вида брускетт или канапе на шпажках (~120 г)',
                     'Мини-круассан с лососем/цыплёнком или мини-сэндвич (~100 г)',
@@ -1555,7 +1562,6 @@
                 title: 'Средний банкет',
                 price: 2850,
                 weight: '950–1 050 г / гость',
-                desc: 'Полноценное застолье: ассорти в стол, салат и горячее с гарниром.',
                 dishes: [
                     'Холодные ассорти-плато в стол: мясное, сырное, овощное, фрукты (~350 г)',
                     'Порционный салат на выбор (Цезарь / По-деревенски / Мимоза, 200 г)',
@@ -1567,7 +1573,6 @@
                 title: 'Максимальный • Люкс',
                 price: 3950,
                 weight: '1 200–1 300 г / гость',
-                desc: 'Премиальный стол с рыбным плато, деликатесами, стейками и медальонами.',
                 dishes: [
                     'Богатые ассорти-плато: рыбное с тунцом, мясное, сырное, фрукты (~450 г)',
                     'Фуршетная встреча: брускетты с лососем/креветкой и канапе (~150 г)',
@@ -1653,7 +1658,7 @@
             { id:'sec-hookah', label:'💨 Кальяны' },
             { id:'sec-bar', label:'🍸 Бар' },
             { id:'sec-tea', label:'☕ Чай и Кофе' },
-            { id:'sec-snacks', label:'🥨 Снеки и Пробка' },
+            { id:'sec-snacks', label:'🥨 Снеки' },
             { id:'sec-banquet', label:'🎉 Банкеты' },
             { id:'sec-promos', label:'🔥 Акции' }
         ];
@@ -1672,6 +1677,7 @@
         // ============================================================
         let searchQuery = '';
         let activeFilter = 'all';
+        let filtersVisible = false;
         let activeTabId = 'sec-kitchen';
         let banquetOnlyMode = /mode=banquet/i.test(location.search);
 
@@ -1680,17 +1686,19 @@
 
         let hookahBuilder = { strength:'Средний', flavor:'Ягодный', bowl:'Глина (Классика)', bowlPrice:1000 };
         let showAllMixes = false;
+        let showHookahBuilder = false;
 
-        let bookedDatesSet = new Set(BANQUET_CALENDAR_CONFIG.demoBookedDates);
-        const nowMoscow = new Date();
-        let calYear = nowMoscow.getFullYear();
-        let calMonth = nowMoscow.getMonth();
+        let bookedDatesSet = new Set();
+        let calendarSyncStatus = 'loading'; // loading | ok | error
+        const nowLocal = new Date();
+        let calYear = nowLocal.getFullYear();
+        let calMonth = nowLocal.getMonth();
 
         let banquetState = {
-            format: 'floor2', // floor2 | full
+            format: 'floor2',
             guests: 20,
             extraHours: 0,
-            kitchenMode: 'tariff', // tariff | custom
+            kitchenMode: 'tariff',
             tariff: 'medium',
             activeCat: 'salads',
             selectedDate: '',
@@ -1721,7 +1729,7 @@
             el.textContent = msg;
             el.classList.remove('hidden');
             clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.add('hidden'), 2600);
+            toastTimer = setTimeout(() => el.classList.add('hidden'), 2700);
         }
         function getAllIndexedItems() {
             const map = {};
@@ -1753,7 +1761,7 @@
                 const now = new Date();
                 const mskStr = now.toLocaleString('en-US', { timeZone: 'Europe/Moscow' });
                 const msk = new Date(mskStr);
-                const day = msk.getDay(); // 0=Вс, 5=Пт, 6=Сб
+                const day = msk.getDay();
                 const h = msk.getHours();
                 const isFriSat = (day === 5 || day === 6);
                 const closeH = isFriSat ? 2 : 1;
@@ -1771,17 +1779,17 @@
                     dot.classList.remove('closed');
                     const untilStr = (h < prevCloseH ? `0${prevCloseH}:00` : `0${closeH}:00`);
                     txt.textContent = kitchenOpen
-                        ? `Открыты до ${untilStr} • Кухня и бар работают`
-                        : `Открыты до ${untilStr} • Фритюр уже доступен, кухня с 18:00`;
+                        ? `Открыто до ${untilStr} • Кухня работает`
+                        : `Открыто до ${untilStr} • Кухня с 18:00`;
                 } else {
                     dot.classList.add('closed');
-                    txt.textContent = 'Сейчас закрыты • Откроемся сегодня в 13:00';
+                    txt.textContent = 'Закрыто • Откроемся в 13:00';
                 }
             } catch (e) {}
         }
 
         // ============================================================
-        // РЕНДЕР ВКЛАДОК И ФИЛЬТРОВ
+        // НАВИГАЦИЯ, ПОИСК И ФИЛЬТРЫ
         // ============================================================
         function renderTabs() {
             const box = document.getElementById('tabsScroll');
@@ -1793,10 +1801,21 @@
 
         function renderQuickFilters() {
             const box = document.getElementById('filtersScroll');
+            const toggleBtn = document.getElementById('filterToggleBtn');
             if (!box) return;
+            box.classList.toggle('hidden', !filtersVisible && activeFilter === 'all');
+            if (toggleBtn) {
+                toggleBtn.classList.toggle('active', filtersVisible || activeFilter !== 'all');
+                toggleBtn.textContent = activeFilter !== 'all' ? '⚙ Фильтр •' : '⚙ Фильтр';
+            }
             box.innerHTML = QUICK_FILTERS.map(f =>
                 `<button type="button" class="filter-chip ${activeFilter === f.id ? 'active' : ''}" onclick="setQuickFilter('${f.id}')">${f.label}</button>`
             ).join('');
+        }
+
+        function toggleFiltersRow() {
+            filtersVisible = !filtersVisible;
+            renderQuickFilters();
         }
 
         function setQuickFilter(id) {
@@ -1819,6 +1838,7 @@
 
         function resetSearchAndFilters() {
             activeFilter = 'all';
+            filtersVisible = false;
             clearSearch();
             renderQuickFilters();
             renderFullFeed();
@@ -1828,9 +1848,7 @@
             activeTabId = id;
             highlightActiveTab(id);
             const el = document.getElementById(id);
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function highlightActiveTab(id) {
@@ -1853,24 +1871,24 @@
         }
 
         // ============================================================
-        // РЕНДЕР КАРТОЧЕК И ОСНОВНОЙ ЛЕНТЫ
+        // КАРТОЧКИ БЛЮД (БЕЗ <article> И БЕЗ ГРОМОЗДКОГО КБЖУ В ЛЕНТЕ)
         // ============================================================
         function renderAddButton(id, customName, customPrice) {
             const qty = notepad[id] ? notepad[id].qty : 0;
             const label = qty > 0 ? `✓ ${qty}` : '+';
             const cls = qty > 0 ? 'add-btn in-cart' : 'add-btn';
-            return `<button type="button" class="${cls}" onclick="addToNotepad('${escapeHtml(id)}', ${customName ? `'${escapeHtml(customName)}'` : 'null'}, ${customPrice || 'null'})" aria-label="Добавить в мой выбор">${label}</button>`;
+            return `<button type="button" class="${cls}" onclick="event.stopPropagation(); addToNotepad('${escapeHtml(id)}', ${customName ? `'${escapeHtml(customName)}'` : 'null'}, ${customPrice || 'null'})" aria-label="Добавить в мой выбор">${label}</button>`;
         }
 
         function renderDishCard(item) {
             const hasImg = USE_LOCAL_IMAGES && item.img;
             const thumbInner = hasImg
-                ? `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"><div style="display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;"><span class="thumb-emoji">${item.emoji || '🍽'}</span><span class="thumb-cap">Фото блюда</span></div>`
-                : `<span class="thumb-emoji">${item.emoji || '🍽'}</span><span class="thumb-cap">Фото блюда</span>`;
+                ? `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"><div style="display:none; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%;"><span class="thumb-emoji">${item.emoji || '🍽'}</span><span class="thumb-cap">Фото</span></div>`
+                : `<span class="thumb-emoji">${item.emoji || '🍽'}</span><span class="thumb-cap">Фото</span>`;
 
             return `
-                <article class="dish-card ${item.featured ? 'featured' : ''}">
-                    <div class="dish-thumb" onclick="openLightbox('${escapeHtml(item.id)}')" title="Увеличить">
+                <div class="dish-card ${item.featured ? 'featured' : ''}" onclick="openLightbox('${escapeHtml(item.id)}')">
+                    <div class="dish-thumb" title="Фото и КБЖУ">
                         ${thumbInner}
                     </div>
                     <div class="dish-body">
@@ -1880,42 +1898,49 @@
                                 ${item.vol ? `<span class="dish-vol">${escapeHtml(item.vol)}</span>` : ''}
                             </div>
                             ${item.tag ? `<span class="dish-tag ${item.tagType === 'hot' ? 'hot' : ''}">${escapeHtml(item.tag)}</span>` : ''}
-                            ${item.desc ? `<p class="dish-desc" style="margin-top:4px;">${escapeHtml(item.desc)}</p>` : ''}
+                            ${item.desc ? `<div class="dish-desc" style="margin-top:4px;">${escapeHtml(item.desc)}</div>` : ''}
                         </div>
-                        <div style="display:flex; flex-direction:column; gap:6px;">
-                            ${item.kbzhu ? `<div class="kbzhu-line">${escapeHtml(item.kbzhu)}</div>` : ''}
-                            <div class="dish-foot">
+                        <div class="dish-foot">
+                            <div style="display:flex; align-items:baseline; gap:7px;">
                                 <span class="price-pill">${item.priceText ? escapeHtml(item.priceText) : formatPrice(item.price)}</span>
-                                ${renderAddButton(item.id)}
+                                ${item.kbzhu ? `<span class="kbzhu-hint">КБЖУ ›</span>` : ''}
                             </div>
+                            ${renderAddButton(item.id)}
                         </div>
                     </div>
-                </article>`;
+                </div>`;
         }
 
         function renderCompactCard(item) {
+            const clickAttr = item.kbzhu ? `onclick="openLightbox('${escapeHtml(item.id)}')"` : '';
+            const cls = item.kbzhu ? 'compact-card clickable' : 'compact-card';
             return `
-                <article class="compact-card">
+                <div class="${cls}" ${clickAttr}>
                     <div class="compact-top">
                         <div style="min-width:0;">
                             <div class="dish-name">${escapeHtml(item.name)} ${item.vol ? `<span class="dish-vol">(${escapeHtml(item.vol)})</span>` : ''}</div>
-                            ${item.tag ? `<span class="dish-tag">${escapeHtml(item.tag)}</span>` : ''}
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                                ${item.tag ? `<span class="dish-tag">${escapeHtml(item.tag)}</span>` : ''}
+                                ${item.kbzhu ? `<span class="kbzhu-hint" style="margin-top:2px;">КБЖУ ›</span>` : ''}
+                            </div>
                         </div>
                         <div class="compact-right">
                             <span class="price-pill">${item.priceText ? escapeHtml(item.priceText) : formatPrice(item.price)}</span>
                             ${renderAddButton(item.id)}
                         </div>
                     </div>
-                    ${item.desc ? `<p class="dish-desc">${escapeHtml(item.desc)}</p>` : ''}
-                    ${item.kbzhu ? `<div class="kbzhu-line">${escapeHtml(item.kbzhu)}</div>` : ''}
-                </article>`;
+                    ${item.desc ? `<div class="dish-desc">${escapeHtml(item.desc)}</div>` : ''}
+                </div>`;
         }
 
+        // ============================================================
+        // КАЛЬЯНЫ (ЧИСТАЯ ВИТРИНА + СВОРАЧИВАЕМЫЙ КОНСТРУКТОР И 14 МИКСОВ)
+        // ============================================================
         function renderHookahSection() {
             const dayIdx = Math.floor(Date.now() / 86400000) % HOOKAH_MIXES_14.length;
             const todayMix = HOOKAH_MIXES_14[dayIdx];
             const mixListHtml = showAllMixes
-                ? `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px; max-height:260px; overflow-y:auto;">
+                ? `<div style="margin-top:10px; display:flex; flex-direction:column; gap:6px; max-height:240px; overflow-y:auto;">
                     ${HOOKAH_MIXES_14.map((m, idx) => `
                         <div style="padding:8px 10px; border-radius:10px; background:rgba(255,255,255,0.04); border:1px solid ${idx === dayIdx ? 'var(--gold)' : 'var(--border)'}; font-size:12px;">
                             <div style="display:flex; justify-content:space-between; gap:6px;">
@@ -1941,7 +1966,7 @@
                     <div class="section-head">
                         <div>
                             <h2 class="section-title">💨 Паровые коктейли</h2>
-                            <div class="section-note">В выходные и праздники цена весь день: 1 000 ₽ / 1 200 ₽ • Перезабивка (классика) — 600 ₽</div>
+                            <div class="section-note">Выходные и праздники весь день: 1 000 ₽ / 1 200 ₽ • Перезабивка — 600 ₽</div>
                         </div>
                     </div>
 
@@ -1960,13 +1985,13 @@
                                 </div>
                             </div>
 
-                            <div style="font-size:12px; font-weight:700; color:var(--gold-light); text-transform:uppercase; letter-spacing:1px; margin:10px 0 8px;">Авторские фруктовые чаши</div>
+                            <div style="font-size:11.5px; font-weight:700; color:var(--gold-light); text-transform:uppercase; letter-spacing:1px; margin:8px 0;">Фруктовые чаши (до / после 18:00)</div>
                             <div style="display:flex; flex-direction:column; gap:8px;">
                                 <div class="compact-card" style="background:rgba(255,255,255,0.04);">
                                     <div class="compact-top">
                                         <div>
-                                            <div class="dish-name">🍊 Чаша на грейпфруте</div>
-                                            <p class="dish-desc">Натуральный цитрусовый аромат, мягкий пар и долгое курение (будни до/после 18:00).</p>
+                                            <div class="dish-name">🍊 На грейпфруте</div>
+                                            <div class="dish-desc">Натуральный цитрусовый аромат, мягкий пар и долгое курение.</div>
                                         </div>
                                         <div class="compact-right">
                                             <span class="price-pill">1 200 / 1 400 ₽</span>
@@ -1977,8 +2002,8 @@
                                 <div class="compact-card" style="background:rgba(255,255,255,0.04);">
                                     <div class="compact-top">
                                         <div>
-                                            <div class="dish-name">🍍 Чаша на ананасе</div>
-                                            <p class="dish-desc">Премиальная подача, тропическая сладость и максимальная жаростойкость.</p>
+                                            <div class="dish-name">🍍 На ананасе</div>
+                                            <div class="dish-desc">Премиальная подача, тропическая сладость и жаростойкость.</div>
                                         </div>
                                         <div class="compact-right">
                                             <span class="price-pill">1 500 / 1 700 ₽</span>
@@ -1989,59 +2014,54 @@
                             </div>
                         </div>
 
-                        <div style="display:flex; flex-direction:column; gap:12px;">
-                            <!-- 14-дневный Микс дня -->
+                        <div style="display:flex; flex-direction:column; gap:10px;">
                             <div class="navy-box" style="background:var(--surface);">
                                 <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                                     <span class="section-badge">✨ Микс дня (${todayMix.day} из 14)</span>
                                     <span style="font-size:11.5px; color:var(--muted);">${escapeHtml(todayMix.strength)}</span>
                                 </div>
-                                <div style="font-size:17px; font-weight:700; color:var(--gold-light); margin-top:8px;">${escapeHtml(todayMix.name)}</div>
-                                <div style="font-size:13px; color:#fff; font-weight:600; margin-top:3px;">${escapeHtml(todayMix.profile)}</div>
-                                <p style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(todayMix.desc)}</p>
+                                <div style="font-size:16.5px; font-weight:700; color:var(--gold-light); margin-top:7px;">${escapeHtml(todayMix.name)}</div>
+                                <div style="font-size:13px; color:#fff; font-weight:600; margin-top:2px;">${escapeHtml(todayMix.profile)}</div>
+                                <div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(todayMix.desc)}</div>
                                 <div style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;">
                                     <button type="button" class="action-btn primary" style="flex:1; padding:8px 10px;" onclick="addToNotepad('hk_mixday', 'Микс дня: ${escapeHtml(todayMix.name)} (${escapeHtml(todayMix.profile)})', 1000)">+ В мой выбор</button>
-                                    <button type="button" class="action-btn" style="padding:8px 10px;" onclick="toggleAllMixes()">${showAllMixes ? 'Скрыть 14 миксов' : 'Все 14 миксов'}</button>
+                                    <button type="button" class="action-btn" style="padding:8px 10px;" onclick="toggleAllMixes()">${showAllMixes ? 'Скрыть 14' : 'Все 14 миксов'}</button>
                                 </div>
                                 ${mixListHtml}
                             </div>
 
-                            <!-- Конструктор кальяна -->
-                            <div class="navy-box" style="background:var(--surface);">
-                                <div style="font-size:14px; font-weight:700; color:var(--gold-light); margin-bottom:8px;">🎛 Собери свой кальян (шпаргалка мастеру)</div>
-                                <div style="font-size:11px; color:var(--muted);">Крепость:</div>
-                                <div class="chip-group">${strengths.map(s => `<button type="button" class="choice-chip ${hookahBuilder.strength===s?'active':''}" onclick="setHookahOpt('strength','${s}')">${s}</button>`).join('')}</div>
-                                <div style="font-size:11px; color:var(--muted); margin-top:8px;">Профиль вкуса:</div>
-                                <div class="chip-group">${flavors.map(f => `<button type="button" class="choice-chip ${hookahBuilder.flavor===f?'active':''}" onclick="setHookahOpt('flavor','${f}')">${f}</button>`).join('')}</div>
-                                <div style="font-size:11px; color:var(--muted); margin-top:8px;">Чаша:</div>
-                                <div class="chip-group">${bowls.map(b => `<button type="button" class="choice-chip ${hookahBuilder.bowl===b.label?'active':''}" onclick="setHookahBowl('${b.label}',${b.price})">${b.label} • ${formatPrice(b.price)}</button>`).join('')}</div>
-                                <button type="button" class="action-btn accent" style="width:100%; margin-top:10px;" onclick="addCustomHookah()">+ Добавить сборку (${formatPrice(hookahBuilder.bowlPrice)})</button>
+                            <div class="navy-box" style="background:var(--surface); padding:12px 14px;">
+                                <button type="button" onclick="toggleHookahBuilder()" style="width:100%; display:flex; justify-content:space-between; align-items:center; font-size:13.5px; font-weight:700; color:var(--gold-light);">
+                                    <span>🎛 Собрать свой кальян (шпаргалка мастеру)</span>
+                                    <span>${showHookahBuilder ? '▲' : '▼'}</span>
+                                </button>
+                                ${showHookahBuilder ? `
+                                    <div style="margin-top:10px;">
+                                        <div style="font-size:11px; color:var(--muted);">Крепость:</div>
+                                        <div class="chip-group">${strengths.map(s => `<button type="button" class="choice-chip ${hookahBuilder.strength===s?'active':''}" onclick="setHookahOpt('strength','${s}')">${s}</button>`).join('')}</div>
+                                        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Вкус:</div>
+                                        <div class="chip-group">${flavors.map(f => `<button type="button" class="choice-chip ${hookahBuilder.flavor===f?'active':''}" onclick="setHookahOpt('flavor','${f}')">${f}</button>`).join('')}</div>
+                                        <div style="font-size:11px; color:var(--muted); margin-top:8px;">Чаша:</div>
+                                        <div class="chip-group">${bowls.map(b => `<button type="button" class="choice-chip ${hookahBuilder.bowl===b.label?'active':''}" onclick="setHookahBowl('${b.label}',${b.price})">${b.label} • ${formatPrice(b.price)}</button>`).join('')}</div>
+                                        <button type="button" class="action-btn accent" style="width:100%; margin-top:10px;" onclick="addCustomHookah()">+ Добавить сборку (${formatPrice(hookahBuilder.bowlPrice)})</button>
+                                    </div>` : ''}
                             </div>
                         </div>
                     </div>
                 </section>`;
         }
 
-        function toggleAllMixes() {
-            showAllMixes = !showAllMixes;
-            renderFullFeed();
-        }
-        function setHookahOpt(key, val) {
-            hookahBuilder[key] = val;
-            renderFullFeed();
-        }
-        function setHookahBowl(label, price) {
-            hookahBuilder.bowl = label;
-            hookahBuilder.bowlPrice = price;
-            renderFullFeed();
-        }
+        function toggleAllMixes() { showAllMixes = !showAllMixes; renderFullFeed(); }
+        function toggleHookahBuilder() { showHookahBuilder = !showHookahBuilder; renderFullFeed(); }
+        function setHookahOpt(key, val) { hookahBuilder[key] = val; renderFullFeed(); }
+        function setHookahBowl(label, price) { hookahBuilder.bowl = label; hookahBuilder.bowlPrice = price; renderFullFeed(); }
         function addCustomHookah() {
             const title = `Кальян: ${hookahBuilder.strength}, ${hookahBuilder.flavor} (${hookahBuilder.bowl})`;
             addToNotepad('hk_custom_' + hookahBuilder.strength + '_' + hookahBuilder.flavor, title, hookahBuilder.bowlPrice);
         }
 
         // ============================================================
-        // БАНКЕТНЫЙ МОДУЛЬ, КАЛЬКУЛЯТОР И КАЛЕНДАРЬ
+        // БАНКЕТНЫЙ РАЗДЕЛ + ЖИВАЯ СИНХРОНИЗАЦИЯ С БОТОМ v2.5
         // ============================================================
         function calcBanquetTotals() {
             const baseRent = banquetState.format === 'full' ? 30000 : 20000;
@@ -2097,9 +2117,6 @@
         }
 
         function renderCalendarHtml() {
-            if (BANQUET_CALENDAR_CONFIG.iframeUrl) {
-                return `<iframe src="${escapeHtml(BANQUET_CALENDAR_CONFIG.iframeUrl)}" style="width:100%; height:360px; border:none; border-radius:12px;"></iframe>`;
-            }
             const monthNames = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
             const firstDay = new Date(calYear, calMonth, 1);
             const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
@@ -2116,11 +2133,17 @@
                 const iso = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 const isPast = dt < today;
                 const isBooked = bookedDatesSet.has(iso);
-                const isSel = banquetState.selectedDate === iso;
+                const isSel = banquetState.selectedDate === iso && !isBooked;
                 const cls = isBooked ? 'cal-day booked' : isPast ? 'cal-day past' : isSel ? 'cal-day selected' : 'cal-day';
                 const disabled = (isPast || isBooked) ? 'disabled' : '';
                 cells += `<button type="button" class="${cls}" ${disabled} onclick="selectBanquetDate('${iso}')">${d}</button>`;
             }
+
+            const syncBadge = calendarSyncStatus === 'ok'
+                ? `<span style="color:var(--green);">● Актуальные даты (занято: ${bookedDatesSet.size})</span>`
+                : calendarSyncStatus === 'loading'
+                    ? `<span>⏳ Загружаем занятые даты...</span>`
+                    : `<span style="color:#fbbf24;">⚠ Не удалось обновить даты</span>`;
 
             return `
                 <div class="cal-wrap">
@@ -2131,9 +2154,13 @@
                     </div>
                     <div class="cal-weekdays"><span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span></div>
                     <div class="cal-days">${cells}</div>
-                    <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:11px; color:var(--muted); margin-top:10px;">
+                    <div style="display:flex; gap:12px; flex-wrap:wrap; font-size:11px; color:var(--muted); margin-top:9px;">
                         <span>🟡 Выбрано: <strong style="color:#fff;">${formatRuDate(banquetState.selectedDate)}</strong></span>
                         <span style="color:#fca5a5;">✕ Красным — занятые даты</span>
+                    </div>
+                    <div class="cal-sync-row">
+                        ${syncBadge}
+                        <button type="button" onclick="loadBookedDatesFromApi(true)" style="color:var(--gold-light); font-weight:600;">🔄 Обновить</button>
                     </div>
                 </div>`;
         }
@@ -2149,39 +2176,36 @@
                     <div class="section-head">
                         <div>
                             <h2 class="section-title">🎉 Банкеты и закрытие площадки</h2>
-                            <div class="section-note">Отдельное 2-этажное здание в центре • Звук, караоке, проектор, PS5 и команда до 4 чел. включены • Свой торт без доплат</div>
+                            <div class="section-note">Отдельное 2-этажное здание в центре • Звук, караоке, проектор, PS5 и персонал включены • Свой торт без доплат</div>
                         </div>
-                        <button type="button" class="section-badge" onclick="toggleBanquetOnlyMode(!banquetOnlyMode)">
-                            ${banquetOnlyMode ? '📋 Полное меню' : '📱 Вид VK-модуля'}
-                        </button>
                     </div>
 
                     <div class="banquet-panel">
-                        <!-- 1. Площадка -->
+                        <!-- Шаг 1. Площадка -->
                         <div>
-                            <div class="field-label">1. Выберите формат закрытия (базовая аренда 6 часов, продление 5 000 ₽/ч)</div>
+                            <div class="field-label">Шаг 1. Выберите формат закрытия (6 часов, продление 5 000 ₽/ч)</div>
                             <div class="venue-grid">
                                 <button type="button" class="venue-card ${banquetState.format === 'floor2' ? 'active' : ''}" onclick="setBanquetField('format','floor2')">
                                     <div style="display:flex; justify-content:space-between; gap:8px;">
-                                        <strong style="color:#fff; font-size:14.5px;">Второй этаж • Камерный</strong>
+                                        <strong style="color:#fff; font-size:14px;">Второй этаж • Камерный</strong>
                                         <span class="price-pill">20 000 ₽</span>
                                     </div>
-                                    <p style="font-size:12px; color:var(--muted); margin-top:4px;">Банкет до 30–40 чел. • Фуршет до 40 чел. • Караоке, проектор, комнаты с приставками.</p>
+                                    <div style="font-size:12px; color:var(--muted); margin-top:4px;">Банкет до 30–40 чел. • Фуршет до 40 чел. • Караоке, проектор, игровые комнаты.</div>
                                 </button>
                                 <button type="button" class="venue-card ${banquetState.format === 'full' ? 'active' : ''}" onclick="setBanquetField('format','full')">
                                     <div style="display:flex; justify-content:space-between; gap:8px;">
-                                        <strong style="color:#fff; font-size:14.5px;">Всё здание целиком • 2 этажа</strong>
+                                        <strong style="color:#fff; font-size:14px;">Всё здание целиком • 2 этажа</strong>
                                         <span class="price-pill">30 000 ₽</span>
                                     </div>
-                                    <p style="font-size:12px; color:var(--muted); margin-top:4px;">Банкет на 2-м + танцпол и велком на 1-м • До 50+ гостей • PS5, абсолютная приватность.</p>
+                                    <div style="font-size:12px; color:var(--muted); margin-top:4px;">Банкет на 2-м + танцпол на 1-м • До 50+ гостей • PS5, полная приватность.</div>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- 2. Календарь и параметры -->
+                        <!-- Шаг 2. Календарь и параметры -->
                         <div class="hookah-grid">
                             <div>
-                                <div class="field-label">2. Выберите желаемую дату</div>
+                                <div class="field-label">Шаг 2. Выберите свободную дату</div>
                                 ${renderCalendarHtml()}
                             </div>
                             <div style="display:flex; flex-direction:column; gap:12px;">
@@ -2194,7 +2218,7 @@
                                 </div>
                                 <div>
                                     <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
-                                        <span>Продление аренды (+5 000 ₽/ч):</span>
+                                        <span>Продление (+5 000 ₽/ч):</span>
                                         <strong id="bqHoursLabel" style="color:var(--gold-light);">${totals.hours} ч (${banquetState.extraHours > 0 ? '+' + banquetState.extraHours + ' ч' : 'база'})</strong>
                                     </div>
                                     <input type="range" min="0" max="6" value="${banquetState.extraHours}" class="range-input" oninput="onBanquetRange('extraHours', this.value)">
@@ -2216,10 +2240,10 @@
                             </div>
                         </div>
 
-                        <!-- 3. Меню банкета: Тарифы или Своя корзина -->
+                        <!-- Шаг 3. Меню банкета -->
                         <div>
                             <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px;">
-                                <span class="field-label" style="margin:0;">3. Банкетная кухня Антона Чистякова (без минимального чека)</span>
+                                <span class="field-label" style="margin:0;">Шаг 3. Банкетная кухня Антона Чистякова (без мин. чека)</span>
                                 <div style="display:flex; gap:6px;">
                                     <button type="button" class="choice-chip ${banquetState.kitchenMode==='tariff'?'active':''}" onclick="setBanquetField('kitchenMode','tariff')">Готовые ориентиры</button>
                                     <button type="button" class="choice-chip ${banquetState.kitchenMode==='custom'?'active':''}" onclick="setBanquetField('kitchenMode','custom')">Собрать по блюдам (${totals.customCount})</button>
@@ -2238,9 +2262,9 @@
                                             </button>`;
                                     }).join('')}
                                 </div>
-                                <div style="margin-top:10px; padding:12px; border-radius:12px; background:var(--bg); border:1px solid var(--border); font-size:12.5px;">
-                                    <div style="font-weight:700; color:var(--gold-light); margin-bottom:6px;">Ориентировочный состав «${tariff.title}» на 1 персону (${tariff.weight}):</div>
-                                    <ul style="padding-left:18px; color:var(--text-soft); display:flex; flex-direction:column; gap:4px;">
+                                <div style="margin-top:10px; padding:11px 12px; border-radius:12px; background:var(--bg); border:1px solid var(--border); font-size:12.5px;">
+                                    <div style="font-weight:700; color:var(--gold-light); margin-bottom:5px;">Состав «${tariff.title}» на 1 персону (${tariff.weight}):</div>
+                                    <ul style="padding-left:18px; color:var(--text-soft); display:flex; flex-direction:column; gap:3px;">
                                         ${tariff.dishes.map(d => `<li>${escapeHtml(d)}</li>`).join('')}
                                     </ul>
                                 </div>
@@ -2256,7 +2280,7 @@
                                                 <div class="compact-top">
                                                     <div>
                                                         <div class="dish-name">${escapeHtml(item.name)} <span class="dish-vol">(${escapeHtml(item.vol)})</span></div>
-                                                        <p class="dish-desc" style="margin-top:2px;">${escapeHtml(item.desc)}</p>
+                                                        <div class="dish-desc" style="margin-top:2px;">${escapeHtml(item.desc)}</div>
                                                     </div>
                                                     <div class="compact-right" style="flex-direction:column; align-items:flex-end;">
                                                         <span class="price-pill">${formatPrice(item.price)}</span>
@@ -2272,7 +2296,7 @@
                             `}
                         </div>
 
-                        <!-- 4. Итог сметы и действия -->
+                        <!-- Шаг 4. Итог и ОДНА чёткая кнопка отправки (всегда проходит через бота!) -->
                         <div class="summary-box">
                             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
                                 <div>
@@ -2281,18 +2305,14 @@
                                     <div id="bqBreakdown" style="font-size:12px; color:var(--text-soft);">Аренда ${formatPrice(totals.rentTotal)} + Кухня ${formatPrice(totals.kitchenTotal)}</div>
                                 </div>
                                 <div style="font-size:12px; color:var(--text-soft); text-align:right;">
-                                    <div>Персональный менеджер: <strong style="color:#fff;">Евгений</strong></div>
+                                    <div>Управляющий: <strong style="color:#fff;">Евгений</strong></div>
                                     <div><a href="tel:+79116738344" style="color:var(--gold-light); font-weight:600;">+7 (911) 673-83-44</a></div>
                                 </div>
                             </div>
 
-                            <div style="display:grid; grid-template-columns:1fr; gap:8px; margin-top:12px;">
-                                <button type="button" class="action-btn primary" style="padding:13px; font-size:13.5px;" onclick="openBanquetLeadModal()">📄 Зафиксировать смету и запросить дату</button>
-                                <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;">
-                                    <button type="button" class="action-btn accent" onclick="sendBanquetToTelegramDirect()">В Telegram ↗</button>
-                                    <button type="button" class="action-btn" onclick="openVkWithCopiedLead()">В ВК (копия) ↗</button>
-                                    <button type="button" class="action-btn" onclick="copyBanquetSummary()">📋 Копировать</button>
-                                </div>
+                            <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+                                <button type="button" class="action-btn primary" style="padding:13px; font-size:13.5px;" onclick="openBanquetLeadModal()">📩 Забронировать дату и отправить смету</button>
+                                <button type="button" class="action-btn" style="padding:9px; font-size:12px;" onclick="copyBanquetSummary()">📋 Просто скопировать расчёт</button>
                             </div>
                         </div>
                     </div>
@@ -2305,6 +2325,10 @@
             renderFullFeed();
         }
         function selectBanquetDate(iso) {
+            if (bookedDatesSet.has(iso)) {
+                showToast('Эта дата уже занята');
+                return;
+            }
             banquetState.selectedDate = iso;
             saveBanquetDraft();
             renderFullFeed();
@@ -2353,18 +2377,23 @@
                 }
             } catch (e) {}
         }
-        function sendBanquetToTelegramDirect() {
-            const text = buildBanquetSummaryText();
-            window.open('https://t.me/tomilov_jonn?text=' + encodeURIComponent(text), '_blank', 'noopener');
-        }
         function copyBanquetSummary() {
             const text = lastSentLeadText || buildBanquetSummaryText();
             copyTextSafe(text, 'Смета скопирована в буфер обмена');
         }
+        function openTelegramWithCopiedLead() {
+            const text = lastSentLeadText || buildBanquetSummaryText();
+            copyTextSafe(text, 'Смета скопирована! Если чат пуст — просто нажмите «Вставить»');
+            setTimeout(() => {
+                window.open('https://t.me/tomilov_jonn?text=' + encodeURIComponent(text), '_blank', 'noopener');
+            }, 250);
+        }
         function openVkWithCopiedLead() {
             const text = lastSentLeadText || buildBanquetSummaryText();
             copyTextSafe(text, 'Смета скопирована! Нажмите «Вставить» в чате с Евгением');
-            setTimeout(() => window.open('https://vk.me/tomilov_jonn', '_blank', 'noopener'), 350);
+            setTimeout(() => {
+                window.open('https://vk.me/tomilov_jonn', '_blank', 'noopener');
+            }, 250);
         }
         function copyTextSafe(text, okMsg) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -2431,9 +2460,9 @@
                         <div class="section-head">
                             <div>
                                 <h2 class="section-title">🍽 Авторская кухня</h2>
-                                <div class="section-note">Меню шеф-повара Антона Чистякова • 14 позиций с КБЖУ</div>
+                                <div class="section-note">Меню шеф-повара Антона Чистякова • Нажмите на блюдо для фото и КБЖУ</div>
                             </div>
-                            <span class="section-badge">Кухня работает с 18:00</span>
+                            <span class="section-badge">С 18:00</span>
                         </div>
                         ${kitchenBlocks}
                     </section>`;
@@ -2505,7 +2534,7 @@
                                 <h2 class="section-title">🍸 Барная карта</h2>
                                 <div class="section-note">Коктейли, домашние настойки, шоты и пиво</div>
                             </div>
-                            <span class="section-badge">−10% за барной стойкой</span>
+                            <span class="section-badge">−10% за баром</span>
                         </div>
                         ${barBlocks}
                     </section>`;
@@ -2547,11 +2576,11 @@
                         </div>
                         <div class="cards-grid">${snList.map(renderCompactCard).join('')}</div>
                         ${!filtering ? `
-                            <div class="navy-box" style="margin-top:14px;">
-                                <div style="font-size:14px; font-weight:700; color:var(--gold-light); margin-bottom:8px;">🍾 Пробковый сбор (на напитки с собой, за 1 единицу)</div>
+                            <div class="navy-box" style="margin-top:12px;">
+                                <div style="font-size:13.5px; font-weight:700; color:var(--gold-light); margin-bottom:8px;">🍾 Пробковый сбор (на напитки с собой, за 1 ед.)</div>
                                 <div class="cards-grid">
                                     ${CORKAGE_ITEMS.map(c => `
-                                        <div style="display:flex; justify-content:space-between; font-size:13.5px; padding:6px 0; border-bottom:1px dashed rgba(255,255,255,0.1);">
+                                        <div style="display:flex; justify-content:space-between; font-size:13px; padding:5px 0; border-bottom:1px dashed rgba(255,255,255,0.1);">
                                             <span>${escapeHtml(c.name)}</span>
                                             <strong style="color:var(--gold-light);">${escapeHtml(c.price)}</strong>
                                         </div>`).join('')}
@@ -2578,8 +2607,8 @@
                         <div class="cards-grid">
                             ${PROMO_LIST.map(p => `
                                 <div class="compact-card" style="border-left:3px solid var(--gold);">
-                                    <div style="font-size:12px; font-weight:700; color:var(--gold-light); text-transform:uppercase;">${escapeHtml(p.day)}</div>
-                                    <div style="font-size:13.5px; color:#fff;">${escapeHtml(p.text)}</div>
+                                    <div style="font-size:11.5px; font-weight:700; color:var(--gold-light); text-transform:uppercase;">${escapeHtml(p.day)}</div>
+                                    <div style="font-size:13px; color:#fff;">${escapeHtml(p.text)}</div>
                                 </div>`).join('')}
                         </div>
                     </section>`;
@@ -2613,7 +2642,6 @@
             renderFullFeed();
             showToast(`Добавлено: ${name}`);
         }
-
         function changeNotepadQty(id, delta) {
             if (!notepad[id]) return;
             notepad[id].qty += delta;
@@ -2623,7 +2651,6 @@
             renderNotepadModal();
             renderFullFeed();
         }
-
         function clearNotepad() {
             notepad = {};
             saveNotepad();
@@ -2631,7 +2658,6 @@
             renderNotepadModal();
             renderFullFeed();
         }
-
         function saveNotepad() {
             try { localStorage.setItem('volna_notepad_v2', JSON.stringify(notepad)); } catch (e) {}
         }
@@ -2641,7 +2667,6 @@
                 if (raw) notepad = JSON.parse(raw) || {};
             } catch (e) { notepad = {}; }
         }
-
         function updateNotepadUI() {
             const items = Object.values(notepad);
             const count = items.reduce((s, i) => s + i.qty, 0);
@@ -2651,7 +2676,6 @@
             document.getElementById('notepadSum').textContent = formatPrice(sum);
             fab.classList.toggle('hidden', count === 0);
         }
-
         function renderNotepadModal() {
             const body = document.getElementById('notepadBody');
             const items = Object.values(notepad);
@@ -2700,7 +2724,7 @@
         }
 
         // ============================================================
-        // ТАБЛИЦА КБЖУ И ПРОСМОТР ФОТО
+        // ТАБЛИЦА КБЖУ И КАРТОЧКА БЛЮДА (LIGHTBOX)
         // ============================================================
         function renderKbzhuTable(query) {
             const box = document.getElementById('kbzhuList');
@@ -2721,34 +2745,63 @@
             const item = ALL_ITEMS_MAP[id];
             if (!item) return;
             document.getElementById('lightboxTitle').textContent = item.name;
+            document.getElementById('lightboxVol').textContent = item.vol ? `Выход: ${item.vol}` : '';
+
             const media = document.getElementById('lightboxMedia');
             if (USE_LOCAL_IMAGES && item.img) {
-                media.innerHTML = `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" style="width:100%; max-height:320px; object-fit:cover; display:block;" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';"><div style="display:none; padding:32px 16px; text-align:center;"><div style="font-size:52px;">${item.emoji || '🍽'}</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Загрузите ${escapeHtml(item.img)} в папку img/ на GitHub — фото появится автоматически</div></div>`;
+                media.classList.remove('hidden');
+                media.innerHTML = `<img src="${escapeHtml(item.img)}" alt="${escapeHtml(item.name)}" style="width:100%; max-height:310px; object-fit:cover; display:block;" onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='block';"><div style="display:none; padding:28px 16px; text-align:center;"><div style="font-size:50px;">${item.emoji || '🍽'}</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Фотография скоро появится</div></div>`;
             } else {
-                media.innerHTML = `<div style="padding:32px 16px; text-align:center;"><div style="font-size:52px;">${item.emoji || '🍽'}</div><div style="font-size:12px; color:var(--muted); margin-top:6px;">Фото блюда скоро появится</div></div>`;
+                media.classList.remove('hidden');
+                media.innerHTML = `<div style="padding:26px 16px; text-align:center;"><div style="font-size:50px;">${item.emoji || '🍽'}</div><div style="font-size:12px; color:var(--muted); margin-top:4px;">${escapeHtml(item.vol || '')}</div></div>`;
             }
-            document.getElementById('lightboxDesc').textContent = item.desc || '';
+
+            const descEl = document.getElementById('lightboxDesc');
+            descEl.textContent = item.desc || '';
+            descEl.classList.toggle('hidden', !item.desc);
+
             const kEl = document.getElementById('lightboxKbzhu');
-            kEl.textContent = item.kbzhu || '';
+            kEl.innerHTML = item.kbzhu ? `<strong style="color:var(--gold-light);">КБЖУ:</strong> ${escapeHtml(item.kbzhu)}` : '';
             kEl.classList.toggle('hidden', !item.kbzhu);
-            document.getElementById('lightboxPrice').textContent = formatPrice(item.price);
+
+            document.getElementById('lightboxPrice').textContent = item.priceText ? item.priceText : formatPrice(item.price);
+            const addBtn = document.getElementById('lightboxAddBtn');
+            addBtn.onclick = () => {
+                addToNotepad(item.id);
+                closeModal('lightboxModal');
+            };
             openModal('lightboxModal');
         }
 
         // ============================================================
-        // ОТПРАВКА БАНКЕТНОЙ СМЕТЫ И ЗАГРУЗКА ЗАНЯТЫХ ДАТ (GAS)
+        // СИНХРОНИЗАЦИЯ КАЛЕНДАРЯ И ОТПРАВКА СМЕТ В БОТА v2.5 (GAS)
         // ============================================================
-        async function loadBookedDatesFromApi() {
-            if (!BANQUET_CALENDAR_CONFIG.bookedDatesApiUrl) return;
+        async function loadBookedDatesFromApi(manual) {
+            if (!GAS_WEBAPP_URL) return;
             try {
-                const res = await fetch(BANQUET_CALENDAR_CONFIG.bookedDatesApiUrl, { method: 'GET', cache: 'no-store' });
-                if (!res.ok) return;
+                if (manual) {
+                    calendarSyncStatus = 'loading';
+                    renderFullFeed();
+                }
+                const url = GAS_WEBAPP_URL + (GAS_WEBAPP_URL.includes('?') ? '&' : '?') + 't=' + Date.now();
+                const res = await fetch(url, { method: 'GET', cache: 'no-store' });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const json = await res.json();
                 if (json && Array.isArray(json.booked)) {
                     bookedDatesSet = new Set(json.booked);
+                    calendarSyncStatus = 'ok';
+                    // Если ранее выбранная пользователем дата уже закрыта в боте — снимаем выбор
+                    if (banquetState.selectedDate && bookedDatesSet.has(banquetState.selectedDate)) {
+                        banquetState.selectedDate = '';
+                        saveBanquetDraft();
+                    }
                     renderFullFeed();
+                    if (manual) showToast('Календарь обновлён');
                 }
-            } catch (e) {}
+            } catch (e) {
+                calendarSyncStatus = 'error';
+                renderFullFeed();
+            }
         }
 
         function openBanquetLeadModal() {
@@ -2775,13 +2828,12 @@
 
             lastSentLeadText = shortSummary;
 
-            // Схема 1: отправляем ТОЛЬКО обезличенные параметры сметы (без ФИО и телефона)
             const payload = {
                 type: 'banquet',
                 scheme: 'anonymous_v1',
                 leadId,
                 createdAt: new Date().toISOString(),
-                source: banquetOnlyMode ? 'vk_mini_app' : 'website',
+                source: window.__isVkMiniApp ? 'vk_mini_app' : 'website',
                 format: banquetState.format,
                 guests: banquetState.guests,
                 hours: totals.hours,
@@ -2796,11 +2848,11 @@
             };
 
             btn.disabled = true;
-            btn.textContent = 'Фиксируем смету...';
+            btn.textContent = 'Отправляем смету управляющему...';
 
-            if (BANQUET_CALENDAR_CONFIG.submitLeadApiUrl) {
+            if (GAS_WEBAPP_URL) {
                 try {
-                    await fetch(BANQUET_CALENDAR_CONFIG.submitLeadApiUrl, {
+                    await fetch(GAS_WEBAPP_URL, {
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -2809,21 +2861,21 @@
                 } catch (err) {}
             }
 
+            // Копируем смету в буфер сразу, чтобы гостю осталось лишь нажать «Вставить»
+            copyTextSafe(shortSummary, `Смета ${leadId} отправлена и скопирована!`);
+
             btn.disabled = false;
-            btn.textContent = '📄 Зафиксировать смету #WL и перейти к связи';
+            btn.textContent = '📩 Отправить смету управляющему';
 
             document.getElementById('leadSuccessId').textContent = leadId;
-            document.getElementById('leadSuccessCodeInline').textContent = leadId;
-            document.getElementById('leadSuccessTgBtn').href = 'https://t.me/tomilov_jonn?text=' + encodeURIComponent(shortSummary);
             document.getElementById('banquetLeadForm').classList.add('hidden');
             document.getElementById('banquetLeadSuccess').classList.remove('hidden');
 
-            // Обновляем календарь (на случай если в бэкенде включено авто-закрытие)
-            setTimeout(loadBookedDatesFromApi, 1500);
+            setTimeout(() => loadBookedDatesFromApi(false), 1800);
         }
 
         // ============================================================
-        // УМНАЯ СИСТЕМА ОТЗЫВОВ (5★ -> КАРТЫ, 1-4★ -> БОТ)
+        // УМНАЯ СИСТЕМА ОТЗЫВОВ (5★ -> КАРТЫ, 1-4★ -> БОТ v2.5)
         // ============================================================
         function openReviewModal() {
             reviewState = { rating: 0, selectedCriteria: [] };
@@ -2909,7 +2961,7 @@
                 reviewId,
                 createdAt: new Date().toISOString(),
                 consentGiven: true,
-                source: banquetOnlyMode ? 'vk_mini_app' : 'website',
+                source: window.__isVkMiniApp ? 'vk_mini_app' : 'website',
                 rating: reviewState.rating,
                 criteria: reviewState.selectedCriteria,
                 comment,
@@ -2940,7 +2992,7 @@
         }
 
         // ============================================================
-        // ИГРОВАЯ ЗОНА: «ПОЙМАЙ ВОЛНУ», РУЛЕТКА И ИГРЫ СТОЛА
+        // ИГРА «ВОЛНА» (АБСТРАКТНАЯ ВОЛНА • РОСТ СКОРОСТИ • СУЖЕНИЕ ОКНА)
         // ============================================================
         function switchGameTab(tab) {
             stopWaveGame();
@@ -2950,108 +3002,276 @@
                 if (pane) pane.classList.toggle('hidden', t !== tab);
                 if (btn) btn.classList.toggle('accent', t === tab);
             });
+            if (tab === 'wave') drawWaveIdleFrame();
         }
 
         let waveRunning = false;
         let waveAnimId = null;
         let waveState = null;
 
-        function startWaveGame() {
-            if (waveRunning) { waveJump(); return; }
+        function sizeWaveCanvas() {
             const canvas = document.getElementById('waveGameCanvas');
-            if (!canvas) return;
+            if (!canvas) return null;
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const rect = canvas.getBoundingClientRect();
+            const w = Math.max(280, Math.round(rect.width || 520));
+            const h = 235;
+            if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+                canvas.width = w * dpr;
+                canvas.height = h * dpr;
+            }
+            const ctx = canvas.getContext('2d');
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            return { canvas, ctx, w, h };
+        }
+
+        function drawWaveIdleFrame(lastScore) {
+            const info = sizeWaveCanvas();
+            if (!info) return;
+            const { ctx, w, h } = info;
+            const bg = ctx.createLinearGradient(0, 0, 0, h);
+            bg.addColorStop(0, '#0c1c34');
+            bg.addColorStop(1, '#111317');
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, w, h);
+
+            // Декоративная золотая волна на экране ожидания
+            ctx.beginPath();
+            for (let x = 0; x <= w; x += 10) {
+                const y = h * 0.55 + Math.sin(x * 0.03) * 16;
+                if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.32)';
+            ctx.lineWidth = 10;
+            ctx.stroke();
+            ctx.strokeStyle = '#f3e1b9';
+            ctx.lineWidth = 2.8;
+            ctx.stroke();
+
+            ctx.fillStyle = '#f3e1b9';
+            ctx.font = '700 18px Montserrat, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(lastScore != null ? `Волна разбилась • Счёт: ${lastScore}` : 'ВОЛНА • РИТМ', w / 2, h * 0.34);
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '500 12.5px Montserrat, sans-serif';
+            ctx.fillText('Нажмите «Старт» или коснитесь экрана', w / 2, h * 0.78);
+        }
+
+        function onWaveActionBtn() {
+            if (waveRunning) waveJump();
+            else startWaveGame();
+        }
+
+        function startWaveGame() {
+            const info = sizeWaveCanvas();
+            if (!info) return;
+            const { w, h } = info;
+
             waveState = {
-                y: 110, vy: 0, score: 0, frame: 0,
-                obstacles: [], stars: []
+                w, h,
+                y: h * 0.48,
+                vy: -135,
+                score: 0,
+                spawnDist: 120,
+                lastTime: performance.now(),
+                obstacles: [],
+                trail: [],
+                sparks: [],
+                flash: 0
             };
+
             document.getElementById('waveScore').textContent = '0';
+            document.getElementById('waveSpeedLabel').textContent = 'Скорость: 1.0x';
             document.getElementById('waveBest').textContent = localStorage.getItem('volna_wave_best') || '0';
             waveRunning = true;
-            document.getElementById('waveStartBtn').textContent = '⬆ Прыжок (или тап по экрану)';
-            waveLoop();
+            document.getElementById('waveStartBtn').textContent = '⬆ Импульс вверх';
+            waveAnimId = requestAnimationFrame(waveLoop);
         }
+
         function waveJump() {
-            if (waveState && waveRunning) waveState.vy = -6.2;
+            if (!waveState || !waveRunning) return;
+            waveState.vy = -255;
+            for (let i = 0; i < 7; i++) {
+                waveState.sparks.push({
+                    x: 82,
+                    y: waveState.y + (Math.random() - 0.5) * 10,
+                    vx: -65 - Math.random() * 95,
+                    vy: (Math.random() - 0.5) * 100,
+                    life: 0.45
+                });
+            }
         }
+
         function stopWaveGame() {
             waveRunning = false;
             if (waveAnimId) cancelAnimationFrame(waveAnimId);
+            waveAnimId = null;
             const btn = document.getElementById('waveStartBtn');
             if (btn) btn.textContent = '▶ Старт / Играть снова';
         }
-        function waveLoop() {
+
+        function waveLoop(now) {
             if (!waveRunning || !waveState) return;
-            const canvas = document.getElementById('waveGameCanvas');
-            const ctx = canvas.getContext('2d');
-            const W = canvas.width, H = canvas.height;
+            const info = sizeWaveCanvas();
+            if (!info) return;
+            const { ctx, w: W, h: H } = info;
             const st = waveState;
-            st.frame++;
+            st.w = W; st.h = H;
+
+            const dt = Math.min(0.042, Math.max(0.001, (now - st.lastTime) / 1000));
+            st.lastTime = now;
+
+            const playerX = 82;
+
+            // Прогрессивная сложность: скорость растёт, окно прохода сужается
+            const speed = Math.min(365, 158 + st.score * 6.8);
+            const gapH = Math.max(64, 122 - st.score * 2.15);
+            const spacing = Math.max(162, 232 - st.score * 2.1);
 
             // Физика
-            st.vy += 0.32;
-            st.y += st.vy;
-            if (st.y < 18) { st.y = 18; st.vy = 0; }
-            if (st.y > H - 22) { endWaveGame(); return; }
+            st.vy += 700 * dt;
+            st.y += st.vy * dt;
+            if (st.y < 14) { st.y = 14; st.vy = 0; }
+            if (st.y > H - 14) { endWaveGame(); return; }
 
-            // Генерация рифов и звёзд
-            if (st.frame % 75 === 0) {
-                const gapH = 82;
-                const topH = 26 + Math.random() * (H - gapH - 52);
-                st.obstacles.push({ x: W, topH, gapH, passed: false });
-                st.stars.push({ x: W + 18, y: topH + gapH / 2, taken: false });
+            // Живой шлейф абстрактной волны
+            for (let i = 0; i < st.trail.length; i++) {
+                st.trail[i].x -= speed * dt;
+            }
+            st.trail.push({ x: playerX, y: st.y });
+            if (st.trail.length > 28) st.trail.shift();
+
+            // Генерация новых ворот-окон
+            st.spawnDist += speed * dt;
+            if (st.spawnDist >= spacing) {
+                st.spawnDist = 0;
+                const margin = 22;
+                const topH = margin + Math.random() * Math.max(20, H - gapH - margin * 2);
+                st.obstacles.push({ x: W + 24, topH, gapH, passed: false });
             }
 
-            // Фон
-            ctx.clearRect(0, 0, W, H);
-            ctx.fillStyle = '#0f1b2e';
+            // Глубокий фон с лёгкой сменой оттенка на новых уровнях
+            const bg = ctx.createLinearGradient(0, 0, 0, H);
+            if (st.score >= 25) {
+                bg.addColorStop(0, '#1e1635');
+                bg.addColorStop(1, '#111317');
+            } else if (st.score >= 12) {
+                bg.addColorStop(0, '#10273c');
+                bg.addColorStop(1, '#111317');
+            } else {
+                bg.addColorStop(0, '#0c1c34');
+                bg.addColorStop(1, '#111317');
+            }
+            ctx.fillStyle = bg;
             ctx.fillRect(0, 0, W, H);
 
-            // Рифы
+            // Фоновые текучие линии
+            ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
+            ctx.lineWidth = 1;
+            for (let row = 42; row < H; row += 46) {
+                ctx.beginPath();
+                for (let x = 0; x <= W; x += 24) {
+                    const yOff = Math.sin((x + now * 0.09) * 0.025 + row) * 4.5;
+                    if (x === 0) ctx.moveTo(x, row + yOff);
+                    else ctx.lineTo(x, row + yOff);
+                }
+                ctx.stroke();
+            }
+
+            // Вспышка при прохождении окна
+            if (st.flash > 0) {
+                st.flash = Math.max(0, st.flash - dt * 2.5);
+                ctx.fillStyle = `rgba(243, 225, 185, ${st.flash * 0.14})`;
+                ctx.fillRect(0, 0, W, H);
+            }
+
+            // Ворота-колонны с золотым свечением окна
             for (let i = st.obstacles.length - 1; i >= 0; i--) {
                 const o = st.obstacles[i];
-                o.x -= 3.2;
-                ctx.fillStyle = '#25324a';
-                ctx.fillRect(o.x, 0, 28, o.topH);
-                ctx.fillRect(o.x, o.topH + o.gapH, 28, H - (o.topH + o.gapH));
-                ctx.strokeStyle = '#c5a059';
-                ctx.strokeRect(o.x, 0, 28, o.topH);
-                ctx.strokeRect(o.x, o.topH + o.gapH, 28, H - (o.topH + o.gapH));
+                o.x -= speed * dt;
+                const colW = 22;
 
-                if (!o.passed && o.x + 28 < 76) {
+                const colGrad = ctx.createLinearGradient(o.x, 0, o.x + colW, 0);
+                colGrad.addColorStop(0, '#19263d');
+                colGrad.addColorStop(1, '#263857');
+                ctx.fillStyle = colGrad;
+                ctx.fillRect(o.x, 0, colW, o.topH);
+                ctx.fillRect(o.x, o.topH + o.gapH, colW, H - (o.topH + o.gapH));
+
+                // Подсветка границ окна
+                ctx.fillStyle = '#c5a059';
+                ctx.fillRect(o.x - 2, o.topH - 4, colW + 4, 4);
+                ctx.fillRect(o.x - 2, o.topH + o.gapH, colW + 4, 4);
+
+                if (!o.passed && o.x + colW < playerX) {
                     o.passed = true;
                     st.score += 1;
-                    document.getElementById('waveScore').textContent = st.score;
+                    st.flash = 1;
+                    document.getElementById('waveScore').textContent = String(st.score);
+                    const mult = (speed / 158).toFixed(1);
+                    document.getElementById('waveSpeedLabel').textContent = `Скорость: ${mult}x`;
                 }
-                if (76 + 11 > o.x && 76 - 11 < o.x + 28 && (st.y - 11 < o.topH || st.y + 11 > o.topH + o.gapH)) {
-                    endWaveGame(); return;
+
+                // Столкновение с честным хитбоксом
+                const r = 8.5;
+                if (playerX + r > o.x && playerX - r < o.x + colW) {
+                    if (st.y - r < o.topH || st.y + r > o.topH + o.gapH) {
+                        endWaveGame();
+                        return;
+                    }
                 }
                 if (o.x < -40) st.obstacles.splice(i, 1);
             }
 
-            // Звёзды
-            for (let i = st.stars.length - 1; i >= 0; i--) {
-                const s = st.stars[i];
-                s.x -= 3.2;
-                if (!s.taken) {
-                    ctx.fillStyle = '#f3e1b9';
-                    ctx.beginPath(); ctx.arc(s.x, s.y, 7, 0, Math.PI * 2); ctx.fill();
-                    if (Math.hypot(76 - s.x, st.y - s.y) < 19) {
-                        s.taken = true;
-                        st.score += 2;
-                        document.getElementById('waveScore').textContent = st.score;
-                    }
-                }
-                if (s.x < -20) st.stars.splice(i, 1);
+            // Брызги-частицы
+            for (let i = st.sparks.length - 1; i >= 0; i--) {
+                const sp = st.sparks[i];
+                sp.x += sp.vx * dt;
+                sp.y += sp.vy * dt;
+                sp.life -= dt;
+                if (sp.life <= 0) { st.sparks.splice(i, 1); continue; }
+                ctx.fillStyle = `rgba(243, 225, 185, ${Math.max(0, sp.life * 2)})`;
+                ctx.beginPath();
+                ctx.arc(sp.x, sp.y, 2.2, 0, Math.PI * 2);
+                ctx.fill();
             }
 
-            // Игрок (золотая волна)
-            ctx.fillStyle = '#c5a059';
-            ctx.beginPath(); ctx.arc(76, st.y, 12, 0, Math.PI * 2); ctx.fill();
-            ctx.fillStyle = '#f3e1b9';
-            ctx.beginPath(); ctx.arc(79, st.y - 3, 4, 0, Math.PI * 2); ctx.fill();
+            // Абстрактная светящаяся волна (многослойная плавная лента)
+            if (st.trail.length > 2) {
+                const layers = [
+                    { color: 'rgba(56, 189, 248, 0.28)', width: 15 },
+                    { color: 'rgba(197, 160, 89, 0.55)', width: 8 },
+                    { color: '#f3e1b9', width: 3.5 }
+                ];
+                layers.forEach(layer => {
+                    ctx.beginPath();
+                    ctx.moveTo(st.trail[0].x, st.trail[0].y);
+                    for (let i = 1; i < st.trail.length; i++) {
+                        const prev = st.trail[i - 1];
+                        const cur = st.trail[i];
+                        ctx.quadraticCurveTo(prev.x, prev.y, (prev.x + cur.x) / 2, (prev.y + cur.y) / 2);
+                    }
+                    ctx.lineCap = 'round';
+                    ctx.strokeStyle = layer.color;
+                    ctx.lineWidth = layer.width;
+                    ctx.stroke();
+                });
+            }
+
+            // Гребень волны
+            const glow = ctx.createRadialGradient(playerX, st.y, 1.5, playerX, st.y, 16);
+            glow.addColorStop(0, '#ffffff');
+            glow.addColorStop(0.4, '#f3e1b9');
+            glow.addColorStop(0.75, 'rgba(56, 189, 248, 0.45)');
+            glow.addColorStop(1, 'rgba(56, 189, 248, 0)');
+            ctx.fillStyle = glow;
+            ctx.beginPath();
+            ctx.arc(playerX, st.y, 16, 0, Math.PI * 2);
+            ctx.fill();
 
             waveAnimId = requestAnimationFrame(waveLoop);
         }
+
         function endWaveGame() {
             const score = waveState ? waveState.score : 0;
             stopWaveGame();
@@ -3060,7 +3280,8 @@
                 try { localStorage.setItem('volna_wave_best', String(score)); } catch (e) {}
                 document.getElementById('waveBest').textContent = String(score);
             }
-            showToast(`Игра окончена! Счёт: ${score}`);
+            drawWaveIdleFrame(score);
+            showToast(`Волна разбилась! Счёт: ${score}`);
         }
 
         function spinFlavorRoulette() {
@@ -3096,13 +3317,107 @@
         }
 
         // ============================================================
+        // УСТАНОВКА НА ЭКРАН СМАРТФОНА (PWA КАК У БАНКОВ)
+        // ============================================================
+        let deferredInstallPrompt = null;
+
+        function isStandaloneApp() {
+            return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        }
+
+        function initPwaInstall() {
+            if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+                navigator.serviceWorker.register('sw.js').catch(() => {});
+            }
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredInstallPrompt = e;
+                maybeShowPwaStrip();
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredInstallPrompt = null;
+                document.getElementById('pwaStripBanner').classList.add('hidden');
+                showToast('Приложение «Волна Лаундж» установлено!');
+            });
+
+            maybeShowPwaStrip();
+        }
+
+        function maybeShowPwaStrip() {
+            const strip = document.getElementById('pwaStripBanner');
+            if (!strip) return;
+            if (isStandaloneApp() || window.__isVkMiniApp || banquetOnlyMode) {
+                strip.classList.add('hidden');
+                return;
+            }
+            try {
+                if (localStorage.getItem('volna_pwa_dismissed') === '1') return;
+            } catch (e) {}
+            const isMobile = /android|iphone|ipad|ipod/i.test(navigator.userAgent);
+            if (isMobile || deferredInstallPrompt) {
+                strip.classList.remove('hidden');
+            }
+        }
+
+        function dismissPwaStrip() {
+            document.getElementById('pwaStripBanner').classList.add('hidden');
+            try { localStorage.setItem('volna_pwa_dismissed', '1'); } catch (e) {}
+        }
+
+        function openInstallFlow() {
+            closeModal('servicesModal');
+            if (isStandaloneApp()) {
+                showToast('Меню уже установлено на экран смартфона!');
+                return;
+            }
+            if (deferredInstallPrompt) {
+                deferredInstallPrompt.prompt();
+                deferredInstallPrompt.userChoice.finally(() => { deferredInstallPrompt = null; });
+                return;
+            }
+            const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+            const body = document.getElementById('installGuideBody');
+            if (isIos) {
+                body.innerHTML = `
+                    <div style="padding:12px; border-radius:12px; background:var(--bg); border:1px solid var(--border-gold);">
+                        <div style="font-weight:700; color:var(--gold-light); margin-bottom:8px;">Установка на iPhone / iPad (Safari):</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <div><strong>1.</strong> Нажмите внизу экрана кнопку <strong>«Поделиться»</strong> (квадрат со стрелкой вверх ⬆).</div>
+                            <div><strong>2.</strong> Пролистайте меню чуть вниз и выберите <strong>«На экран „Домой“»</strong> (➕).</div>
+                            <div><strong>3.</strong> Нажмите <strong>«Добавить»</strong> в правом верхнем углу — иконка «Волна Лаундж» появится на рабочем столе.</div>
+                        </div>
+                    </div>
+                    <button type="button" class="action-btn primary" onclick="closeModal('installGuideModal')">Понятно</button>`;
+            } else {
+                body.innerHTML = `
+                    <div style="padding:12px; border-radius:12px; background:var(--bg); border:1px solid var(--border-gold);">
+                        <div style="font-weight:700; color:var(--gold-light); margin-bottom:8px;">Установка на Android (Chrome / Яндекс Браузер):</div>
+                        <div style="display:flex; flex-direction:column; gap:8px;">
+                            <div><strong>1.</strong> Нажмите кнопку меню браузера <strong>( ⋮ )</strong> в правом верхнем или нижнем углу.</div>
+                            <div><strong>2.</strong> Выберите <strong>«Добавить на главный экран»</strong> или <strong>«Установить приложение»</strong>.</div>
+                            <div><strong>3.</strong> Подтвердите установку — меню будет открываться на весь экран, как приложение.</div>
+                        </div>
+                    </div>
+                    <button type="button" class="action-btn primary" onclick="closeModal('installGuideModal')">Понятно</button>`;
+            }
+            openModal('installGuideModal');
+        }
+
+        // ============================================================
         // МОДАЛКИ, COOKIE-БАННЕР И SCROLL-SPY
         // ============================================================
-        const MODAL_IDS = ['bookingModal','wifiModal','notepadModal','kbzhuModal','gamesModal','privacyModal','consentModal','lightboxModal','banquetLeadModal','reviewModal'];
+        const MODAL_IDS = [
+            'servicesModal', 'installGuideModal', 'bookingModal', 'wifiModal',
+            'notepadModal', 'kbzhuModal', 'gamesModal', 'reviewModal',
+            'banquetLeadModal', 'lightboxModal', 'privacyModal', 'consentModal'
+        ];
 
         function openModal(id) {
             if (id === 'notepadModal') renderNotepadModal();
             if (id === 'kbzhuModal') renderKbzhuTable('');
+            if (id === 'gamesModal') setTimeout(() => drawWaveIdleFrame(), 40);
             const el = document.getElementById(id);
             if (!el) return;
             el.classList.remove('hidden');
@@ -3110,8 +3425,7 @@
         }
         function closeModal(id) {
             const el = document.getElementById(id);
-            if (!el) return;
-            el.classList.add('hidden');
+            if (el) el.classList.add('hidden');
             const anyOpen = MODAL_IDS.some(m => {
                 const node = document.getElementById(m);
                 return node && !node.classList.contains('hidden');
@@ -3127,7 +3441,7 @@
             const fabBar = document.getElementById('fabBar');
             if (!fabBar) return;
             const visible = banner && !banner.classList.contains('hidden');
-            fabBar.style.bottom = visible ? '148px' : '14px';
+            fabBar.style.bottom = visible ? '118px' : '14px';
         }
         function initCookieBanner() {
             try {
@@ -3172,7 +3486,7 @@
                 let current = TABS[0].id;
                 for (let i = 0; i < TABS.length; i++) {
                     const sec = document.getElementById(TABS[i].id);
-                    if (sec && sec.getBoundingClientRect().top <= 175) current = TABS[i].id;
+                    if (sec && sec.getBoundingClientRect().top <= 165) current = TABS[i].id;
                 }
                 if (current !== activeTabId) {
                     activeTabId = current;
@@ -3192,11 +3506,20 @@
             }
         });
 
+        // Автообновление занятых дат при возврате на вкладку браузера
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                loadBookedDatesFromApi(false);
+            }
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
             const canvas = document.getElementById('waveGameCanvas');
             if (canvas) {
                 canvas.addEventListener('pointerdown', (e) => {
-                    if (waveRunning) { e.preventDefault(); waveJump(); }
+                    e.preventDefault();
+                    if (waveRunning) waveJump();
+                    else startWaveGame();
                 });
             }
             restoreNotepad();
@@ -3209,7 +3532,8 @@
             renderQuickFilters();
             renderFullFeed();
             initCookieBanner();
-            loadBookedDatesFromApi();
+            initPwaInstall();
+            loadBookedDatesFromApi(false);
         });
     </script>
 </body>
