@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Иконка Волна Лаундж">
+  <defs>
+    <!-- Глубокий фирменный градиент фона -->
+    <radialGradient id="bgGrad" cx="50%" cy="38%" r="68%">
+      <stop offset="0%" stop-color="#1b365d"/>
+      <stop offset="100%" stop-color="#0e1b30"/>
+    </radialGradient>
+    <!-- Золотой градиент для колец, логотипа и волн -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9a7432"/>
+      <stop offset="50%" stop-color="#f3e1b9"/>
+      <stop offset="100%" stop-color="#9a7432"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Квадратный фон на весь холст (важно для iOS и Android maskable-иконок) -->
+  <rect width="512" height="512" fill="url(#bgGrad)"/>
+
+  <!-- Двойное золотое кольцо внутри безопасной зоны (не обрежется маской Android/iOS) -->
+  <circle cx="256" cy="256" r="196" fill="none" stroke="url(#goldGrad)" stroke-width="5.5"/>
+  <circle cx="256" cy="256" r="184" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-opacity="0.6"/>
+
+  <!-- Фирменная надпись ВОЛНА -->
+  <text x="256" y="246" font-family="Cormorant Garamond, Georgia, 'Times New Roman', serif" font-size="78" font-weight="700" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="7">ВОЛНА</text>
+
+  <!-- Три золотые волны под названием -->
+  <g fill="none" stroke="url(#goldGrad)" stroke-width="4" stroke-linecap="round">
+    <path d="M 96 286 C 156 318, 212 252, 304 296 C 362 324, 394 286, 416 286"/>
+    <path d="M 102 312 C 162 344, 218 278, 310 322 C 366 348, 390 314, 410 312" stroke-opacity="0.8"/>
+    <path d="M 114 338 C 172 368, 224 306, 316 348 C 362 370, 384 342, 400 338" stroke-opacity="0.5"/>
+  </g>
+</svg>
